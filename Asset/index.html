@@ -398,9 +398,11 @@
       return hay.includes(term);
     });
 
-    document.getElementById('statTotal').textContent = ASSETS.length;
-    document.getElementById('statAktif').textContent = ASSETS.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='ya').length;
-    document.getElementById('statTidak').textContent = ASSETS.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='tidak').length;
+    /* Statistik mengikuti kelompok yang sedang dipilih di dropdown (bukan total semua aset) */
+    const groupScoped = groupFilterValue==='semua' ? ASSETS : ASSETS.filter(a => (a['Kelompok']||'').trim()===groupFilterValue);
+    document.getElementById('statTotal').textContent = groupScoped.length;
+    document.getElementById('statAktif').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='ya').length;
+    document.getElementById('statTidak').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='tidak').length;
 
     if(filtered.length===0){
       grid.innerHTML = `<div class="empty">Tidak ada aset yang cocok dengan pencarian / filter.</div>`;
