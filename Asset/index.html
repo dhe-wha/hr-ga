@@ -472,14 +472,14 @@
       ['No Mesin', a['No Mesin']],
       ['Tanggal Perolehan', a['Tanggal Perolehan']],
       ['Berlaku Pajak', a['Berlaku Pajak']],
-      ['Keterangan', a['Keterangan']],
+      ['Jumlah Pajak', a['Jumlah Pajak']],
     ];
 
     /* Baris ini ditampilkan di bawah foto (kolom kiri), bukan di tabel spesifikasi kanan */
     const rowsBelowPhoto = [
-      ['Jumlah Pajak', a['Jumlah Pajak']],
       ['User / Driver', a['User_Driver']],
       ['Status Aset (Acc)', st.label],
+      ['Keterangan', a['Keterangan']],
     ];
 
     const specRows = rows.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
