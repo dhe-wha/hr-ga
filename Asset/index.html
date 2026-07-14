@@ -462,8 +462,6 @@
     const st = statusInfo(a['Status Aset (Acc)']);
 
     const rows = [
-      ['Kode Aset', a['Kode Aset']],
-      ['Kelompok', a['Kelompok']],
       ['Company', a['Company']],
       ['Model', a['Model']],
       ['Nama Aset (Acc)', a['Nama Aset (Acc)']],
@@ -474,6 +472,7 @@
       ['No Mesin', a['No Mesin']],
       ['Tanggal Perolehan', a['Tanggal Perolehan']],
       ['Berlaku Pajak', a['Berlaku Pajak']],
+      ['Keterangan', a['Keterangan']],
     ];
 
     /* Baris ini ditampilkan di bawah foto (kolom kiri), bukan di tabel spesifikasi kanan */
@@ -509,7 +508,6 @@
           ${viewFrame(photoUrl(a['Foto Kanan']), 'Tampak Kanan')}
           ${viewFrame(photoUrl(a['Foto Belakang']), 'Tampak Belakang')}
         </div>
-        ${a['Keterangan'] ? `<div class="note-box"><b>Keterangan:</b> ${a['Keterangan']}</div>` : ''}
       </div>
     `;
     document.getElementById('closeBtn').addEventListener('click', closeDossier);
