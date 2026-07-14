@@ -128,19 +128,35 @@
   /* ---------- Modal / dossier ---------- */
   .overlay{position:fixed; inset:0; background:rgba(10,12,13,0.75); backdrop-filter:blur(2px); display:none; align-items:flex-start; justify-content:center; z-index:50; padding:40px 16px; overflow-y:auto;}
   .overlay.show{display:flex;}
-  .dossier{background:var(--panel); border:1px solid var(--border); border-radius:14px; max-width:760px; width:100%; animation:rise .18s ease-out;}
+  .dossier{background:var(--panel); border:1px solid var(--border); border-radius:14px; max-width:880px; width:100%; animation:rise .18s ease-out;}
   @keyframes rise{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
   .dossier-header{display:flex; justify-content:space-between; align-items:flex-start; padding:22px 26px; border-bottom:1px solid var(--border);}
   .dossier-tag{font-family:var(--font-mono); font-size:11px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; margin:0 0 6px;}
   .dossier-title{font-family:var(--font-display); font-size:24px; font-weight:700; margin:0; text-transform:uppercase;}
   .close-btn{background:var(--panel-alt); border:1px solid var(--border); color:var(--text); width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:16px; line-height:1; flex-shrink:0;}
   .close-btn:hover{border-color:var(--text-dim);}
-  .dossier-body{padding:22px 26px 28px;}
+  .dossier-body{padding:24px 26px 28px;}
+  .main-section{display:grid; grid-template-columns:1.1fr 1fr; gap:22px; margin-bottom:26px;}
+  @media (max-width:640px){.main-section{grid-template-columns:1fr;}}
+  .photo-frame{position:relative; border-radius:10px; overflow:hidden; background:var(--panel-alt); aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;}
+  .photo-frame img{width:100%; height:100%; object-fit:cover; display:block;}
+  .corner{position:absolute; width:16px; height:16px; border-color:var(--amber); opacity:.9;}
+  .corner.tl{top:8px; left:8px; border-top:2px solid; border-left:2px solid;}
+  .corner.tr{top:8px; right:8px; border-top:2px solid; border-right:2px solid;}
+  .corner.bl{bottom:8px; left:8px; border-bottom:2px solid; border-left:2px solid;}
+  .corner.br{bottom:8px; right:8px; border-bottom:2px solid; border-right:2px solid;}
+  .photo-label{position:absolute; bottom:8px; left:50%; transform:translateX(-50%); font-family:var(--font-mono); font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; background:rgba(20,24,26,0.75); padding:3px 10px; border-radius:20px; color:var(--text-dim);}
+  .no-photo{color:var(--text-dim); font-family:var(--font-mono); font-size:11px; text-align:center; letter-spacing:.5px; padding:0 20px;}
   .spec-table{border-top:1px solid var(--border);}
   .spec-row{display:flex; justify-content:space-between; gap:16px; padding:11px 2px; border-bottom:1px solid var(--border); font-size:13.5px;}
   .spec-row .k{color:var(--text-dim); font-family:var(--font-mono); font-size:11px; letter-spacing:.5px; text-transform:uppercase; padding-top:2px; flex-shrink:0;}
   .spec-row .v{font-weight:600; text-align:right;}
-  .note-box{margin-top:18px; background:var(--panel-alt); border:1px solid var(--border); border-radius:8px; padding:14px 16px; font-size:13px; color:var(--text-dim); line-height:1.5;}
+  .views-heading{font-family:var(--font-mono); font-size:11px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; margin:0 0 12px; border-top:1px solid var(--border); padding-top:20px;}
+  .views-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;}
+  @media (max-width:520px){.views-grid{grid-template-columns:1fr;}}
+  .view-frame{position:relative; border-radius:8px; overflow:hidden; background:var(--panel-alt); aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;}
+  .view-frame img{width:100%; height:100%; object-fit:cover;}
+  .note-box{margin-top:22px; background:var(--panel-alt); border:1px solid var(--border); border-radius:8px; padding:14px 16px; font-size:13px; color:var(--text-dim); line-height:1.5;}
   .note-box b{color:var(--text); font-weight:600;}
 
   ::-webkit-scrollbar{width:10px;}
@@ -383,7 +399,7 @@
               <div class="card-id">${kode}</div>
             </div>
             <p class="card-name">${fmtVal(nama)}</p>
-            <p class="card-meta">${fmtVal(a['Model'])} &middot; <span class="driver">${fmtVal(driver)}</span></p>
+            <p class="card-meta">${fmtVal(a['No Polisi'])} &middot; <span class="driver">${fmtVal(driver)}</span></p>
             <span class="badge ${st.cls}">${st.label}</span>
           </div>
         </div>`;
@@ -393,6 +409,27 @@
       card.addEventListener('click', ()=>openDossier(card.dataset.no));
       card.addEventListener('keydown', e=>{ if(e.key==='Enter') openDossier(card.dataset.no); });
     });
+  }
+
+  /* Kolom foto di sheet (opsional): "Foto Utama", "Foto Kiri", "Foto Kanan", "Foto Belakang".
+     Jika kolom belum ada / kosong, otomatis tampil placeholder "Foto belum tersedia". */
+  function photoFrame(url, label){
+    if(url){
+      return `<div class="photo-frame"><img src="${url}" alt="${label}">
+        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        <span class="photo-label">${label}</span></div>`;
+    }
+    return `<div class="photo-frame"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <span class="no-photo">Foto ${label.toLowerCase()}<br>belum tersedia</span></div>`;
+  }
+
+  function viewFrame(url, label){
+    if(url){
+      return `<div class="view-frame"><img src="${url}" alt="${label}">
+        <span class="corner tl" style="width:11px;height:11px;"></span><span class="corner br" style="width:11px;height:11px;"></span>
+        <span class="photo-label" style="font-size:8.5px;">${label}</span></div>`;
+    }
+    return `<div class="view-frame"><span class="no-photo" style="font-size:10px;">${label}<br>belum tersedia</span></div>`;
   }
 
   function openDossier(no){
@@ -430,7 +467,16 @@
         <button class="close-btn" id="closeBtn" aria-label="Tutup">&#10005;</button>
       </div>
       <div class="dossier-body">
-        <div class="spec-table">${specRows}</div>
+        <div class="main-section">
+          ${photoFrame(a['Foto Utama'], 'Foto Utama')}
+          <div class="spec-table">${specRows}</div>
+        </div>
+        <p class="views-heading">Tampak Sekeliling</p>
+        <div class="views-grid">
+          ${viewFrame(a['Foto Kiri'], 'Tampak Kiri')}
+          ${viewFrame(a['Foto Kanan'], 'Tampak Kanan')}
+          ${viewFrame(a['Foto Belakang'], 'Tampak Belakang')}
+        </div>
         ${a['Keterangan'] ? `<div class="note-box"><b>Keterangan:</b> ${a['Keterangan']}</div>` : ''}
       </div>
     `;
