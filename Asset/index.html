@@ -375,14 +375,19 @@
           </div>
           <div class="stat-strip">
             <div class="stat"><div class="n" id="kryTotal">0</div><div class="l">Total Karyawan</div></div>
-            <div class="stat"><div class="n" id="kryMasukTotal">0</div><div class="l">Masuk (YTD)</div></div>
-            <div class="stat"><div class="n" id="kryKeluarTotal">0</div><div class="l">Keluar (YTD)</div></div>
+            <div class="stat"><div class="n" id="kryMasukTotal">0</div><div class="l" id="kryMasukLabel">Masuk (YTD)</div></div>
+            <div class="stat"><div class="n" id="kryKeluarTotal">0</div><div class="l" id="kryKeluarLabel">Keluar (YTD)</div></div>
           </div>
         </header>
 
         <div class="controls">
           <div class="group-select">
             <select id="kryTahunFilter"></select>
+          </div>
+          <div class="group-select">
+            <select id="kryBulanFilter">
+              <option value="semua">Semua Bulan</option>
+            </select>
           </div>
           <div class="group-select">
             <select id="kryPtFilter">
@@ -717,6 +722,7 @@
   let kryLoaded = false;
   let kryTahunValue = null;
   let kryPtValue = 'semua';
+  let kryBulanValue = 'semua';
 
   function kryParseNum(v){
     if(v===undefined || v===null) return 0;
@@ -821,6 +827,23 @@
     ptSel.innerHTML = `<option value="semua">Semua PT</option>` + pts.map(p=>`<option value="${p}">${p}</option>`).join('');
     ptSel.value = (curPt==='semua' || pts.includes(curPt)) ? curPt : 'semua';
     kryPtValue = ptSel.value;
+
+    kryPopulateBulanFilter();
+  }
+
+  /* Isi dropdown Bulan mengikuti Tahun yang sedang dipilih, urut kronologis */
+  function kryPopulateBulanFilter(){
+    const bulanSel = document.getElementById('kryBulanFilter');
+    const bulanOptions = Array.from(
+      new Map(
+        KRY_ROWS.filter(r=>r.tahun===kryTahunValue).map(r=>[r.bulan, r.sortKey])
+      ).entries()
+    ).sort((a,b)=>a[1]-b[1]).map(([bulan])=>bulan);
+
+    const curBulan = kryBulanValue || 'semua';
+    bulanSel.innerHTML = `<option value="semua">Semua Bulan</option>` + bulanOptions.map(b=>`<option value="${b}">${b}</option>`).join('');
+    bulanSel.value = (curBulan==='semua' || bulanOptions.includes(curBulan)) ? curBulan : 'semua';
+    kryBulanValue = bulanSel.value;
   }
 
   function renderBarList(containerId, entries, colorClass){
@@ -857,12 +880,23 @@
       return;
     }
 
-    /* Snapshot bulan terakhir yang tersedia di tahun ini dipakai untuk data
-       "jumlah/stok" karyawan (per PT, departemen, gender, status, dst).
-       Data masuk/keluar dijumlah sepanjang semua bulan di tahun tsb (YTD). */
-    const maxSortKey = Math.max(...rowsInYear.map(r=>r.sortKey));
-    const snapshotRows = rowsInYear.filter(r=>r.sortKey===maxSortKey);
-    const snapshotBulanLabel = snapshotRows[0] ? snapshotRows[0].bulan : '';
+    /* Jika Bulan = "Semua Bulan": data jumlah/stok karyawan diambil dari snapshot
+       bulan terakhir yang tersedia di tahun ini, dan masuk/keluar dijumlah
+       sepanjang tahun (YTD). Jika user memilih bulan tertentu, semuanya
+       (stok maupun masuk/keluar) dihitung hanya untuk bulan itu saja. */
+    let snapshotRows, flowRows, isSingleMonth;
+    if(kryBulanValue==='semua'){
+      const maxSortKey = Math.max(...rowsInYear.map(r=>r.sortKey));
+      snapshotRows = rowsInYear.filter(r=>r.sortKey===maxSortKey);
+      flowRows = rowsInYear;
+      isSingleMonth = false;
+    }else{
+      const monthRows = rowsInYear.filter(r=>r.bulan===kryBulanValue);
+      snapshotRows = monthRows;
+      flowRows = monthRows;
+      isSingleMonth = true;
+    }
+    const snapshotBulanLabel = snapshotRows[0] ? snapshotRows[0].bulan : kryBulanValue;
 
     const sum = (rows, field) => rows.reduce((s,r)=>s+r[field], 0);
     const groupSum = (rows, keyField, valField) => {
@@ -878,8 +912,8 @@
     const kabLokal = sum(snapshotRows,'kabLokal'), kabNonLokal = sum(snapshotRows,'kabNonLokal');
     const provLokal = sum(snapshotRows,'provLokal'), provNonLokal = sum(snapshotRows,'provNonLokal');
 
-    const masukTotal = sum(rowsInYear,'masukPenambahan')+sum(rowsInYear,'masukPenggantian')+sum(rowsInYear,'masukMutasi')+sum(rowsInYear,'masukPromosi');
-    const keluarTotal = sum(rowsInYear,'keluarResign')+sum(rowsInYear,'keluarMutasi')+sum(rowsInYear,'keluarPromosi')+sum(rowsInYear,'keluarHabisKontrak')+sum(rowsInYear,'keluarMeninggal');
+    const masukTotal = sum(flowRows,'masukPenambahan')+sum(flowRows,'masukPenggantian')+sum(flowRows,'masukMutasi')+sum(flowRows,'masukPromosi');
+    const keluarTotal = sum(flowRows,'keluarResign')+sum(flowRows,'keluarMutasi')+sum(flowRows,'keluarPromosi')+sum(flowRows,'keluarHabisKontrak')+sum(flowRows,'keluarMeninggal');
 
     const genderL = sum(snapshotRows,'genderL'), genderP = sum(snapshotRows,'genderP');
     const statusBulanan = sum(snapshotRows,'statusBulanan'), statusSKU = sum(snapshotRows,'statusSKU'), statusPKWT = sum(snapshotRows,'statusPKWT'), statusBHL = sum(snapshotRows,'statusBHL');
@@ -894,7 +928,11 @@
     document.getElementById('kryTotal').textContent = totalKry.toLocaleString('id-ID');
     document.getElementById('kryMasukTotal').textContent = masukTotal.toLocaleString('id-ID');
     document.getElementById('kryKeluarTotal').textContent = keluarTotal.toLocaleString('id-ID');
-    document.getElementById('kryNote').innerHTML = `Data jumlah karyawan per <b>${snapshotBulanLabel}</b>. Data masuk/keluar akumulasi sepanjang tahun <b>${kryTahunValue}</b>.`;
+    document.getElementById('kryMasukLabel').textContent = isSingleMonth ? 'Masuk (Bulan Ini)' : 'Masuk (YTD)';
+    document.getElementById('kryKeluarLabel').textContent = isSingleMonth ? 'Keluar (Bulan Ini)' : 'Keluar (YTD)';
+    document.getElementById('kryNote').innerHTML = isSingleMonth
+      ? `Data jumlah karyawan, masuk, dan keluar untuk bulan <b>${snapshotBulanLabel}</b>.`
+      : `Data jumlah karyawan per <b>${snapshotBulanLabel}</b>. Data masuk/keluar akumulasi sepanjang tahun <b>${kryTahunValue}</b>.`;
 
     grid.innerHTML = `
       <div class="kry-card"><h3>Karyawan per PT</h3><div class="bar-list" id="kryByPT"></div></div>
@@ -916,17 +954,17 @@
     renderBarList('kryKab', [{label:'Lokal',value:kabLokal},{label:'Non Lokal',value:kabNonLokal}]);
     renderBarList('kryProv', [{label:'Lokal',value:provLokal},{label:'Non Lokal',value:provNonLokal}]);
     renderBarList('kryMasukList', [
-      {label:'Penambahan', value: sum(rowsInYear,'masukPenambahan')},
-      {label:'Penggantian', value: sum(rowsInYear,'masukPenggantian')},
-      {label:'Mutasi', value: sum(rowsInYear,'masukMutasi')},
-      {label:'Promosi', value: sum(rowsInYear,'masukPromosi')},
+      {label:'Penambahan', value: sum(flowRows,'masukPenambahan')},
+      {label:'Penggantian', value: sum(flowRows,'masukPenggantian')},
+      {label:'Mutasi', value: sum(flowRows,'masukMutasi')},
+      {label:'Promosi', value: sum(flowRows,'masukPromosi')},
     ], 'green');
     renderBarList('kryKeluarList', [
-      {label:'Resign', value: sum(rowsInYear,'keluarResign')},
-      {label:'Mutasi', value: sum(rowsInYear,'keluarMutasi')},
-      {label:'Promosi', value: sum(rowsInYear,'keluarPromosi')},
-      {label:'Habis Kontrak', value: sum(rowsInYear,'keluarHabisKontrak')},
-      {label:'Meninggal', value: sum(rowsInYear,'keluarMeninggal')},
+      {label:'Resign', value: sum(flowRows,'keluarResign')},
+      {label:'Mutasi', value: sum(flowRows,'keluarMutasi')},
+      {label:'Promosi', value: sum(flowRows,'keluarPromosi')},
+      {label:'Habis Kontrak', value: sum(flowRows,'keluarHabisKontrak')},
+      {label:'Meninggal', value: sum(flowRows,'keluarMeninggal')},
     ], 'red');
     renderBarList('kryGender', [{label:'Laki-laki',value:genderL},{label:'Perempuan',value:genderP}]);
     renderBarList('kryStatus', [
@@ -956,6 +994,12 @@
 
   document.getElementById('kryTahunFilter').addEventListener('change', e=>{
     kryTahunValue = parseInt(e.target.value,10);
+    kryBulanValue = 'semua'; // daftar bulan berbeda per tahun, reset ke "Semua Bulan"
+    kryPopulateBulanFilter();
+    renderKaryawan();
+  });
+  document.getElementById('kryBulanFilter').addEventListener('change', e=>{
+    kryBulanValue = e.target.value;
     renderKaryawan();
   });
   document.getElementById('kryPtFilter').addEventListener('change', e=>{
