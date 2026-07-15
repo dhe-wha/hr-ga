@@ -589,11 +589,27 @@
   /* Link foto di sheet biasanya berupa link "share" (OneDrive/SharePoint/Google Drive),
      bukan link gambar langsung. Fungsi ini mencoba mengubahnya jadi link yang bisa
      langsung dibaca sebagai <img>. Link tetap harus dibagikan sebagai "Anyone with the
-     link can view" - kalau masih perlu login, gambar tidak akan pernah muncul di browser. */
+     link can view" - kalau masih perlu login, gambar tidak akan pernah muncul di browser.
+
+     CATATAN PENTING (SharePoint/OneDrive for Business "my.sharepoint.com"):
+     Link share format "https://tenant-my.sharepoint.com/:i:/g/personal/{user}/{token}?e=..."
+     itu link ke halaman VIEWER interaktif (bukan file gambar mentah), jadi tidak pernah
+     bisa langsung dipakai di <img src> walau sudah di-share "Anyone with the link".
+     Menambahkan "&download=1" di belakang link viewer ini TIDAK cukup (sudah dicoba,
+     tetap gagal). Yang benar-benar berhasil adalah mengubahnya ke endpoint download
+     langsung SharePoint: ".../personal/{user}/_layouts/15/download.aspx?share={token}".
+     Endpoint ini kalau dibuka manual di address bar akan langsung "Save As" / download
+     file (karena itu perilaku Content-Disposition untuk navigasi halaman penuh), TAPI
+     saat dipakai sebagai <img src> (permintaan subresource, bukan navigasi halaman),
+     browser tetap merender byte gambarnya langsung sebagai gambar - bukan men-download. */
   function photoUrl(raw){
     const url = (raw||'').trim();
     if(!url || url==='#N/A') return '';
     try{
+      const spShareMatch = url.match(/^(https:\/\/[^/]+)\/:[a-z]:\/[a-z]\/personal\/([^/]+)\/([^/?]+)/i);
+      if(spShareMatch){
+        return `${spShareMatch[1]}/personal/${spShareMatch[2]}/_layouts/15/download.aspx?share=${spShareMatch[3]}`;
+      }
       if(/sharepoint\.com|onedrive\.live\.com|1drv\.ms/i.test(url)){
         if(/download=1/i.test(url)) return url;
         return url + (url.includes('?') ? '&' : '?') + 'download=1';
