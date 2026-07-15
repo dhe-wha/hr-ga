@@ -1167,16 +1167,32 @@
     }));
   }
 
-  async function recFetchAllCandidates(){
+  function recSleep(ms){ return new Promise(resolve=>setTimeout(resolve, ms)); }
+
+  /* Ambil 1 chunk CSV dengan retry, karena request beruntun ke gviz kadang
+     gagal sesaat (rate limit / hiccup jaringan) - jangan langsung dianggap
+     "data habis" kalau itu yang terjadi, supaya kandidat di baris jauh
+     (mis. baris 3000+) tidak ikut hilang gara-gara 1 request doang gagal. */
+  async function recFetchChunkWithRetry(url, retries){
+    for(let attempt=0; attempt<=retries; attempt++){
+      try{
+        const text = await recFetchText(url);
+        if(text && text.trim()!=='' ) return text;
+      }catch(e){ /* coba lagi */ }
+      if(attempt<retries) await recSleep(400 + attempt*400);
+    }
+    return null;
+  }
+
+  async function recFetchAllCandidates(onProgress){
     const CHUNK = 250;
     let startRow = 2; // baris 1 = header, dilewati
     let all = [];
-    for(let i=0;i<40;i++){ // batas aman ~10.000 baris
+    for(let i=0;i<60;i++){ // batas aman ~15.000 baris
       const endRow = startRow + CHUNK - 1;
       const url = `https://docs.google.com/spreadsheets/d/${REC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('candidate')}&range=A${startRow}:AC${endRow}`;
-      let text;
-      try{ text = await recFetchText(url); } catch(e){ break; }
-      if(!text || text.trim()==='' || text.trim().startsWith('{')) break; // habis / error range
+      const text = await recFetchChunkWithRetry(url, 2);
+      if(!text || text.trim().startsWith('{')) break; // benar-benar habis / range tidak valid
       const parsed = Papa.parse(text.trim(), { header:false }).data;
       const real = parsed.filter(r => r.some(c => (c||'').trim()!==''));
       if(real.length===0) break;
@@ -1188,24 +1204,34 @@
         progress: (cols[25]||'').trim(),
         statusProgress: (cols[26]||'').trim(),
       })));
+      if(typeof onProgress==='function') onProgress(all.length);
       if(parsed.length < CHUNK) break; // baris terakhir yang tersedia
       startRow = endRow + 1;
+      await recSleep(120); // jeda kecil antar request supaya tidak kena rate limit
     }
     return all;
   }
 
   async function loadRekrutmenData(){
     const body = document.getElementById('recTableBody');
+    const setLoadingMsg = (n) => {
+      const el = document.getElementById('recLoadingMsg');
+      if(el) el.textContent = `Memuat data dari Google Sheet... (${n} data kandidat dimuat)`;
+    };
     body.innerHTML = `<tr><td colspan="8" class="state-msg" id="recLoadingMsg">Memuat data dari Google Sheet...</td></tr>`;
     const btn = document.getElementById('recRefreshBtn');
     btn.classList.add('spinning');
     try{
-      const [jobs, candidates] = await Promise.all([recFetchRecapJobs(), recFetchAllCandidates()]);
+      const [jobs, candidates] = await Promise.all([
+        recFetchRecapJobs(),
+        recFetchAllCandidates(setLoadingMsg)
+      ]);
       REC_JOBS = jobs;
       REC_CANDIDATES = candidates;
       recPopulateDeptFilter();
       recLoaded = true;
       renderRekrutmen();
+      document.getElementById('recNote').innerHTML = `Hanya menampilkan posisi yang kolom "posting" di sheet recap_jobs dicentang (TRUE). Total data kandidat dimuat: <b>${candidates.length}</b>.`;
     }catch(e){
       body.innerHTML = `<tr><td colspan="8" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="recRetryBtn">Coba Lagi</button></td></tr>`;
       const retry = document.getElementById('recRetryBtn');
