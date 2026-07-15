@@ -284,6 +284,7 @@
           <h1 class="asset-title">Dashboard Aset Kendaraan</h1>
         </div>
         <div class="stat-strip">
+          <div class="stat"><div class="n" id="statDriver">0</div><div class="l">Ada User/Driver</div></div>
           <div class="stat"><div class="n" id="statTotal">0</div><div class="l">Total Unit</div></div>
           <div class="stat"><div class="n" id="statAktif">0</div><div class="l">Aktif</div></div>
           <div class="stat"><div class="n" id="statTidak">0</div><div class="l">Tidak Aktif</div></div>
@@ -444,6 +445,10 @@
     document.getElementById('statTotal').textContent = groupScoped.length;
     document.getElementById('statAktif').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='ya').length;
     document.getElementById('statTidak').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='tidak').length;
+    document.getElementById('statDriver').textContent = groupScoped.filter(a => {
+      const d = (a['User_Driver']||'').trim().toLowerCase();
+      return d!=='' && d!=='kosong' && d!=='#n/a';
+    }).length;
 
     /* Tampilkan wadah sesuai mode, sembunyikan yang lain */
     grid.style.display = (viewMode==='card') ? '' : 'none';
