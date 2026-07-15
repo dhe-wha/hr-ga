@@ -750,54 +750,98 @@
         btn.classList.remove('spinning');
         const raw = results.data || [];
         const dataRows = raw.slice(1); // baris pertama adalah header, dilewati
-        let lastBulan = '';
-        KRY_ROWS = dataRows.map(cols=>{
-          let bulan = (cols[0]||'').trim();
-          if(bulan){ lastBulan = bulan; } else { bulan = lastBulan; }
-          const parts = bulan.split('-');
-          const monthAbbr = parts[0] || '';
-          const yy = parts[1] || '';
-          const tahun = yy ? (2000+parseInt(yy,10)) : null;
-          const monthIdx = MONTH_ORDER.indexOf(monthAbbr);
-          return {
-            bulan, tahun, monthIdx,
-            sortKey: (tahun||0)*100 + (monthIdx>=0?monthIdx:0),
-            pt: (cols[1]||'').trim(),
-            dept: (cols[2]||'').trim(),
-            total: kryParseNum(cols[3]),
-            kabLokal: kryParseNum(cols[4]),
-            kabNonLokal: kryParseNum(cols[5]),
-            provLokal: kryParseNum(cols[6]),
-            provNonLokal: kryParseNum(cols[7]),
-            masukPenambahan: kryParseNum(cols[8]),
-            masukPenggantian: kryParseNum(cols[9]),
-            masukMutasi: kryParseNum(cols[10]),
-            masukPromosi: kryParseNum(cols[11]),
-            keluarResign: kryParseNum(cols[12]),
-            keluarMutasi: kryParseNum(cols[13]),
-            keluarPromosi: kryParseNum(cols[14]),
-            keluarHabisKontrak: kryParseNum(cols[15]),
-            keluarMeninggal: kryParseNum(cols[16]),
-            genderL: kryParseNum(cols[17]),
-            genderP: kryParseNum(cols[18]),
-            statusBulanan: kryParseNum(cols[19]),
-            statusSKU: kryParseNum(cols[20]),
-            statusPKWT: kryParseNum(cols[21]),
-            statusBHL: kryParseNum(cols[22]),
-            pangkatStaff: kryParseNum(cols[23]),
-            pangkatMandor1: kryParseNum(cols[24]),
-            pangkatMandorKerani: kryParseNum(cols[25]),
-            pangkatWorker: kryParseNum(cols[26]),
-            gajiBruto: kryParseNum(cols[27]),
-            gajiNetto: kryParseNum(cols[28]),
-            klasDesaBinaan: kryParseNum(cols[29]),
-            klasKecamatan: kryParseNum(cols[30]),
-            klasKabupaten: kryParseNum(cols[31]),
-            klasProvinsi: kryParseNum(cols[32]),
-            klasSulawesi: kryParseNum(cols[33]),
-            klasNonSulawesi: kryParseNum(cols[34]),
-          };
-        }).filter(r => r.pt && r.dept);
+
+        /* Tahap 1: ambil semua kolom apa adanya (belum menentukan Bulan-nya) */
+        const parsedRows = dataRows.map(cols => ({
+          bulanRaw: (cols[0]||'').trim(),
+          pt: (cols[1]||'').trim(),
+          dept: (cols[2]||'').trim(),
+          total: kryParseNum(cols[3]),
+          kabLokal: kryParseNum(cols[4]),
+          kabNonLokal: kryParseNum(cols[5]),
+          provLokal: kryParseNum(cols[6]),
+          provNonLokal: kryParseNum(cols[7]),
+          masukPenambahan: kryParseNum(cols[8]),
+          masukPenggantian: kryParseNum(cols[9]),
+          masukMutasi: kryParseNum(cols[10]),
+          masukPromosi: kryParseNum(cols[11]),
+          keluarResign: kryParseNum(cols[12]),
+          keluarMutasi: kryParseNum(cols[13]),
+          keluarPromosi: kryParseNum(cols[14]),
+          keluarHabisKontrak: kryParseNum(cols[15]),
+          keluarMeninggal: kryParseNum(cols[16]),
+          genderL: kryParseNum(cols[17]),
+          genderP: kryParseNum(cols[18]),
+          statusBulanan: kryParseNum(cols[19]),
+          statusSKU: kryParseNum(cols[20]),
+          statusPKWT: kryParseNum(cols[21]),
+          statusBHL: kryParseNum(cols[22]),
+          pangkatStaff: kryParseNum(cols[23]),
+          pangkatMandor1: kryParseNum(cols[24]),
+          pangkatMandorKerani: kryParseNum(cols[25]),
+          pangkatWorker: kryParseNum(cols[26]),
+          gajiBruto: kryParseNum(cols[27]),
+          gajiNetto: kryParseNum(cols[28]),
+          klasDesaBinaan: kryParseNum(cols[29]),
+          klasKecamatan: kryParseNum(cols[30]),
+          klasKabupaten: kryParseNum(cols[31]),
+          klasProvinsi: kryParseNum(cols[32]),
+          klasSulawesi: kryParseNum(cols[33]),
+          klasNonSulawesi: kryParseNum(cols[34]),
+        })).filter(r => r.pt && r.dept);
+
+        /* Tahap 2: kolom "Bulan" adalah sel yang di-merge di Google Sheet. Kadang
+           SATU BULAN PENUH (33 baris PT x Departemen) kosong semua di kolom Bulan -
+           bukan cuma baris ke-2/3 dst - jadi forward-fill biasa akan salah menempelkan
+           baris-baris itu ke bulan sebelumnya. Solusinya: deteksi batas blok bulan dari
+           pola PT+Departemen yang berulang (baris pertama tiap blok = pasangan PT+Departemen
+           yang sama dengan baris pertama dataset), lalu isi label bulan yang kosong dengan
+           urutan bulan berikutnya secara berurutan. */
+        if(parsedRows.length){
+          const anchorPt = parsedRows[0].pt, anchorDept = parsedRows[0].dept;
+          let blockIndex = 0;
+          parsedRows.forEach((r,i)=>{
+            if(i>0 && r.pt===anchorPt && r.dept===anchorDept) blockIndex++;
+            r.blockIndex = blockIndex;
+          });
+
+          const blockLabel = {};
+          parsedRows.forEach(r=>{
+            if(r.bulanRaw && !(r.blockIndex in blockLabel)){
+              const parts = r.bulanRaw.split('-');
+              const monthIdx = MONTH_ORDER.indexOf(parts[0]||'');
+              const yy = parts[1]||'';
+              const tahun = yy ? (2000+parseInt(yy,10)) : null;
+              if(monthIdx>=0 && tahun){ blockLabel[r.blockIndex] = {monthIdx, tahun}; }
+            }
+          });
+
+          const maxBlock = parsedRows[parsedRows.length-1].blockIndex;
+          for(let b=0; b<=maxBlock; b++){
+            if(!blockLabel[b] && blockLabel[b-1]){
+              let mi = blockLabel[b-1].monthIdx+1, ty = blockLabel[b-1].tahun;
+              if(mi>11){ mi=0; ty++; }
+              blockLabel[b] = {monthIdx:mi, tahun:ty};
+            }
+          }
+          for(let b=maxBlock-1; b>=0; b--){
+            if(!blockLabel[b] && blockLabel[b+1]){
+              let mi = blockLabel[b+1].monthIdx-1, ty = blockLabel[b+1].tahun;
+              if(mi<0){ mi=11; ty--; }
+              blockLabel[b] = {monthIdx:mi, tahun:ty};
+            }
+          }
+
+          parsedRows.forEach(r=>{
+            const lbl = blockLabel[r.blockIndex];
+            r.monthIdx = lbl ? lbl.monthIdx : -1;
+            r.tahun = lbl ? lbl.tahun : null;
+            r.bulan = lbl ? `${MONTH_ORDER[lbl.monthIdx]}-${String(lbl.tahun%100).padStart(2,'0')}` : r.bulanRaw;
+            r.sortKey = (r.tahun||0)*100 + (r.monthIdx>=0?r.monthIdx:0);
+          });
+        }
+
+        KRY_ROWS = parsedRows;
 
         kryPopulateFilters();
         kryLoaded = true;
