@@ -204,6 +204,22 @@
   .kry-table td:last-child{text-align:right; font-weight:600; font-family:var(--font-mono);}
   .kry-table tr.total td{border-top:2px solid var(--amber); border-bottom:none; font-weight:700; color:var(--amber); padding-top:14px;}
   .kry-table tr.total td:first-child{color:var(--amber);}
+
+  /* ---------- Progres Rekrutmen ---------- */
+  .cell-kekurangan{color:var(--red); font-weight:700;}
+  .cell-terpenuhi{color:var(--green); font-weight:600;}
+  .kandidat-btn{background:rgba(120,170,110,0.15); color:var(--green); border:1px solid rgba(120,170,110,0.35); font-family:var(--font-mono); font-size:11px; letter-spacing:.4px; text-transform:uppercase; padding:6px 12px; border-radius:20px; cursor:pointer; white-space:nowrap; transition:.15s;}
+  .kandidat-btn:hover{background:rgba(120,170,110,0.28);}
+  .cand-badge{display:inline-block; font-family:var(--font-mono); font-size:10px; letter-spacing:.4px; text-transform:lowercase; padding:3px 9px; border-radius:20px;}
+  .cand-badge.proses{background:rgba(232,163,61,0.15); color:var(--amber);}
+  .cand-badge.open{background:rgba(154,161,180,0.14); color:var(--text-dim);}
+  .cand-badge.close_filled, .cand-badge.hired{background:rgba(120,170,110,0.15); color:var(--green);}
+  .cand-badge.close_period, .cand-badge.passed{background:rgba(193,68,14,0.15); color:var(--red);}
+  .cand-badge.unknown{background:rgba(154,161,180,0.12); color:var(--text-dim);}
+  .cand-table{width:100%; border-collapse:collapse; font-size:13px;}
+  .cand-table th{text-align:left; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.6px; text-transform:uppercase; color:var(--text-dim); padding:10px 8px; border-bottom:1px solid var(--border);}
+  .cand-table td{padding:10px 8px; border-bottom:1px solid var(--border); vertical-align:top;}
+  .cand-table td.name{font-weight:600;}
 </style>
 </head>
 <body>
@@ -235,7 +251,7 @@
     <div class="submenu" id="hrSubmenu">
       <div class="sub-item" data-page="karyawan">Karyawan</div>
       <div class="sub-item">BPJS</div>
-      <div class="sub-item">Rekrutmen</div>
+      <div class="sub-item" data-page="rekrutmen">Rekrutmen</div>
       <div class="sub-item">Perubahan Status</div>
       <div class="sub-item">Mutasi</div>
       <div class="sub-item">PHK</div>
@@ -307,7 +323,7 @@
         <header class="asset-header">
           <div>
             <p class="eyebrow">General Affair &middot; Sistem Registrasi Aset</p>
-            <h1 class="asset-title">Dashboard Aset Kendaraan</h1>
+            <h1 class="asset-title">Aset Kendaraan</h1>
           </div>
           <div class="stat-strip">
             <div class="stat"><div class="n" id="statDriver">0</div><div class="l">Ada User/Driver</div></div>
@@ -404,6 +420,60 @@
 
       <div class="kry-grid" id="kryGrid">
         <div class="state-msg" id="kryLoadingMsg">Memuat data dari Google Sheet...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Halaman Progres Rekrutmen (Human Resources > Rekrutmen) ===== -->
+  <div class="asset-view" id="page-rekrutmen" style="display:none;">
+    <div class="grid-texture"></div>
+    <div class="wrap">
+      <div class="sticky-bar">
+        <header class="asset-header">
+          <div>
+            <p class="eyebrow">Human Resources &middot; Rekrutmen</p>
+            <h1 class="asset-title">Progres Rekrutmen</h1>
+          </div>
+          <div class="stat-strip">
+            <div class="stat"><div class="n" id="recOpenPosisi">0</div><div class="l">Open Posisi</div></div>
+            <div class="stat"><div class="n" id="recKebutuhan">0</div><div class="l">Kebutuhan</div></div>
+            <div class="stat"><div class="n" id="recTerpenuhi">0</div><div class="l">Terpenuhi</div></div>
+            <div class="stat"><div class="n" id="recKekurangan">0</div><div class="l">Kekurangan</div></div>
+          </div>
+        </header>
+
+        <div class="controls">
+          <div class="group-select">
+            <select id="recDeptFilter">
+              <option value="semua">Semua Departemen</option>
+            </select>
+          </div>
+          <button class="refresh-btn" id="recRefreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            Refresh
+          </button>
+          <p class="kry-note" id="recNote">Hanya menampilkan posisi yang kolom "posting" di sheet recap_jobs dicentang (TRUE).</p>
+        </div>
+      </div>
+
+      <div class="table-wrap" id="recTableWrap">
+        <table class="asset-table">
+          <thead>
+            <tr>
+              <th>Departemen</th>
+              <th>Jabatan</th>
+              <th>Kebutuhan</th>
+              <th>Terpenuhi</th>
+              <th>Kekurangan</th>
+              <th>Kondisi Sebelum</th>
+              <th>Kondisi Saat Ini</th>
+              <th>Kandidat</th>
+            </tr>
+          </thead>
+          <tbody id="recTableBody">
+            <tr><td colspan="8" class="state-msg" id="recLoadingMsg">Memuat data dari Google Sheet...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -1052,6 +1122,190 @@
   });
   document.getElementById('kryRefreshBtn').addEventListener('click', loadKaryawanData);
 
+  /* =====================================================================
+     PROGRES REKRUTMEN (Human Resources > Rekrutmen)
+     Sumber data: Google Sheet "Recruitment" - sheet "recap_jobs" (daftar
+     kebutuhan per jabatan) dan sheet "candidate" (data pelamar).
+
+     CATATAN PENTING: sheet "candidate" isinya 3000+ baris, tapi endpoint
+     export CSV Google Sheets (gviz) membatasi HANYA sekitar 250 baris per
+     satu kali request, berapa pun besar range yang diminta. Jadi baris
+     candidate diambil bertahap (paging) per 250 baris sampai baris kosong/
+     habis, lalu digabung. Sheet "recap_jobs" jauh lebih kecil jadi cukup
+     satu kali fetch dengan range eksplisit (fetch tanpa range kadang hanya
+     mengembalikan sebagian kolom saja).
+     ===================================================================== */
+  const REC_SHEET_ID = '1Tj2ZNCW04lOGoB5hcCxT_d3GvqdAj854daY4dVDN3sU';
+  let REC_JOBS = [];
+  let REC_CANDIDATES = [];
+  let recLoaded = false;
+  let recDeptValue = 'semua';
+
+  function recParseBool(v){ return String(v||'').trim().toUpperCase()==='TRUE'; }
+
+  async function recFetchText(url){
+    const res = await fetch(url);
+    const text = await res.text();
+    return text;
+  }
+
+  async function recFetchRecapJobs(){
+    const url = `https://docs.google.com/spreadsheets/d/${REC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('recap_jobs')}&range=A1:K300`;
+    const text = await recFetchText(url);
+    const rows = Papa.parse(text.trim(), { header:false }).data.slice(1); // lewati baris header
+    return rows.filter(r => (r[0]||'').trim()!=='').map(r => ({
+      id: (r[0]||'').trim(),
+      departemen: (r[1]||'').trim(),
+      bagian: (r[2]||'').trim(),
+      jabatan: (r[3]||'').trim(),
+      kebutuhan: kryParseNum(r[4]),
+      terpenuhi: kryParseNum(r[5]),
+      kekurangan: kryParseNum(r[6]),
+      kondisiSebelum: (r[7]||'').trim(),
+      kondisiSaatIni: (r[8]||'').trim(),
+      posting: recParseBool(r[9]),
+    }));
+  }
+
+  async function recFetchAllCandidates(){
+    const CHUNK = 250;
+    let startRow = 2; // baris 1 = header, dilewati
+    let all = [];
+    for(let i=0;i<40;i++){ // batas aman ~10.000 baris
+      const endRow = startRow + CHUNK - 1;
+      const url = `https://docs.google.com/spreadsheets/d/${REC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('candidate')}&range=A${startRow}:AC${endRow}`;
+      let text;
+      try{ text = await recFetchText(url); } catch(e){ break; }
+      if(!text || text.trim()==='' || text.trim().startsWith('{')) break; // habis / error range
+      const parsed = Papa.parse(text.trim(), { header:false }).data;
+      const real = parsed.filter(r => r.some(c => (c||'').trim()!==''));
+      if(real.length===0) break;
+      all = all.concat(real.map(cols=>({
+        nama: (cols[1]||'').trim(),
+        noTelp: (cols[3]||'').trim(),
+        posisi: (cols[16]||'').trim(),
+        status: (cols[22]||'').trim(),
+        progress: (cols[25]||'').trim(),
+        statusProgress: (cols[26]||'').trim(),
+      })));
+      if(parsed.length < CHUNK) break; // baris terakhir yang tersedia
+      startRow = endRow + 1;
+    }
+    return all;
+  }
+
+  async function loadRekrutmenData(){
+    const body = document.getElementById('recTableBody');
+    body.innerHTML = `<tr><td colspan="8" class="state-msg" id="recLoadingMsg">Memuat data dari Google Sheet...</td></tr>`;
+    const btn = document.getElementById('recRefreshBtn');
+    btn.classList.add('spinning');
+    try{
+      const [jobs, candidates] = await Promise.all([recFetchRecapJobs(), recFetchAllCandidates()]);
+      REC_JOBS = jobs;
+      REC_CANDIDATES = candidates;
+      recPopulateDeptFilter();
+      recLoaded = true;
+      renderRekrutmen();
+    }catch(e){
+      body.innerHTML = `<tr><td colspan="8" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="recRetryBtn">Coba Lagi</button></td></tr>`;
+      const retry = document.getElementById('recRetryBtn');
+      if(retry) retry.addEventListener('click', loadRekrutmenData);
+    }
+    btn.classList.remove('spinning');
+  }
+
+  function recPopulateDeptFilter(){
+    const sel = document.getElementById('recDeptFilter');
+    const depts = Array.from(new Set(REC_JOBS.filter(j=>j.posting).map(j=>j.departemen).filter(Boolean))).sort();
+    const cur = recDeptValue || 'semua';
+    sel.innerHTML = `<option value="semua">Semua Departemen</option>` + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+    sel.value = (cur==='semua' || depts.includes(cur)) ? cur : 'semua';
+    recDeptValue = sel.value;
+  }
+
+  function candStatusClass(status){
+    const s = (status||'').trim().toLowerCase().replace(/\s+/g,'_');
+    return s || 'unknown';
+  }
+
+  function renderRekrutmen(){
+    const body = document.getElementById('recTableBody');
+    const postingJobs = REC_JOBS.filter(j=>j.posting);
+
+    const openPosisi = postingJobs.length;
+    const totalKebutuhan = postingJobs.reduce((s,j)=>s+j.kebutuhan,0);
+    const totalTerpenuhi = postingJobs.reduce((s,j)=>s+j.terpenuhi,0);
+    const totalKekurangan = postingJobs.reduce((s,j)=>s+j.kekurangan,0);
+    document.getElementById('recOpenPosisi').textContent = openPosisi;
+    document.getElementById('recKebutuhan').textContent = totalKebutuhan;
+    document.getElementById('recTerpenuhi').textContent = totalTerpenuhi;
+    document.getElementById('recKekurangan').textContent = totalKekurangan;
+
+    const filtered = postingJobs.filter(j => recDeptValue==='semua' || j.departemen===recDeptValue);
+
+    if(filtered.length===0){
+      body.innerHTML = `<tr><td colspan="8" class="empty">Tidak ada posisi (posting=TRUE) untuk filter ini.</td></tr>`;
+      return;
+    }
+
+    body.innerHTML = filtered.map(j=>{
+      const candCount = REC_CANDIDATES.filter(c=>c.progress===j.id).length;
+      return `
+        <tr>
+          <td>${j.departemen}</td>
+          <td class="name">${j.jabatan}</td>
+          <td>${j.kebutuhan}</td>
+          <td class="cell-terpenuhi">${j.terpenuhi}</td>
+          <td class="cell-kekurangan">${j.kekurangan}</td>
+          <td>${fmtVal(j.kondisiSebelum)}</td>
+          <td>${fmtVal(j.kondisiSaatIni)}</td>
+          <td><button class="kandidat-btn" data-job-id="${j.id}" data-job-label="${j.jabatan}">${candCount} Kandidat</button></td>
+        </tr>`;
+    }).join('');
+
+    body.querySelectorAll('.kandidat-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>openCandidateModal(btn.dataset.jobId, btn.dataset.jobLabel));
+    });
+  }
+
+  function openCandidateModal(jobId, jobLabel){
+    const list = REC_CANDIDATES.filter(c=>c.progress===jobId);
+    const rows = list.map(c=>`
+      <tr>
+        <td>${fmtVal(c.statusProgress)}</td>
+        <td class="name">${fmtVal(c.nama)}</td>
+        <td>${fmtVal(c.posisi)}</td>
+        <td><span class="cand-badge ${candStatusClass(c.status)}">${fmtVal(c.status)}</span></td>
+        <td>${fmtVal(c.noTelp)}</td>
+      </tr>`).join('');
+
+    const dossier = document.getElementById('dossier');
+    dossier.innerHTML = `
+      <div class="dossier-header">
+        <div>
+          <p class="dossier-tag">${jobId} &middot; ${list.length} kandidat ditemukan</p>
+          <h2 class="dossier-title">Kandidat &mdash; ${jobLabel}</h2>
+        </div>
+        <button class="close-btn" id="closeBtn" aria-label="Tutup">&#10005;</button>
+      </div>
+      <div class="dossier-body">
+        ${list.length ? `
+          <table class="cand-table">
+            <thead><tr><th>Status Progress</th><th>Nama</th><th>Posisi Dilamar</th><th>Status</th><th>No. Telp</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>` : `<div class="empty">Belum ada kandidat yang tercatat untuk posisi ini.</div>`}
+      </div>
+    `;
+    document.getElementById('closeBtn').addEventListener('click', closeDossier);
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  document.getElementById('recDeptFilter').addEventListener('change', e=>{
+    recDeptValue = e.target.value;
+    renderRekrutmen();
+  });
+  document.getElementById('recRefreshBtn').addEventListener('click', loadRekrutmenData);
+
   /* ===================== SIDEBAR NAVIGATION ===================== */
   function toggleSubmenu(key){
     const toggle = document.getElementById(key+'Toggle');
@@ -1063,14 +1317,19 @@
   document.getElementById('hrToggle').addEventListener('click', ()=>toggleSubmenu('hr'));
   document.getElementById('gaToggle').addEventListener('click', ()=>toggleSubmenu('ga'));
 
+  const KNOWN_PAGES = ['kendaraan','karyawan','rekrutmen'];
   function showPage(page, label){
     document.getElementById('page-kendaraan').style.display = (page==='kendaraan') ? '' : 'none';
     document.getElementById('page-karyawan').style.display = (page==='karyawan') ? '' : 'none';
-    document.getElementById('page-placeholder').style.display = (page==='kendaraan' || page==='karyawan') ? 'none' : '';
+    document.getElementById('page-rekrutmen').style.display = (page==='rekrutmen') ? '' : 'none';
+    document.getElementById('page-placeholder').style.display = KNOWN_PAGES.includes(page) ? 'none' : '';
     if(page==='karyawan' && !kryLoaded){
       loadKaryawanData();
     }
-    if(page!=='kendaraan' && page!=='karyawan'){
+    if(page==='rekrutmen' && !recLoaded){
+      loadRekrutmenData();
+    }
+    if(!KNOWN_PAGES.includes(page)){
       document.getElementById('placeholderTitle').textContent = label;
       document.getElementById('crumb').textContent = 'Menu aktif: ' + label;
     }
