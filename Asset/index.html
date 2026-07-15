@@ -1294,6 +1294,7 @@
       recPopulateDeptFilter();
       recLoaded = true;
       renderRekrutmen();
+      if(fullLoaded) renderFulfillment();
       document.getElementById('recNote').innerHTML = `Hanya menampilkan posisi yang kolom "posting" di sheet recap_jobs dicentang (TRUE). Total data kandidat dimuat: <b>${candidates.length}</b>.`;
     }catch(e){
       body.innerHTML = `<tr><td colspan="8" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="recRetryBtn">Coba Lagi</button></td></tr>`;
@@ -1303,9 +1304,17 @@
     btn.classList.remove('spinning');
   }
 
+  /* Daftar Departemen di dropdown ini diambil dari GABUNGAN sheet fulfillment
+     (sumber utama - paling lengkap, termasuk departemen yang sedang tidak
+     ada open posisi tapi punya riwayat penempatan) dan recap_jobs (supaya
+     departemen dengan open posisi tapi belum ada riwayat penempatan tetap
+     muncul). Dipanggil ulang setelah masing-masing sumber selesai dimuat. */
   function recPopulateDeptFilter(){
     const sel = document.getElementById('recDeptFilter');
-    const depts = Array.from(new Set(REC_JOBS.filter(j=>j.posting).map(j=>j.departemen).filter(Boolean))).sort();
+    const depts = Array.from(new Set([
+      ...FULL_ROWS.map(r=>r.departemen),
+      ...REC_JOBS.filter(j=>j.posting).map(j=>j.departemen)
+    ].filter(Boolean))).sort();
     const cur = recDeptValue || 'semua';
     sel.innerHTML = `<option value="semua">Semua Departemen</option>` + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
     sel.value = (cur==='semua' || depts.includes(cur)) ? cur : 'semua';
@@ -1465,8 +1474,10 @@
         tgl: fullParseTanggal(r[10]),
       })).filter(x=>x.jabatan && x.tgl);
       fullPopulateFilters();
+      recPopulateDeptFilter(); // sinkronkan dropdown Departemen bersama dengan daftar lengkap dari fulfillment
       fullLoaded = true;
       fullPage = 1;
+      if(recLoaded) renderRekrutmen();
       renderFulfillment();
     }catch(e){
       body.innerHTML = `<tr><td colspan="17" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="fullRetryBtn">Coba Lagi</button></td></tr>`;
