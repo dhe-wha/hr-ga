@@ -328,7 +328,7 @@
               <th>No Polisi</th>
               <th>Kelompok</th>
               <th>User / Driver</th>
-              <th>Status</th>
+              <th>Keterangan</th>
             </tr>
           </thead>
           <tbody id="assetTableBody"></tbody>
@@ -504,7 +504,6 @@
   function renderTable(filtered){
     const body = document.getElementById('assetTableBody');
     body.innerHTML = filtered.map(a=>{
-      const st = statusInfo(a['Status Aset (Acc)']);
       return `
         <tr tabindex="0" data-no="${a['No']}">
           <td>${fmtVal(a['Kode Aset'])}</td>
@@ -512,7 +511,7 @@
           <td>${fmtVal(a['No Polisi'])}</td>
           <td>${fmtVal(a['Kelompok'])}</td>
           <td>${fmtVal(a['User_Driver'])}</td>
-          <td><span class="badge ${st.cls}">${st.label}</span></td>
+          <td>${fmtVal(a['Keterangan'])}</td>
         </tr>`;
     }).join('');
 
