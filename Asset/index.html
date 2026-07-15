@@ -110,7 +110,9 @@
   .card .strip{height:4px; width:100%; background:var(--amber);}
   .card-body{padding:16px;}
   .card-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;}
-  .card-icon{width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:rgba(232,163,61,0.12); color:var(--amber);}
+  .card-icon{width:44px; height:44px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:rgba(232,163,61,0.12); color:var(--amber); overflow:hidden;}
+  .card-icon.thumb{background:var(--panel-alt);}
+  .card-icon.thumb img{width:100%; height:100%; object-fit:cover; display:block;}
   .card-id{font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:1px;}
   .card-name{font-family:var(--font-display); font-size:17px; font-weight:600; margin:0 0 4px; text-transform:uppercase; letter-spacing:.3px; line-height:1.25;}
   .card-meta{font-size:12.5px; color:var(--text-dim); margin:0;}
@@ -414,12 +416,16 @@
       const kode = a['Kode Aset']; // 1. Kode Aset
       const nama = a['Nama Display']; // 2. Nama Display
       const driver = a['User_Driver']; // 3. User_Driver
+      const thumb = photoUrl(a['Foto Utama']);
+      const iconHtml = thumb
+        ? `<img src="${thumb}" alt="${fmtVal(nama)}" loading="lazy" onerror="this.parentElement.classList.remove('thumb'); this.remove(); this.parentElement.innerHTML='${iconVehicle.replace(/'/g, "\\'")}';">`
+        : iconVehicle;
       return `
         <div class="card" tabindex="0" data-no="${a['No']}">
           <div class="strip"></div>
           <div class="card-body">
             <div class="card-top">
-              <div class="card-icon">${iconVehicle}</div>
+              <div class="card-icon${thumb ? ' thumb' : ''}">${iconHtml}</div>
               <div class="card-id">${kode}</div>
             </div>
             <p class="card-name">${fmtVal(nama)}</p>
