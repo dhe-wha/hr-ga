@@ -502,18 +502,13 @@
 
         <div class="controls">
           <div class="group-select">
-            <select id="fullDeptFilter">
-              <option value="semua">Semua Departemen</option>
-            </select>
-          </div>
-          <div class="group-select">
             <select id="fullYearFilter"></select>
           </div>
           <button class="refresh-btn" id="fullRefreshBtn">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
             Refresh
           </button>
-          <p class="kry-note" id="fullNote">Data penempatan karyawan per bulan berdasarkan tanggal gabung (sheet "fulfillment").</p>
+          <p class="kry-note" id="fullNote">Data penempatan karyawan per bulan berdasarkan tanggal gabung (sheet "fulfillment"). Mengikuti filter Departemen di atas.</p>
         </div>
       </div>
 
@@ -1397,6 +1392,10 @@
   document.getElementById('recDeptFilter').addEventListener('change', e=>{
     recDeptValue = e.target.value;
     renderRekrutmen();
+    if(fullLoaded){
+      fullPage = 1;
+      renderFulfillment();
+    }
   });
   document.getElementById('recRefreshBtn').addEventListener('click', loadRekrutmenData);
 
@@ -1410,7 +1409,6 @@
      ===================================================================== */
   let FULL_ROWS = [];
   let fullLoaded = false;
-  let fullDeptValue = 'semua';
   let fullYearValue = null;
   let fullPage = 1;
   const FULL_PAGE_SIZE = 10;
@@ -1479,13 +1477,6 @@
   }
 
   function fullPopulateFilters(){
-    const deptSel = document.getElementById('fullDeptFilter');
-    const depts = Array.from(new Set(FULL_ROWS.map(r=>r.departemen).filter(Boolean))).sort();
-    const curDept = fullDeptValue || 'semua';
-    deptSel.innerHTML = `<option value="semua">Semua Departemen</option>` + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
-    deptSel.value = (curDept==='semua' || depts.includes(curDept)) ? curDept : 'semua';
-    fullDeptValue = deptSel.value;
-
     const yearSel = document.getElementById('fullYearFilter');
     const years = Array.from(new Set(FULL_ROWS.map(r=>r.tgl.year))).sort((a,b)=>b-a);
     const curYear = fullYearValue || years[0];
@@ -1497,7 +1488,7 @@
   function renderFulfillment(){
     const body = document.getElementById('fullTableBody');
     const filteredRows = FULL_ROWS.filter(r =>
-      (fullDeptValue==='semua' || r.departemen===fullDeptValue) &&
+      (recDeptValue==='semua' || r.departemen===recDeptValue) &&
       r.tgl.year===fullYearValue
     );
 
@@ -1569,11 +1560,6 @@
     renderFulfillment();
   }
 
-  document.getElementById('fullDeptFilter').addEventListener('change', e=>{
-    fullDeptValue = e.target.value;
-    fullPage = 1;
-    renderFulfillment();
-  });
   document.getElementById('fullYearFilter').addEventListener('change', e=>{
     fullYearValue = parseInt(e.target.value,10);
     fullPage = 1;
