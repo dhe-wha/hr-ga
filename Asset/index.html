@@ -675,6 +675,11 @@
       return hay.includes(term);
     });
 
+    /* Urutkan berdasarkan Nama Display (natural sort, supaya DT2 tetap sebelum DT10
+       walau nomornya tidak diberi nol di depan) - sheet sumber tidak selalu berurutan
+       (mis. unit yang ditambah belakangan bisa nyempil di baris paling bawah). */
+    filtered.sort((a,b)=> (a['Nama Display']||'').localeCompare(b['Nama Display']||'', undefined, {numeric:true, sensitivity:'base'}));
+
     /* Statistik mengikuti kelompok yang sedang dipilih di dropdown (bukan total semua aset) */
     const groupScoped = groupFilterValue==='semua' ? ASSETS : ASSETS.filter(a => (a['Kelompok']||'').trim()===groupFilterValue);
     document.getElementById('statTotal').textContent = groupScoped.length;
