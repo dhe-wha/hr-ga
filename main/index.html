@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
 <style>
   :root{
     /* sidebar palette */
@@ -1345,6 +1345,20 @@
   function renderDashboardCharts(){
     if(!KRY_ROWS.length) return;
 
+    if(typeof Chart === 'undefined'){
+      document.getElementById('dashNote').textContent = 'Gagal memuat library chart (Chart.js). Cek koneksi internet lalu refresh halaman.';
+      return;
+    }
+
+    try{
+      renderDashboardChartsInner();
+    }catch(err){
+      console.error('renderDashboardCharts error:', err);
+      document.getElementById('dashNote').textContent = 'Terjadi error saat menggambar chart: ' + (err && err.message ? err.message : err);
+    }
+  }
+
+  function renderDashboardChartsInner(){
     /* ---------- Line chart: total karyawan per PT per bulan (tahun terpilih) ---------- */
     const yearRows = KRY_ROWS.filter(r=>r.tahun===dashTahunValue);
     const months = Array.from(
