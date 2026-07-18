@@ -1362,19 +1362,27 @@
       const meta = chart.getDatasetMeta(0);
       if(!meta || meta.hidden) return;
       const dataset = chart.data.datasets[0];
+      const total = dataset.data.reduce((s,v)=>s+(v||0),0);
       meta.data.forEach((arc, index) => {
         const value = dataset.data[index];
         if(!value) return;
+        const pct = total ? Math.round(value/total*100) : 0;
+        const line1 = String(value);
+        const line2 = `(${pct}%)`;
         const pos = arc.getCenterPoint();
         ctx.save();
-        ctx.font = "bold 12px 'IBM Plex Mono', monospace";
         ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
         ctx.lineWidth = 3;
         ctx.strokeStyle = 'rgba(20,24,26,0.9)';
         ctx.fillStyle = '#ffffff';
-        ctx.strokeText(String(value), pos.x, pos.y);
-        ctx.fillText(String(value), pos.x, pos.y);
+        ctx.font = "bold 12px 'IBM Plex Mono', monospace";
+        ctx.textBaseline = 'bottom';
+        ctx.strokeText(line1, pos.x, pos.y);
+        ctx.fillText(line1, pos.x, pos.y);
+        ctx.font = "10px 'IBM Plex Mono', monospace";
+        ctx.textBaseline = 'top';
+        ctx.strokeText(line2, pos.x, pos.y + 1);
+        ctx.fillText(line2, pos.x, pos.y + 1);
         ctx.restore();
       });
     }
