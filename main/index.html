@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 <style>
   :root{
     /* sidebar palette */
@@ -190,6 +191,12 @@
   .kry-card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:20px 22px;}
   .kry-card.wide{grid-column:1/-1;}
   .kry-card h3{font-family:var(--font-display); text-transform:uppercase; font-size:15px; font-weight:600; letter-spacing:.3px; margin:0 0 16px; color:var(--text);}
+
+  /* ---------- Dashboard (landing page: charts) ---------- */
+  .chart-box{position:relative; height:300px;}
+  .chart-box.tall{height:340px;}
+  .chart-legend-note{font-family:var(--font-mono); font-size:10.5px; color:var(--text-dim); text-align:center; margin:10px 0 0;}
+
   .bar-row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
   .bar-row:last-child{margin-bottom:0;}
   .bar-row .label{width:190px; flex-shrink:0; color:var(--text-dim); font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; line-height:1.3;}
@@ -537,6 +544,59 @@
       <div class="page-bar" id="fullPageBar">
         <p class="kry-note" id="fullPageInfo"></p>
         <div class="page-nav" id="fullPageNav"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Halaman Dashboard (landing page) ===== -->
+  <div class="asset-view" id="page-dashboard" style="display:none;">
+    <div class="grid-texture"></div>
+    <div class="wrap">
+      <div class="sticky-bar">
+        <header class="asset-header">
+          <div>
+            <p class="eyebrow">Ringkasan &middot; HR &amp; General Affair</p>
+            <h1 class="asset-title">Dashboard</h1>
+          </div>
+        </header>
+
+        <div class="controls">
+          <div class="group-select">
+            <select id="dashTahunFilter"></select>
+          </div>
+          <div class="group-select">
+            <select id="dashPtFilter">
+              <option value="semua">Semua PT</option>
+            </select>
+          </div>
+          <button class="refresh-btn" id="dashRefreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            Refresh
+          </button>
+          <p class="kry-note" id="dashNote">Memuat data dari Google Sheet...</p>
+        </div>
+      </div>
+
+      <div class="kry-grid" id="dashGrid">
+        <div class="kry-card wide">
+          <h3>Jumlah Karyawan per PT per Bulan</h3>
+          <div class="chart-box tall"><canvas id="dashLineChart"></canvas></div>
+        </div>
+        <div class="kry-card">
+          <h3>Karyawan Lokal &middot; by Kabupaten</h3>
+          <div class="chart-box"><canvas id="dashPieKabChart"></canvas></div>
+          <p class="chart-legend-note" id="dashPieKabNote"></p>
+        </div>
+        <div class="kry-card">
+          <h3>Karyawan Lokal &middot; by Provinsi</h3>
+          <div class="chart-box"><canvas id="dashPieProvChart"></canvas></div>
+          <p class="chart-legend-note" id="dashPieProvNote"></p>
+        </div>
+        <div class="kry-card wide">
+          <h3>Klasifikasi Asal Karyawan</h3>
+          <div class="chart-box"><canvas id="dashDoughnutChart"></canvas></div>
+          <p class="chart-legend-note" id="dashDoughnutNote"></p>
+        </div>
       </div>
     </div>
   </div>
@@ -1031,6 +1091,9 @@
         kryPopulateFilters();
         kryLoaded = true;
         renderKaryawan();
+
+        dashPopulateFilters();
+        renderDashboardCharts();
       },
       error: function(){
         btn.classList.remove('spinning');
@@ -1236,6 +1299,172 @@
     renderKaryawan();
   });
   document.getElementById('kryRefreshBtn').addEventListener('click', loadKaryawanData);
+
+  /* =====================================================================
+     DASHBOARD (landing page) - chart Chart.js, sumber data sama dengan
+     Dashboard Karyawan di atas (KRY_ROWS, sheet Summary).
+     ===================================================================== */
+  let dashTahunValue = null;
+  let dashPtValue = 'semua';
+  let dashLineChart = null, dashPieKabChart = null, dashPieProvChart = null, dashDoughnutChart = null;
+  const DASH_PT_COLORS = { BJA:'#E8A33D', BTL:'#4C8DF5', IGL:'#3FB6A8' };
+  const DASH_PT_FALLBACK_COLORS = ['#F2B705','#E08A3E','#9AA1B4','#8FCB84','#E8825A'];
+
+  function dashPtColor(pt, idx){
+    return DASH_PT_COLORS[pt] || DASH_PT_FALLBACK_COLORS[idx % DASH_PT_FALLBACK_COLORS.length];
+  }
+
+  function dashPopulateFilters(){
+    const tahunSel = document.getElementById('dashTahunFilter');
+    const ptSel = document.getElementById('dashPtFilter');
+
+    const tahuns = Array.from(new Set(KRY_ROWS.map(r=>r.tahun).filter(Boolean))).sort((a,b)=>b-a);
+    const curTahun = dashTahunValue || tahuns[0];
+    tahunSel.innerHTML = tahuns.map(t=>`<option value="${t}">${t}</option>`).join('');
+    tahunSel.value = tahuns.includes(curTahun) ? curTahun : tahuns[0];
+    dashTahunValue = parseInt(tahunSel.value, 10);
+
+    const pts = Array.from(new Set(KRY_ROWS.map(r=>r.pt).filter(Boolean))).sort();
+    const curPt = dashPtValue || 'semua';
+    ptSel.innerHTML = `<option value="semua">Semua PT</option>` + pts.map(p=>`<option value="${p}">${p}</option>`).join('');
+    ptSel.value = (curPt==='semua' || pts.includes(curPt)) ? curPt : 'semua';
+    dashPtValue = ptSel.value;
+  }
+
+  function dashPieOptions(){
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position:'bottom', labels: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, boxWidth:12, padding:10 } },
+        tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
+      },
+    };
+  }
+
+  function renderDashboardCharts(){
+    if(!KRY_ROWS.length) return;
+
+    /* ---------- Line chart: total karyawan per PT per bulan (tahun terpilih) ---------- */
+    const yearRows = KRY_ROWS.filter(r=>r.tahun===dashTahunValue);
+    const months = Array.from(
+      new Map(yearRows.map(r=>[r.bulan, r.sortKey])).entries()
+    ).sort((a,b)=>a[1]-b[1]).map(([bulan])=>bulan);
+
+    const ptsForLine = dashPtValue==='semua'
+      ? Array.from(new Set(yearRows.map(r=>r.pt))).sort()
+      : [dashPtValue];
+
+    const lineDatasets = ptsForLine.map((pt, idx)=>{
+      const data = months.map(bulan=> yearRows.filter(r=>r.pt===pt && r.bulan===bulan).reduce((s,r)=>s+r.total,0));
+      const color = dashPtColor(pt, idx);
+      return {
+        label: pt,
+        data,
+        borderColor: color,
+        backgroundColor: color,
+        tension: 0.3,
+        borderWidth: 2.5,
+        pointRadius: 3,
+        pointBackgroundColor: color,
+      };
+    });
+
+    if(dashLineChart) dashLineChart.destroy();
+    dashLineChart = new Chart(document.getElementById('dashLineChart'), {
+      type: 'line',
+      data: { labels: months, datasets: lineDatasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#9BA3A0', font: { family: 'IBM Plex Mono', size: 11 } } },
+          tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
+        },
+        scales: {
+          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
+          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
+        },
+      },
+    });
+
+    /* ---------- Snapshot bulan terakhir dalam cakupan filter (untuk pie/doughnut) ---------- */
+    const scopedRows = dashPtValue==='semua' ? yearRows : yearRows.filter(r=>r.pt===dashPtValue);
+    let snapshotBulan = null, snapshotSortKey = -1;
+    scopedRows.forEach(r=>{
+      if(r.sortKey > snapshotSortKey){ snapshotSortKey = r.sortKey; snapshotBulan = r.bulan; }
+    });
+    const snapshotRows = scopedRows.filter(r=>r.bulan===snapshotBulan);
+    const sum = (field) => snapshotRows.reduce((s,r)=>s+r[field],0);
+
+    document.getElementById('dashNote').innerHTML = snapshotBulan
+      ? `Tren tahun <b>${dashTahunValue}</b>. Snapshot pie/doughnut per <b>${snapshotBulan}</b>.`
+      : `Tidak ada data untuk tahun ${dashTahunValue}.`;
+
+    /* ---------- Pie: Lokal/Non-Lokal by Kabupaten ---------- */
+    const kabLokal = sum('kabLokal'), kabNonLokal = sum('kabNonLokal');
+    if(dashPieKabChart) dashPieKabChart.destroy();
+    dashPieKabChart = new Chart(document.getElementById('dashPieKabChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Lokal','Non Lokal'],
+        datasets: [{ data: [kabLokal, kabNonLokal], backgroundColor: ['#8FCB84','#E8825A'], borderColor:'#1E2426', borderWidth:2 }],
+      },
+      options: dashPieOptions(),
+    });
+    const kabTotal = kabLokal + kabNonLokal;
+    document.getElementById('dashPieKabNote').textContent = kabTotal
+      ? `Lokal ${kabLokal} (${Math.round(kabLokal/kabTotal*100)}%) · Non Lokal ${kabNonLokal} (${Math.round(kabNonLokal/kabTotal*100)}%)`
+      : 'Tidak ada data.';
+
+    /* ---------- Pie: Lokal/Non-Lokal by Provinsi ---------- */
+    const provLokal = sum('provLokal'), provNonLokal = sum('provNonLokal');
+    if(dashPieProvChart) dashPieProvChart.destroy();
+    dashPieProvChart = new Chart(document.getElementById('dashPieProvChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Lokal','Non Lokal'],
+        datasets: [{ data: [provLokal, provNonLokal], backgroundColor: ['#4C8DF5','#F2B705'], borderColor:'#1E2426', borderWidth:2 }],
+      },
+      options: dashPieOptions(),
+    });
+    const provTotal = provLokal + provNonLokal;
+    document.getElementById('dashPieProvNote').textContent = provTotal
+      ? `Lokal ${provLokal} (${Math.round(provLokal/provTotal*100)}%) · Non Lokal ${provNonLokal} (${Math.round(provNonLokal/provTotal*100)}%)`
+      : 'Tidak ada data.';
+
+    /* ---------- Doughnut: Klasifikasi asal karyawan ---------- */
+    const klas = {
+      'Desa Binaan': sum('klasDesaBinaan'),
+      'Satu Kecamatan': sum('klasKecamatan'),
+      'Satu Kabupaten': sum('klasKabupaten'),
+      'Satu Provinsi': sum('klasProvinsi'),
+      'Sulawesi': sum('klasSulawesi'),
+      'Non Sulawesi': sum('klasNonSulawesi'),
+    };
+    if(dashDoughnutChart) dashDoughnutChart.destroy();
+    dashDoughnutChart = new Chart(document.getElementById('dashDoughnutChart'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(klas),
+        datasets: [{ data: Object.values(klas), backgroundColor: ['#E8A33D','#4C8DF5','#8FCB84','#E8825A','#3FB6A8','#F2B705'], borderColor:'#1E2426', borderWidth:2 }],
+      },
+      options: dashPieOptions(),
+    });
+    const klasTotal = Object.values(klas).reduce((a,b)=>a+b,0);
+    document.getElementById('dashDoughnutNote').textContent = klasTotal ? `Total ${klasTotal} karyawan` : 'Tidak ada data.';
+  }
+
+  document.getElementById('dashTahunFilter').addEventListener('change', e=>{
+    dashTahunValue = parseInt(e.target.value,10);
+    renderDashboardCharts();
+  });
+  document.getElementById('dashPtFilter').addEventListener('change', e=>{
+    dashPtValue = e.target.value;
+    renderDashboardCharts();
+  });
+  document.getElementById('dashRefreshBtn').addEventListener('click', loadKaryawanData);
 
   /* =====================================================================
      PROGRES REKRUTMEN (Human Resources > Rekrutmen)
@@ -1641,12 +1870,21 @@
   document.getElementById('hrToggle').addEventListener('click', ()=>toggleSubmenu('hr'));
   document.getElementById('gaToggle').addEventListener('click', ()=>toggleSubmenu('ga'));
 
-  const KNOWN_PAGES = ['kendaraan','karyawan','rekrutmen'];
+  const KNOWN_PAGES = ['dashboard','kendaraan','karyawan','rekrutmen'];
   function showPage(page, label){
+    document.getElementById('page-dashboard').style.display = (page==='dashboard') ? '' : 'none';
     document.getElementById('page-kendaraan').style.display = (page==='kendaraan') ? '' : 'none';
     document.getElementById('page-karyawan').style.display = (page==='karyawan') ? '' : 'none';
     document.getElementById('page-rekrutmen').style.display = (page==='rekrutmen') ? '' : 'none';
     document.getElementById('page-placeholder').style.display = KNOWN_PAGES.includes(page) ? 'none' : '';
+    if(page==='dashboard'){
+      if(!kryLoaded){
+        loadKaryawanData();
+      } else {
+        dashPopulateFilters();
+        renderDashboardCharts();
+      }
+    }
     if(page==='kendaraan' && !kendaraanLoaded){
       kendaraanLoaded = true;
       loadData();
@@ -1673,7 +1911,10 @@
   }
 
   document.querySelectorAll('.item[data-nav]').forEach(el=>{
-    el.addEventListener('click', ()=>setActive(el, el.dataset.nav, 'placeholder'));
+    el.addEventListener('click', ()=>{
+      const page = el.dataset.nav==='Dashboard' ? 'dashboard' : 'placeholder';
+      setActive(el, el.dataset.nav, page);
+    });
   });
   document.querySelectorAll('.sub-item').forEach(el=>{
     el.addEventListener('click', (e)=>{
@@ -1684,7 +1925,7 @@
   });
 
   /* Halaman awal: Dashboard */
-  showPage('placeholder', 'Dashboard');
+  showPage('dashboard', 'Dashboard');
 </script>
 </body>
 </html>
