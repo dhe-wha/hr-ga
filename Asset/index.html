@@ -247,7 +247,7 @@
   <div class="menu-section">
     <div class="section-label">Menu Utama</div>
 
-    <div class="item" data-nav="Dashboard">
+    <div class="item active" data-nav="Dashboard">
       <div class="icon-box" style="background:var(--blue-soft)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
       </div>
@@ -272,15 +272,15 @@
     </div>
 
     <!-- GENERAL AFFAIR -->
-    <div class="item expanded" id="gaToggle" data-toggle="ga">
+    <div class="item" id="gaToggle" data-toggle="ga">
       <div class="icon-box" style="background:var(--orange-soft)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--orange)"><path d="M14.7 6.3a1 1 0 0 0 1.4 0l1.6-1.6a1 1 0 0 0 0-1.4l-1.4-1.4a1 1 0 0 0-1.4 0l-1.6 1.6a1 1 0 0 0 0 1.4z"/><path d="m21 21-7.4-7.4"/><path d="m3 21 7.6-7.6"/><path d="M9.3 9.7a1 1 0 0 0 0-1.4L7.7 6.7a1 1 0 0 0-1.4 0L4.7 8.1a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0z"/></svg>
       </div>
       <span class="item-label">General Affair</span>
       <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
     </div>
-    <div class="submenu open" id="gaSubmenu">
-      <div class="sub-item active" data-page="kendaraan">Kendaraan</div>
+    <div class="submenu" id="gaSubmenu">
+      <div class="sub-item" data-page="kendaraan">Kendaraan</div>
       <div class="sub-item" data-page="placeholder">Motor</div>
       <div class="sub-item" data-page="placeholder">Alat Berat</div>
       <div class="sub-item" data-page="placeholder">Bangunan</div>
@@ -567,6 +567,7 @@
   let groupFilterValue = 'semua';
   let searchTerm = '';
   let viewMode = localStorage.getItem('assetViewMode') || 'card';
+  let kendaraanLoaded = false;
 
   const iconVehicle = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="7" cy="17" r="1.5"/><circle cx="17" cy="17" r="1.5"/></svg>`;
 
@@ -1646,6 +1647,10 @@
     document.getElementById('page-karyawan').style.display = (page==='karyawan') ? '' : 'none';
     document.getElementById('page-rekrutmen').style.display = (page==='rekrutmen') ? '' : 'none';
     document.getElementById('page-placeholder').style.display = KNOWN_PAGES.includes(page) ? 'none' : '';
+    if(page==='kendaraan' && !kendaraanLoaded){
+      kendaraanLoaded = true;
+      loadData();
+    }
     if(page==='karyawan' && !kryLoaded){
       loadKaryawanData();
     }
@@ -1678,9 +1683,8 @@
     });
   });
 
-  /* Halaman awal: General Affair > Kendaraan */
-  showPage('kendaraan', 'Kendaraan');
-  loadData();
+  /* Halaman awal: Dashboard */
+  showPage('placeholder', 'Dashboard');
 </script>
 </body>
 </html>
