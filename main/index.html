@@ -1352,6 +1352,34 @@
     }
   };
 
+  /* Plugin terpisah khusus untuk doughnut Klasifikasi Asal Karyawan - sengaja
+     dibuat berdiri sendiri (tidak berbagi kode dengan dashDataLabelsPlugin di
+     atas) supaya perubahan di sini tidak bisa memengaruhi chart Line/Bar. */
+  const dashDoughnutLabelsPlugin = {
+    id: 'dashDoughnutLabels',
+    afterDatasetsDraw(chart){
+      const { ctx } = chart;
+      const meta = chart.getDatasetMeta(0);
+      if(!meta || meta.hidden) return;
+      const dataset = chart.data.datasets[0];
+      meta.data.forEach((arc, index) => {
+        const value = dataset.data[index];
+        if(!value) return;
+        const pos = arc.getCenterPoint();
+        ctx.save();
+        ctx.font = "bold 12px 'IBM Plex Mono', monospace";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(20,24,26,0.9)';
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeText(String(value), pos.x, pos.y);
+        ctx.fillText(String(value), pos.x, pos.y);
+        ctx.restore();
+      });
+    }
+  };
+
   function dashPopulateFilters(){
     const tahunSel = document.getElementById('dashTahunFilter');
     const ptSel = document.getElementById('dashPtFilter');
@@ -1513,6 +1541,7 @@
         labels: Object.keys(klas),
         datasets: [{ data: Object.values(klas), backgroundColor: ['#E8A33D','#4C8DF5','#8FCB84','#E8825A','#3FB6A8','#F2B705'], borderColor:'#1E2426', borderWidth:2 }],
       },
+      plugins: [dashDoughnutLabelsPlugin],
       options: dashPieOptions(),
     });
     const klasTotal = Object.values(klas).reduce((a,b)=>a+b,0);
