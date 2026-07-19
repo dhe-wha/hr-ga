@@ -214,6 +214,17 @@
   .bar-fill.green{background:var(--green);}
   .bar-fill.red{background:var(--red);}
   .bar-value{width:54px; text-align:right; font-weight:700; flex-shrink:0; font-size:13px;}
+  .bar-group{margin-bottom:20px;}
+  .bar-group:last-child{margin-bottom:0;}
+  .bar-row.main .label{color:var(--text); font-weight:600; letter-spacing:.5px;}
+  .bar-row.main .bar-track{height:12px;}
+  .bar-subgroup{margin:8px 0 0 22px; padding-left:14px; border-left:2px solid var(--border);}
+  .bar-subgroup .bar-row{margin-bottom:7px;}
+  .bar-subgroup .bar-row:last-child{margin-bottom:0;}
+  .bar-subgroup .label{width:168px; font-size:9.5px; color:var(--text-dim); opacity:.85;}
+  .bar-subgroup .bar-track{height:6px;}
+  .bar-subgroup .bar-fill{opacity:.65;}
+  .bar-subgroup .bar-value{width:40px; font-size:11px; font-weight:600;}
   .kry-table{width:100%; border-collapse:collapse; font-size:13.5px;}
   .kry-table td{padding:10px 4px; border-bottom:1px solid var(--border);}
   .kry-table td:first-child{color:var(--text-dim); font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.3px;}
@@ -2055,19 +2066,48 @@
   }
 
   /* Total Bangunan per Kategori (sheet "Bangunan", variabel BUILDINGS - sudah
-     dipakai halaman General Affair > Bangunan) - juga bar-list horizontal,
-     gaya sama seperti "Karyawan per Departemen". */
+     dipakai halaman General Affair > Bangunan) - bar-list horizontal gaya
+     sama seperti "Karyawan per Departemen", TAPI tiap baris Kategori punya
+     sub bar-list di bawahnya yang merinci jumlah per Jenis di kategori itu
+     (renderBarList generik tidak mendukung nested, jadi dirakit manual di sini). */
   function renderDashBuildingChart(){
     if(!BUILDINGS.length) return;
-    const counts = {};
-    BUILDINGS.forEach(a => {
-      const k = (a['Kategori']||'').trim() || 'Tanpa Kategori';
-      counts[k] = (counts[k]||0) + 1;
-    });
-    const entries = Object.entries(counts).map(([k,v])=>({label:k, value:v})).sort((a,b)=>b.value-a.value);
-    renderBarList('dashBuildingList', entries);
 
-    document.getElementById('dashBuildingNote').textContent = `Total ${BUILDINGS.length} bangunan dari ${entries.length} kategori.`;
+    const catCounts = {};
+    const catJenisCounts = {};
+    BUILDINGS.forEach(a => {
+      const kat = (a['Kategori']||'').trim() || 'Tanpa Kategori';
+      const jenis = (a['Jenis']||'').trim() || 'Tanpa Jenis';
+      catCounts[kat] = (catCounts[kat]||0) + 1;
+      if(!catJenisCounts[kat]) catJenisCounts[kat] = {};
+      catJenisCounts[kat][jenis] = (catJenisCounts[kat][jenis]||0) + 1;
+    });
+
+    const catEntries = Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);
+    const maxCat = Math.max(...catEntries.map(([,v])=>v), 1);
+
+    const html = catEntries.map(([kat, total]) => {
+      const jenisEntries = Object.entries(catJenisCounts[kat]||{}).sort((a,b)=>b[1]-a[1]);
+      const maxJenis = Math.max(...jenisEntries.map(([,v])=>v), 1);
+      const subRows = jenisEntries.map(([jenis, v]) => `
+        <div class="bar-row sub">
+          <div class="label">${jenis}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(v/maxJenis*100).toFixed(1)}%"></div></div>
+          <div class="bar-value">${v.toLocaleString('id-ID')}</div>
+        </div>`).join('');
+      return `
+        <div class="bar-group">
+          <div class="bar-row main">
+            <div class="label">${kat}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${(total/maxCat*100).toFixed(1)}%"></div></div>
+            <div class="bar-value">${total.toLocaleString('id-ID')}</div>
+          </div>
+          <div class="bar-subgroup">${subRows}</div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('dashBuildingList').innerHTML = html;
+    document.getElementById('dashBuildingNote').textContent = `Total ${BUILDINGS.length} bangunan dari ${catEntries.length} kategori.`;
   }
 
   document.querySelectorAll('#dashTrendTypeToggle button').forEach(btn=>{
