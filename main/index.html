@@ -299,7 +299,7 @@
       <div class="sub-item" data-page="kendaraan">Kendaraan</div>
       <div class="sub-item" data-page="placeholder">Motor</div>
       <div class="sub-item" data-page="placeholder">Alat Berat</div>
-      <div class="sub-item" data-page="placeholder">Bangunan</div>
+      <div class="sub-item" data-page="bangunan">Bangunan</div>
       <div class="sub-item" data-page="placeholder">Fasilitas Umum</div>
     </div>
 
@@ -404,6 +404,71 @@
             </tr>
           </thead>
           <tbody id="assetTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Halaman Aset Bangunan (General Affair > Bangunan) ===== -->
+  <div class="asset-view" id="page-bangunan" style="display:none;">
+    <div class="grid-texture"></div>
+    <div class="wrap">
+      <div class="sticky-bar">
+        <header class="asset-header">
+          <div>
+            <p class="eyebrow">General Affair &middot; Sistem Registrasi Aset</p>
+            <h1 class="asset-title">Aset Bangunan</h1>
+          </div>
+          <div class="stat-strip">
+            <div class="stat"><div class="n" id="bldStatTotal">0</div><div class="l">Total Bangunan</div></div>
+            <div class="stat"><div class="n" id="bldStatPermanen">0</div><div class="l">Permanen</div></div>
+            <div class="stat"><div class="n" id="bldStatNonPermanen">0</div><div class="l">Non Permanen</div></div>
+            <div class="stat"><div class="n" id="bldStatLokasi">0</div><div class="l">Lokasi</div></div>
+          </div>
+        </header>
+
+        <div class="controls">
+          <div class="group-select">
+            <select id="bldGroupFilter">
+              <option value="semua">Semua Kategori</option>
+            </select>
+          </div>
+          <div class="search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="bldSearchInput" placeholder="Cari kode bangunan, nama, jenis, atau lokasi...">
+          </div>
+          <div class="view-toggle" id="bldViewToggle">
+            <button type="button" data-view="card" class="active" title="Tampilan Kartu">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+            </button>
+            <button type="button" data-view="table" title="Tampilan Tabel">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9h18M3 14h18M9 9v11"/></svg>
+            </button>
+          </div>
+          <button class="refresh-btn" id="bldRefreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <div class="asset-grid" id="bldGrid">
+        <div class="state-msg" id="bldLoadingMsg">Memuat data dari Google Sheet...</div>
+      </div>
+      <div class="table-wrap" id="bldTableWrap" style="display:none;">
+        <table class="asset-table">
+          <thead>
+            <tr>
+              <th>Kode Bangunan</th>
+              <th>Nama Bangunan</th>
+              <th>Kategori</th>
+              <th>Tipe</th>
+              <th>Jenis</th>
+              <th>Lokasi</th>
+              <th>PT</th>
+            </tr>
+          </thead>
+          <tbody id="bldTableBody"></tbody>
         </table>
       </div>
     </div>
@@ -671,6 +736,17 @@
     if(!parent) return;
     parent.classList.remove('thumb');
     parent.innerHTML = iconVehicle;
+  }
+
+  const iconBuilding = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/></svg>`;
+
+  /* Sama seperti cardThumbError, tapi untuk kartu Aset Bangunan (ikon gedung,
+     bukan ikon kendaraan) - fungsi terpisah supaya tidak mengganggu kartu Kendaraan. */
+  function bldCardThumbError(imgEl){
+    const parent = imgEl.parentElement;
+    if(!parent) return;
+    parent.classList.remove('thumb');
+    parent.innerHTML = iconBuilding;
   }
 
   function fmtVal(v){ return (v===undefined || v===null || String(v).trim()==='' || v==='#N/A') ? '—' : v; }
@@ -973,6 +1049,224 @@
       localStorage.setItem('assetViewMode', viewMode);
       viewToggle.querySelectorAll('button[data-view]').forEach(b=>b.classList.toggle('active', b===btn));
       renderGrid();
+    });
+  });
+
+  /* =====================================================================
+     ASET BANGUNAN (General Affair > Bangunan)
+     Sumber data: sheet "Bangunan" di spreadsheet Asset_GA yang sama dengan
+     sheet Kendaraan. Struktur halaman ini sengaja dibuat sama persis dengan
+     Aset Kendaraan di atas (card/tabel, filter Kategori, pencarian, modal
+     detail dengan foto) - cuma nama elemen & field-nya disesuaikan.
+     CATATAN: sheet Bangunan tidak punya kolom "No" seperti Kendaraan, jadi
+     "Kode Bangunan" dipakai sebagai id unik baris (dianggap unik per baris).
+     Nama kolom foto persis mengikuti header sheet: "Foto Utama", "Foto Kiri",
+     "Foto kanan" (huruf k kecil - sesuai header aslinya), "Foto Belakang"
+     (asumsi nama lengkap kolom P, sesuaikan lagi kalau ternyata berbeda).
+     ===================================================================== */
+  const BLD_SHEET_ID = '1ZtQ7H3Z5BsHsYQ1VSG6-CUxnLfLHw4T0FMArZLXjq4I';
+  const BLD_SHEET_NAME = 'Bangunan';
+  const BLD_CSV_URL = `https://docs.google.com/spreadsheets/d/${BLD_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(BLD_SHEET_NAME)}`;
+
+  let BUILDINGS = [];
+  let bldGroupFilterValue = 'semua';
+  let bldSearchTerm = '';
+  let bldViewMode = localStorage.getItem('bangunanViewMode') || 'card';
+  let bldLoaded = false;
+
+  function loadBangunanData(){
+    const grid = document.getElementById('bldGrid');
+    grid.innerHTML = `<div class="state-msg" id="bldLoadingMsg">Memuat data dari Google Sheet...</div>`;
+    const btn = document.getElementById('bldRefreshBtn');
+    btn.classList.add('spinning');
+
+    Papa.parse(BLD_CSV_URL, {
+      download:true,
+      header:true,
+      skipEmptyLines:true,
+      complete: function(results){
+        btn.classList.remove('spinning');
+        BUILDINGS = (results.data||[]).filter(r => r['Kode Bangunan'] && r['Kode Bangunan'].trim()!=='');
+        populateBldGroupFilter();
+        renderBldGrid();
+      },
+      error: function(){
+        btn.classList.remove('spinning');
+        grid.innerHTML = `<div class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="bldRetryBtn">Coba Lagi</button></div>`;
+        const retry = document.getElementById('bldRetryBtn');
+        if(retry) retry.addEventListener('click', loadBangunanData);
+      }
+    });
+  }
+
+  function populateBldGroupFilter(){
+    const sel = document.getElementById('bldGroupFilter');
+    const groups = Array.from(new Set(BUILDINGS.map(a => (a['Kategori']||'').trim()).filter(Boolean))).sort();
+    const current = sel.value || 'semua';
+    sel.innerHTML = `<option value="semua">Semua Kategori</option>` + groups.map(g => `<option value="${g}">${g}</option>`).join('');
+    sel.value = groups.includes(current) ? current : 'semua';
+    bldGroupFilterValue = sel.value;
+  }
+
+  function renderBldGrid(){
+    const grid = document.getElementById('bldGrid');
+    const tableWrap = document.getElementById('bldTableWrap');
+    const term = bldSearchTerm.trim().toLowerCase();
+
+    const filtered = BUILDINGS.filter(a=>{
+      if(bldGroupFilterValue!=='semua' && (a['Kategori']||'').trim()!==bldGroupFilterValue) return false;
+      if(!term) return true;
+      const hay = [a['Kode Bangunan'], a['Nama Bangunan'], a['Jenis'], a['Lokasi'], a['PT']].join(' ').toLowerCase();
+      return hay.includes(term);
+    });
+
+    filtered.sort((a,b)=> (a['Nama Bangunan']||'').localeCompare(b['Nama Bangunan']||'', undefined, {numeric:true, sensitivity:'base'}));
+
+    const groupScoped = bldGroupFilterValue==='semua' ? BUILDINGS : BUILDINGS.filter(a => (a['Kategori']||'').trim()===bldGroupFilterValue);
+    document.getElementById('bldStatTotal').textContent = groupScoped.length;
+    document.getElementById('bldStatPermanen').textContent = groupScoped.filter(a => (a['Tipe']||'').trim().toLowerCase()==='permanen').length;
+    document.getElementById('bldStatNonPermanen').textContent = groupScoped.filter(a => (a['Tipe']||'').trim().toLowerCase()==='non permanen').length;
+    document.getElementById('bldStatLokasi').textContent = new Set(groupScoped.map(a => (a['Lokasi']||'').trim()).filter(Boolean)).size;
+
+    grid.style.display = (bldViewMode==='card') ? '' : 'none';
+    tableWrap.style.display = (bldViewMode==='table') ? '' : 'none';
+
+    if(filtered.length===0){
+      const emptyHtml = `<div class="empty">Tidak ada bangunan yang cocok dengan pencarian / filter.</div>`;
+      grid.innerHTML = emptyHtml;
+      document.getElementById('bldTableBody').innerHTML = `<tr><td colspan="7" class="empty">Tidak ada bangunan yang cocok dengan pencarian / filter.</td></tr>`;
+      return;
+    }
+
+    if(bldViewMode==='card'){
+      renderBldCards(filtered);
+    }else{
+      renderBldTable(filtered);
+    }
+  }
+
+  function renderBldCards(filtered){
+    const grid = document.getElementById('bldGrid');
+    grid.innerHTML = filtered.map(a=>{
+      const kode = a['Kode Bangunan'];
+      const nama = a['Nama Bangunan'];
+      const thumb = photoUrl(a['Foto Utama']);
+      const iconHtml = thumb
+        ? `<img src="${thumb}" alt="${fmtVal(nama)}" loading="lazy" onerror="bldCardThumbError(this)">`
+        : iconBuilding;
+      return `
+        <div class="card" tabindex="0" data-kode="${kode}">
+          <div class="strip"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <div class="card-icon${thumb ? ' thumb' : ''}">${iconHtml}</div>
+              <div class="card-id">${fmtVal(kode)}</div>
+            </div>
+            <p class="card-name">${fmtVal(nama)}</p>
+            <p class="card-meta">${fmtVal(a['Lokasi'])} &middot; <span class="driver">${fmtVal(a['Tipe'])}</span></p>
+            <span class="badge">${fmtVal(a['Kategori'])}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    grid.querySelectorAll('.card').forEach(card=>{
+      card.addEventListener('click', ()=>openBldDossier(card.dataset.kode));
+      card.addEventListener('keydown', e=>{ if(e.key==='Enter') openBldDossier(card.dataset.kode); });
+    });
+  }
+
+  function renderBldTable(filtered){
+    const body = document.getElementById('bldTableBody');
+    body.innerHTML = filtered.map(a=>{
+      return `
+        <tr tabindex="0" data-kode="${a['Kode Bangunan']}">
+          <td>${fmtVal(a['Kode Bangunan'])}</td>
+          <td class="name">${fmtVal(a['Nama Bangunan'])}</td>
+          <td>${fmtVal(a['Kategori'])}</td>
+          <td>${fmtVal(a['Tipe'])}</td>
+          <td>${fmtVal(a['Jenis'])}</td>
+          <td>${fmtVal(a['Lokasi'])}</td>
+          <td>${fmtVal(a['PT'])}</td>
+        </tr>`;
+    }).join('');
+
+    body.querySelectorAll('tr').forEach(row=>{
+      row.addEventListener('click', ()=>openBldDossier(row.dataset.kode));
+      row.addEventListener('keydown', e=>{ if(e.key==='Enter') openBldDossier(row.dataset.kode); });
+    });
+  }
+
+  function openBldDossier(kode){
+    const a = BUILDINGS.find(x=>String(x['Kode Bangunan'])===String(kode));
+    if(!a) return;
+
+    const rows = [
+      ['PT', a['PT']],
+      ['Kategori', a['Kategori']],
+      ['Kode Tip', a['Kode Tip']],
+      ['Tipe', a['Tipe']],
+      ['Kode Jenis', a['Kode Jenis']],
+      ['Jenis', a['Jenis']],
+      ['Kode_1', a['Kode_1']],
+      ['Lokasi', a['Lokasi']],
+      ['Kode Lokasi', a['Kode Lokasi']],
+      ['No Urut', a['No Urut']],
+    ];
+
+    const rowsBelowPhoto = [
+      ['Kode Bangunan', a['Kode Bangunan']],
+    ];
+
+    const specRows = rows.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
+    const belowPhotoRows = rowsBelowPhoto.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
+
+    const dossier = document.getElementById('dossier');
+    dossier.innerHTML = `
+      <div class="dossier-header">
+        <div>
+          <p class="dossier-tag">${fmtVal(a['Kode Bangunan'])} &middot; ${fmtVal(a['Kategori'])}</p>
+          <h2 class="dossier-title">${fmtVal(a['Nama Bangunan'])}</h2>
+        </div>
+        <button class="close-btn" id="closeBtn" aria-label="Tutup">&#10005;</button>
+      </div>
+      <div class="dossier-body">
+        <div class="main-section">
+          <div class="photo-col">
+            ${photoFrame(photoUrl(a['Foto Utama']), 'Foto Utama')}
+            <div class="spec-table">${belowPhotoRows}</div>
+          </div>
+          <div class="spec-table">${specRows}</div>
+        </div>
+        <p class="views-heading">Tampak Sekeliling</p>
+        <div class="views-grid">
+          ${viewFrame(photoUrl(a['Foto Kiri']), 'Tampak Kiri')}
+          ${viewFrame(photoUrl(a['Foto kanan']), 'Tampak Kanan')}
+          ${viewFrame(photoUrl(a['Foto Belakang']), 'Tampak Belakang')}
+        </div>
+      </div>
+    `;
+    document.getElementById('closeBtn').addEventListener('click', closeDossier);
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  document.getElementById('bldGroupFilter').addEventListener('change', e=>{
+    bldGroupFilterValue = e.target.value;
+    renderBldGrid();
+  });
+  document.getElementById('bldSearchInput').addEventListener('input', e=>{
+    bldSearchTerm = e.target.value;
+    renderBldGrid();
+  });
+  document.getElementById('bldRefreshBtn').addEventListener('click', loadBangunanData);
+
+  const bldViewToggle = document.getElementById('bldViewToggle');
+  bldViewToggle.querySelectorAll('button[data-view]').forEach(btn=>{
+    if(btn.dataset.view === bldViewMode) btn.classList.add('active'); else btn.classList.remove('active');
+    btn.addEventListener('click', ()=>{
+      bldViewMode = btn.dataset.view;
+      localStorage.setItem('bangunanViewMode', bldViewMode);
+      bldViewToggle.querySelectorAll('button[data-view]').forEach(b=>b.classList.toggle('active', b===btn));
+      renderBldGrid();
     });
   });
 
@@ -2145,10 +2439,11 @@
   document.getElementById('hrToggle').addEventListener('click', ()=>toggleSubmenu('hr'));
   document.getElementById('gaToggle').addEventListener('click', ()=>toggleSubmenu('ga'));
 
-  const KNOWN_PAGES = ['dashboard','kendaraan','karyawan','rekrutmen'];
+  const KNOWN_PAGES = ['dashboard','kendaraan','bangunan','karyawan','rekrutmen'];
   function showPage(page, label){
     document.getElementById('page-dashboard').style.display = (page==='dashboard') ? '' : 'none';
     document.getElementById('page-kendaraan').style.display = (page==='kendaraan') ? '' : 'none';
+    document.getElementById('page-bangunan').style.display = (page==='bangunan') ? '' : 'none';
     document.getElementById('page-karyawan').style.display = (page==='karyawan') ? '' : 'none';
     document.getElementById('page-rekrutmen').style.display = (page==='rekrutmen') ? '' : 'none';
     document.getElementById('page-placeholder').style.display = KNOWN_PAGES.includes(page) ? 'none' : '';
@@ -2169,6 +2464,10 @@
     if(page==='kendaraan' && !kendaraanLoaded){
       kendaraanLoaded = true;
       loadData();
+    }
+    if(page==='bangunan' && !bldLoaded){
+      bldLoaded = true;
+      loadBangunanData();
     }
     if(page==='karyawan' && !kryLoaded){
       loadKaryawanData();
