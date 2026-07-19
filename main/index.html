@@ -366,7 +366,7 @@
         <div class="controls">
           <div class="group-select">
             <select id="groupFilter">
-              <option value="semua">Semua Kelompok</option>
+              <option value="semua">Semua Kategori</option>
             </select>
           </div>
           <div class="search">
@@ -398,7 +398,7 @@
               <th>Kode Aset</th>
               <th>Nama Display</th>
               <th>No Polisi</th>
-              <th>Kelompok</th>
+              <th>Kategori</th>
               <th>User / Driver</th>
               <th>Keterangan</th>
             </tr>
@@ -616,7 +616,7 @@
         <div class="dash-section-title" style="--accent-color:var(--orange);"><span>General Affair</span></div>
         <div class="kry-card wide">
           <div class="card-head-row">
-            <h3>Total Kendaraan per Kelompok</h3>
+            <h3>Total Kendaraan per Kategori</h3>
             <div class="chart-type-toggle" id="dashVehicleFilterToggle">
               <button type="button" data-filter="semua" class="active">Semua</button>
               <button type="button" data-filter="wajib">Wajib Pajak</button>
@@ -746,9 +746,9 @@
 
   function populateGroupFilter(){
     const sel = document.getElementById('groupFilter');
-    const groups = Array.from(new Set(ASSETS.map(a => (a['Kelompok']||'').trim()).filter(Boolean))).sort();
+    const groups = Array.from(new Set(ASSETS.map(a => (a['Kategori']||'').trim()).filter(Boolean))).sort();
     const current = sel.value || 'semua';
-    sel.innerHTML = `<option value="semua">Semua Kelompok</option>` + groups.map(g => `<option value="${g}">${g}</option>`).join('');
+    sel.innerHTML = `<option value="semua">Semua Kategori</option>` + groups.map(g => `<option value="${g}">${g}</option>`).join('');
     sel.value = groups.includes(current) ? current : 'semua';
     groupFilterValue = sel.value;
   }
@@ -759,7 +759,7 @@
     const term = searchTerm.trim().toLowerCase();
 
     const filtered = ASSETS.filter(a=>{
-      if(groupFilterValue!=='semua' && (a['Kelompok']||'').trim()!==groupFilterValue) return false;
+      if(groupFilterValue!=='semua' && (a['Kategori']||'').trim()!==groupFilterValue) return false;
       if(!term) return true;
       const hay = [a['Kode Aset'], a['Nama Display'], a['User_Driver'], a['Company'], a['Model'], a['No Polisi']].join(' ').toLowerCase();
       return hay.includes(term);
@@ -771,7 +771,7 @@
     filtered.sort((a,b)=> (a['Nama Display']||'').localeCompare(b['Nama Display']||'', undefined, {numeric:true, sensitivity:'base'}));
 
     /* Statistik mengikuti kelompok yang sedang dipilih di dropdown (bukan total semua aset) */
-    const groupScoped = groupFilterValue==='semua' ? ASSETS : ASSETS.filter(a => (a['Kelompok']||'').trim()===groupFilterValue);
+    const groupScoped = groupFilterValue==='semua' ? ASSETS : ASSETS.filter(a => (a['Kategori']||'').trim()===groupFilterValue);
     document.getElementById('statTotal').textContent = groupScoped.length;
     document.getElementById('statAktif').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='ya').length;
     document.getElementById('statTidak').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='tidak').length;
@@ -838,7 +838,7 @@
           <td>${fmtVal(a['Kode Aset'])}</td>
           <td class="name">${fmtVal(a['Nama Display'])}</td>
           <td>${fmtVal(a['No Polisi'])}</td>
-          <td>${fmtVal(a['Kelompok'])}</td>
+          <td>${fmtVal(a['Kategori'])}</td>
           <td>${fmtVal(a['User_Driver'])}</td>
           <td>${fmtVal(a['Keterangan'])}</td>
         </tr>`;
@@ -920,7 +920,7 @@
     dossier.innerHTML = `
       <div class="dossier-header">
         <div>
-          <p class="dossier-tag">${a['Kode Aset']} &middot; ${fmtVal(a['Kelompok'])}</p>
+          <p class="dossier-tag">${a['Kode Aset']} &middot; ${fmtVal(a['Kategori'])}</p>
           <h2 class="dossier-title">${fmtVal(a['Nama Display'])}</h2>
         </div>
         <button class="close-btn" id="closeBtn" aria-label="Tutup">&#10005;</button>
@@ -1574,7 +1574,7 @@
   }
 
   /* =====================================================================
-     Total Kendaraan per Kelompok (bar 3D) - sumber data sheet "Kendaraan"
+     Total Kendaraan per Kategori (bar 3D) - sumber data sheet "Kendaraan"
      yang sama dengan halaman General Affair > Kendaraan (variabel ASSETS).
      Plugin di bawah sengaja dibuat berdiri sendiri (tidak berbagi kode
      dengan dashDataLabelsPlugin/dashDoughnutLabelsPlugin) supaya perubahan
@@ -1674,7 +1674,7 @@
 
       const counts = {};
       scoped.forEach(a => {
-        const k = (a['Kelompok']||'').trim() || 'Tanpa Kelompok';
+        const k = (a['Kategori']||'').trim() || 'Tanpa Kategori';
         counts[k] = (counts[k]||0) + 1;
       });
       const entries = Object.entries(counts).sort((a,b)=> b[1]-a[1]);
