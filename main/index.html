@@ -761,7 +761,7 @@
     const filtered = ASSETS.filter(a=>{
       if(groupFilterValue!=='semua' && (a['Kategori']||'').trim()!==groupFilterValue) return false;
       if(!term) return true;
-      const hay = [a['Kode Aset'], a['Nama Display'], a['User_Driver'], a['Company'], a['Model'], a['No Polisi']].join(' ').toLowerCase();
+      const hay = [a['Kode Aset'], a['Nama Display'], a['User_Driver'], a['Company'], a['Jenis'], a['No Polisi']].join(' ').toLowerCase();
       return hay.includes(term);
     });
 
@@ -894,7 +894,7 @@
 
     const rows = [
       ['Company', a['Company']],
-      ['Model', a['Model']],
+      ['Jenis', a['Jenis']],
       ['Nama Aset (Acc)', a['Nama Aset (Acc)']],
       ['Jenis Kendaraan (Acc)', a['Jenis Kendaraan (Acc)']],
       ['No Polisi', a['No Polisi']],
