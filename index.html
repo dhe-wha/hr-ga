@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Struktur Organisasi</title>
+<style>
+  :root{
+    --bd:#2f2f2f;
+    --mgr-bg:#ffffff;
+    --askep-bg:#a9d18e;
+    --krd-bg:#f4b183;
+    --ast-bg:#c9a3d9;
+    --m1-bg:#ffe94d;
+    --mdr-bg:#bdd7ee;
+    --line:#555;
+    --jab:#1a1a2e;
+    --nama:#14406b;
+    --vacant:#d40000;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:Arial,'Segoe UI',sans-serif; background:#fafafa; padding:18px;}
+  h1{text-align:center; font-size:24px; letter-spacing:.5px; color:#111; text-transform:uppercase; margin-bottom:4px;}
+  .sub-title{text-align:center; font-size:12px; color:#777; margin-bottom:14px;}
+
+  .controls{display:flex; gap:10px; justify-content:center; align-items:center; margin-bottom:12px; flex-wrap:wrap;}
+  .controls label{font-size:13px; font-weight:bold; color:#333;}
+  .controls select{padding:6px 10px; font-size:13px; border:1px solid #bbb; border-radius:5px; background:#fff; min-width:260px;}
+
+  .stats{display:flex; gap:10px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;}
+  .stat{background:#fff; border:1px solid #ddd; border-radius:6px; padding:5px 14px; font-size:11.5px; color:#666;}
+  .stat b{font-size:14px; color:#222; margin-right:4px;}
+  .stat.vac b{color:var(--vacant);}
+
+  .toolbar{display:flex; gap:8px; justify-content:center; margin-bottom:14px;}
+  .toolbar button{background:#fff; border:1px solid #bbb; border-radius:5px; padding:5px 14px; cursor:pointer; font-size:12.5px;}
+  .toolbar button:hover{background:#f0f0f0;}
+
+  .viewport{overflow:auto; background:#fff; border:1px solid #ddd; padding:30px 24px; min-height:200px;}
+  .chart{transform-origin:top left; position:relative; margin:0 auto;}
+  .chart svg{position:absolute; top:0; left:0; pointer-events:none;}
+  .msg{text-align:center; color:#888; font-size:14px; padding:40px 0;}
+  .msg.err{color:var(--vacant);}
+
+  .card{
+    position:absolute;
+    background:#fff; border:1.6px solid var(--bd); border-radius:4px;
+    text-align:center; overflow:hidden;
+    box-shadow:1.5px 1.5px 0 rgba(0,0,0,.18);
+    display:flex; flex-direction:column;
+  }
+  .card .jab{
+    flex:1; display:flex; align-items:center; justify-content:center;
+    font-size:10px; font-weight:bold; text-transform:uppercase;
+    color:var(--jab); padding:3px 6px; line-height:1.2;
+    border-bottom:1.2px solid var(--bd);
+  }
+  .card .nm{
+    font-size:11.5px; color:var(--nama); font-style:italic; font-weight:600;
+    padding:4px 6px; line-height:1.15; background:rgba(255,255,255,.5);
+  }
+  .card .nm.vac{color:var(--vacant); font-weight:bold;}
+  .l0{background:var(--mgr-bg);}
+  .l1{background:var(--askep-bg);}
+  .l2{background:var(--krd-bg);}
+  .l3{background:var(--ast-bg);}
+  .l4{background:var(--m1-bg);}
+  .l5{background:var(--mdr-bg);}
+
+  .legend{display:flex; gap:14px; justify-content:center; margin-top:16px; font-size:11.5px; color:#555; flex-wrap:wrap;}
+  .legend span{display:flex; align-items:center; gap:5px;}
+  .dot{width:13px; height:13px; border:1.2px solid var(--bd); border-radius:2px; display:inline-block;}
+
+  @media print{
+    .toolbar,.stats,.legend,.controls{display:none;}
+    body{padding:0;}
+    .viewport{border:none; overflow:visible;}
+  }
+</style>
+</head>
+<body>
+<h1 id="title">Struktur Organisasi</h1>
+<p class="sub-title" id="subtitle">Memuat data dari Google Sheet…</p>
+
+<div class="controls">
+  <label for="deptSel">Departemen:</label>
+  <select id="deptSel" onchange="render()"></select>
+</div>
+
+<div class="stats">
+  <div class="stat"><b id="stTotal">0</b>Total Posisi</div>
+  <div class="stat"><b id="stFilled">0</b>Terisi</div>
+  <div class="stat vac"><b id="stVacant">0</b>Vacant</div>
+</div>
+
+<div class="toolbar">
+  <button onclick="zoom(0.1)">Zoom +</button>
+  <button onclick="zoom(-0.1)">Zoom −</button>
+  <button onclick="zoomReset()">Reset</button>
+  <button onclick="loadData()">&#8635; Muat Ulang Data</button>
+  <button onclick="window.print()">Print</button>
+</div>
+
+<div class="viewport"><div class="chart" id="chart"><div class="msg">Memuat data…</div></div></div>
+
+<div class="legend">
+  <span><span class="dot" style="background:var(--mgr-bg)"></span>Manager</span>
+  <span><span class="dot" style="background:var(--askep-bg)"></span>Asisten Kepala</span>
+  <span><span class="dot" style="background:var(--krd-bg)"></span>Koordinator</span>
+  <span><span class="dot" style="background:var(--ast-bg)"></span>Asisten</span>
+  <span><span class="dot" style="background:var(--m1-bg)"></span>Mandor 1 / Krani 1</span>
+  <span><span class="dot" style="background:var(--mdr-bg)"></span>Mandor / Krani</span>
+  <span style="color:var(--vacant); font-weight:bold">Vacant = posisi kosong</span>
+</div>
+
+<script>
+/* ================== SUMBER DATA (REALTIME) ==================
+   Sheet harus di-share "Siapa saja yang memiliki link — Viewer".
+   Data diambil langsung setiap halaman dibuka / tombol Muat Ulang. */
+const SHEET_ID = '1mHMrWu6yQ7p6gL_fQz_G6fa8ew2V2LcJ3WHZXwYZo7c';
+const CSV = sheet => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheet)}`;
+
+/* ============ Ketentuan kode 9 digit ============
+   Digit 1    : Perusahaan
+   Digit 2-3  : Manager / Departemen
+   Digit 4    : Asisten Kepala (Askep)
+   Digit 5    : Koordinator
+   Digit 6-7  : Asisten
+   Digit 8    : Mandor 1 / Krani 1
+   Digit 9    : Mandor / Krani                                    */
+const GRUP = [[3,1],[4,1],[5,2],[7,1],[8,1]]; // [start,len] ASK,KRD,AST,MK1,MDK
+function parentKode(k){
+  for(let i=GRUP.length-1;i>=0;i--){
+    const [s,l]=GRUP[i];
+    if(parseInt(k.substr(s,l))>0) return k.substr(0,s)+'0'.repeat(l)+k.substr(s+l);
+  }
+  return null;
+}
+// Level: 0 Manager | 1 Askep | 2 Koordinator | 3 Asisten | 4 Mandor1/Krani1 | 5 Mandor/Krani
+function levelOf(k){
+  const ask=+k.substr(3,1), krd=+k.substr(4,1), ast=+k.substr(5,2), mk1=+k.substr(7,1), mdk=+k.substr(8,1);
+  if(ask===0 && krd===0 && ast===0 && mk1===0 && mdk===0) return 0;
+  if(krd===0 && ast===0 && mk1===0 && mdk===0) return 1;
+  if(ast===0 && mk1===0 && mdk===0) return 2;
+  if(mk1===0 && mdk===0) return 3;
+  if(mdk===0) return 4;
+  return 5;
+}
+
+/* ================== CSV parser ================== */
+function parseCSV(text){
+  const rows=[]; let row=[], cur='', q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){
+      if(c==='"'){ if(text[i+1]==='"'){cur+='"'; i++;} else q=false; }
+      else cur+=c;
+    }else{
+      if(c==='"') q=true;
+      else if(c===','){ row.push(cur); cur=''; }
+      else if(c==='\n'){ row.push(cur); rows.push(row); row=[]; cur=''; }
+      else if(c!=='\r') cur+=c;
+    }
+  }
+  if(cur!=='' || row.length){ row.push(cur); rows.push(row); }
+  return rows;
+}
+
+/* ================== STATE ================== */
+let companies={}, depts={}, forest=[], nodes={};
+const isVac = n => !n.n || n.n.toLowerCase()==='vacant';
+
+async function loadData(){
+  const chartEl=document.getElementById('chart');
+  chartEl.style.width=''; chartEl.style.height='';
+  chartEl.innerHTML='<div class="msg">Memuat data dari Google Sheet…</div>';
+  try{
+    const [rs,rk]=await Promise.all([fetch(CSV('Struktur')),fetch(CSV('Ketentuan'))]);
+    if(!rs.ok) throw new Error('Gagal mengambil sheet Struktur ('+rs.status+')');
+    const sRows=parseCSV(await rs.text());
+    // --- Ketentuan: peta perusahaan (kolom A-B) & departemen (kolom D-E)
+    companies={}; depts={};
+    if(rk.ok){
+      parseCSV(await rk.text()).slice(1).forEach(r=>{
+        if(r[0] && r[1]) companies[r[0].trim()]=r[1].trim();
+        if(r[3] && r[4]) depts[r[3].trim().padStart(2,'0')]=r[4].trim();
+      });
+    }
+    // --- Struktur: cari kolom via header
+    const head=sRows[0].map(h=>h.trim().toLowerCase());
+    const iK=head.indexOf('kode'), iJ=head.indexOf('nama jabatan'), iN=head.indexOf('nama');
+    if(iK<0||iJ<0||iN<0) throw new Error('Kolom Kode / Nama Jabatan / Nama tidak ditemukan');
+    nodes={};
+    const order=[];
+    sRows.slice(1).forEach(r=>{
+      const k=(r[iK]||'').trim();
+      if(!/^\d{9}$/.test(k) || nodes[k]) return;
+      nodes[k]={k, j:(r[iJ]||'').trim(), n:(r[iN]||'').trim(), lv:levelOf(k), children:[]};
+      order.push(k);
+    });
+    // --- bangun forest (bisa banyak departemen)
+    forest=[];
+    order.forEach(k=>{
+      const p=parentKode(k);
+      if(p && nodes[p]) nodes[p].children.push(nodes[k]);
+      else forest.push(nodes[k]);
+    });
+    if(!forest.length) throw new Error('Tidak ada data posisi ditemukan');
+    // --- isi dropdown departemen
+    const sel=document.getElementById('deptSel');
+    const prev=sel.value;
+    sel.innerHTML='';
+    forest.forEach((r,i)=>{
+      const co=companies[r.k[0]]||('Perusahaan '+r.k[0]);
+      const dp=depts[r.k.substr(1,2)]||r.j;
+      const o=document.createElement('option');
+      o.value=i; o.textContent=`${dp} — ${co}`;
+      sel.appendChild(o);
+    });
+    if(prev && sel.querySelector(`option[value="${prev}"]`)) sel.value=prev;
+    document.getElementById('subtitle').textContent =
+      'Realtime dari Google Sheet · dimuat '+new Date().toLocaleString('id-ID');
+    render();
+  }catch(e){
+    chartEl.innerHTML='<div class="msg err">Gagal memuat data: '+e.message+
+      '<br><small>Pastikan Google Sheet di-share "Siapa saja yang memiliki link — Viewer", lalu klik Muat Ulang Data.</small></div>';
+  }
+}
+
+/* ================== LAYOUT ================== */
+const CW=168, CH=60, PW=CW+18, GAP=16, BH=118;
+let pos={}, lines=[], curX=0, BY=null;
+
+function flat(n){ const o=[]; n.children.forEach(c=>{o.push(c); o.push(...flat(c));}); return o; }
+function V(x,y1,y2){ if(y2>y1) lines.push(`M${x} ${y1} L${x} ${y2}`); }
+function Hln(y,x1,x2){ if(x2>x1) lines.push(`M${x1} ${y} L${x2} ${y}`); }
+
+// kolom: kepala (lv>=3) + semua turunannya ditumpuk vertikal sesuai pita level
+function placeColumn(n){
+  const cx=curX, c=cx+CW/2;
+  pos[n.k]={x:cx, y:BY(n.lv)};
+  let bottom=BY(n.lv)+CH;
+  const stack=[n,...flat(n)];
+  for(let i=1;i<stack.length;i++){
+    const d=stack[i];
+    const y=Math.max(BY(d.lv), bottom+GAP);
+    pos[d.k]={x:cx, y};
+    V(c, bottom, y);
+    bottom=y+CH;
+  }
+  curX+=PW;
+  return c;
+}
+// node horizontal (lv<3): anak-anaknya bisa node horizontal lagi atau kolom
+function placeGroup(n){
+  if(!n.children.length){
+    pos[n.k]={x:curX, y:BY(n.lv)};
+    const c=curX+CW/2; curX+=PW; return c;
+  }
+  const centers=n.children.map(ch=> ch.lv<3 ? placeGroup(ch) : placeColumn(ch));
+  const c=(Math.min(...centers)+Math.max(...centers))/2;
+  pos[n.k]={x:c-CW/2, y:BY(n.lv)};
+  const busY=BY(n.lv)+CH+22;
+  V(c, BY(n.lv)+CH, busY);
+  Hln(busY, Math.min(...centers,c), Math.max(...centers,c));
+  n.children.forEach((ch,i)=>V(centers[i], busY, pos[ch.k].y));
+  return c;
+}
+
+function render(){
+  const chartEl=document.getElementById('chart');
+  if(!forest.length) return;
+  const root=forest[+document.getElementById('deptSel').value||0];
+  if(!root) return;
+
+  // pita level: hanya level yang terpakai di departemen ini
+  const all=[root,...flat(root)];
+  const used=[...new Set(all.map(n=>n.lv))].sort((a,b)=>a-b);
+  const bandIdx={}; used.forEach((lv,i)=>bandIdx[lv]=i);
+  BY=lv=>bandIdx[lv]*BH;
+
+  pos={}; lines=[]; curX=0;
+  placeGroup(root);
+
+  let maxX=0, maxY=0;
+  Object.values(pos).forEach(p=>{ maxX=Math.max(maxX,p.x+CW); maxY=Math.max(maxY,p.y+CH); });
+
+  chartEl.style.width=maxX+'px'; chartEl.style.height=maxY+'px';
+  let html=`<svg width="${maxX}" height="${maxY}"><path d="${lines.join(' ')}" stroke="#555" stroke-width="1.6" fill="none"/></svg>`;
+  all.forEach(n=>{
+    const p=pos[n.k]; if(!p) return;
+    html+=`<div class="card l${n.lv}" style="left:${p.x}px; top:${p.y}px; width:${CW}px; height:${CH}px">
+      <div class="jab">${n.j}</div>
+      <div class="nm${isVac(n)?' vac':''}">${isVac(n)?'Vacant':n.n}</div>
+    </div>`;
+  });
+  chartEl.innerHTML=html;
+
+  // judul + statistik per departemen
+  const dp=depts[root.k.substr(1,2)]||root.j;
+  document.getElementById('title').textContent='Struktur Organisasi Departemen '+dp;
+  const vac=all.filter(isVac).length;
+  stTotal.textContent=all.length; stFilled.textContent=all.length-vac; stVacant.textContent=vac;
+  zoomReset();
+}
+
+/* ================== zoom ================== */
+let scale=1;
+function zoom(d){ scale=Math.min(2,Math.max(.25,scale+d)); chart.style.transform=`scale(${scale})`; }
+function zoomReset(){ scale=1; chart.style.transform=''; }
+
+loadData();
+</script>
+</body>
+</html>
