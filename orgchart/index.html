@@ -168,7 +168,7 @@ function parseCSV(text){
 }
 
 /* ================== STATE ================== */
-let companies={}, depts={}, forest=[], nodes={};
+let companies={}, depts={}, deptList=[], nodes={};
 const isVac = n => !n.n || n.n.toLowerCase()==='vacant';
 
 async function loadData(){
@@ -199,22 +199,36 @@ async function loadData(){
       nodes[k]={k, j:(r[iJ]||'').trim(), n:(r[iN]||'').trim(), lv:levelOf(k), children:[]};
       order.push(k);
     });
-    // --- bangun forest (bisa banyak departemen)
-    forest=[];
+    // --- bangun pohon per departemen (digit 1-3)
+    // baris yang induknya tidak ada dinaikkan ke induk terdekat yang ada
+    const rootsByDept={};
     order.forEach(k=>{
-      const p=parentKode(k);
+      let p=parentKode(k);
+      while(p && !nodes[p]) p=parentKode(p);
       if(p && nodes[p]) nodes[p].children.push(nodes[k]);
-      else forest.push(nodes[k]);
+      else{
+        const dk=k.substr(0,3);
+        (rootsByDept[dk]=rootsByDept[dk]||[]).push(nodes[k]);
+      }
     });
-    if(!forest.length) throw new Error('Tidak ada data posisi ditemukan');
+    deptList=Object.keys(rootsByDept).sort().map(dk=>({key:dk, roots:rootsByDept[dk]}));
+    if(!deptList.length) throw new Error('Tidak ada data posisi ditemukan');
+    // label: nama departemen; tambahkan perusahaan jika ada nama dept kembar
+    const lblCount={};
+    deptList.forEach(d=>{
+      d.label=depts[d.key.substr(1,2)]||d.roots[0].j;
+      lblCount[d.label]=(lblCount[d.label]||0)+1;
+    });
+    deptList.forEach(d=>{
+      if(lblCount[d.label]>1) d.label+=' — '+(companies[d.key[0]]||'Perusahaan '+d.key[0]);
+    });
     // --- isi dropdown departemen
     const sel=document.getElementById('deptSel');
     const prev=sel.value;
     sel.innerHTML='';
-    forest.forEach((r,i)=>{
-      const dp=depts[r.k.substr(1,2)]||r.j;
+    deptList.forEach((d,i)=>{
       const o=document.createElement('option');
-      o.value=i; o.textContent=dp;
+      o.value=i; o.textContent=d.label;
       sel.appendChild(o);
     });
     if(prev && sel.querySelector(`option[value="${prev}"]`)) sel.value=prev;
@@ -296,18 +310,18 @@ function placeGroup(n){
 
 function render(){
   const chartEl=document.getElementById('chart');
-  if(!forest.length) return;
-  const root=forest[+document.getElementById('deptSel').value||0];
-  if(!root) return;
+  if(!deptList.length) return;
+  const dept=deptList[+document.getElementById('deptSel').value||0];
+  if(!dept) return;
 
   // pita level: hanya level yang terpakai di departemen ini
-  const all=[root,...flat(root)];
+  const all=dept.roots.flatMap(r=>[r,...flat(r)]);
   const used=[...new Set(all.map(n=>n.lv))].sort((a,b)=>a-b);
   const bandIdx={}; used.forEach((lv,i)=>bandIdx[lv]=i);
   BY=lv=>bandIdx[lv]*BH;
 
   pos={}; lines=[]; curX=0;
-  placeGroup(root);
+  dept.roots.forEach(r=>{ r.lv<4 ? placeGroup(r) : placeColumn(r); });
 
   let maxX=0, maxY=0;
   Object.values(pos).forEach(p=>{ maxX=Math.max(maxX,p.x+CW); maxY=Math.max(maxY,p.y+CH); });
@@ -324,8 +338,7 @@ function render(){
   chartEl.innerHTML=html;
 
   // judul + statistik per departemen
-  const dp=depts[root.k.substr(1,2)]||root.j;
-  document.getElementById('title').textContent='Struktur Organisasi Departemen '+dp;
+  document.getElementById('title').textContent='Struktur Organisasi Departemen '+dept.label;
   const vac=all.filter(isVac).length;
   stTotal.textContent=all.length; stFilled.textContent=all.length-vac; stVacant.textContent=vac;
   zoomReset();
