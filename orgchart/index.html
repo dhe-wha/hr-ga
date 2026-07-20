@@ -80,7 +80,6 @@
 </head>
 <body>
 <h1 id="title">Struktur Organisasi</h1>
-<p class="sub-title" id="subtitle">Memuat data dari Google Sheet…</p>
 
 <div class="controls">
   <label for="deptSel">Departemen:</label>
@@ -211,15 +210,12 @@ async function loadData(){
     const prev=sel.value;
     sel.innerHTML='';
     forest.forEach((r,i)=>{
-      const co=companies[r.k[0]]||('Perusahaan '+r.k[0]);
       const dp=depts[r.k.substr(1,2)]||r.j;
       const o=document.createElement('option');
-      o.value=i; o.textContent=`${dp} — ${co}`;
+      o.value=i; o.textContent=dp;
       sel.appendChild(o);
     });
     if(prev && sel.querySelector(`option[value="${prev}"]`)) sel.value=prev;
-    document.getElementById('subtitle').textContent =
-      'Realtime dari Google Sheet · dimuat '+new Date().toLocaleString('id-ID');
     render();
   }catch(e){
     chartEl.innerHTML='<div class="msg err">Gagal memuat data: '+e.message+
