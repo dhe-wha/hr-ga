@@ -182,7 +182,7 @@ function parseCSV(text){
 
 /* ================== STATE ================== */
 let companies={}, depts={}, deptList=[], nodes={};
-const isVac = n => !n.n || n.n.toLowerCase()==='vacant';
+const isVac = n => !n.n || n.n.toLowerCase().startsWith('vacant');
 
 async function loadData(){
   const chartEl=document.getElementById('chart');
@@ -374,7 +374,7 @@ function render(){
     const jabTxt = n.lv===6 ? n.k.substr(10,2)+' '+n.j : n.j;
     html+=`<div class="card l${n.lv}" style="left:${p.x}px; top:${p.y}px; width:${CW}px; height:${CH}px">
       <div class="jab">${jabTxt}</div>
-      <div class="nm${isVac(n)?' vac':''}">${isVac(n)?'Vacant':n.n}</div>
+      <div class="nm${isVac(n)?' vac':''}">${n.n?n.n:'Vacant'}</div>
     </div>`;
   });
   chartEl.innerHTML=html;
