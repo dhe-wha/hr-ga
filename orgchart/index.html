@@ -203,8 +203,16 @@ async function loadData(){
     }
     // --- Struktur: cari kolom via header
     const head=sRows[0].map(h=>h.trim().toLowerCase());
-    const iJ=head.indexOf('nama jabatan'), iN=head.indexOf('nama'), iK=head.indexOf('kode');
+    const iJ=head.indexOf('nama jabatan'), iN=head.indexOf('nama'), iK=head.indexOf('kode'), iLvl=head.indexOf('level');
     if(iJ<0||iN<0) throw new Error('Kolom Nama Jabatan / Nama tidak ditemukan');
+    // Level teks di sheet adalah acuan utama (SUB kadang dipakai sbg nomor urut dalam level yang
+    // sama, bukan level baru, jadi levelOf(kode) tidak selalu akurat) — dipakai dulu bila cocok,
+    // baru fallback ke perhitungan dari digit kode.
+    const LEVEL_NAMES=['manager','asisten kepala','koordinator','asisten','mandor1/krani1','mandor/krani','sub mandor/krani','worker'];
+    function lvlFromText(t){
+      const i=LEVEL_NAMES.indexOf((t||'').trim().toLowerCase());
+      return i>=0?i:null;
+    }
     // kode 14 digit dibangun dari kolom digit (SUB & WRK opsional, default 00)
     const DIGKEYS=['dir','mgr','ask','krd','ast','mk1','mdk','sub','wrk'];
     const DIGCOL=DIGKEYS.map(h=>head.indexOf(h));
@@ -230,7 +238,8 @@ async function loadData(){
         else if(/^\d{14}$/.test(kk)) k=kk;
       }
       if(!k || nodes[k]) return;
-      nodes[k]={k, j:(r[iJ]||'').trim(), n:(r[iN]||'').trim(), lv:levelOf(k), children:[]};
+      const lvText = iLvl>=0 ? lvlFromText(r[iLvl]) : null;
+      nodes[k]={k, j:(r[iJ]||'').trim(), n:(r[iN]||'').trim(), lv:(lvText!==null?lvText:levelOf(k)), children:[]};
       order.push(k);
     });
     // --- bangun pohon per departemen (digit 1-3)
@@ -281,18 +290,51 @@ function flat(n){ const o=[]; n.children.forEach(c=>{o.push(c); o.push(...flat(c
 function V(x,y1,y2){ if(y2>y1) lines.push(`M${x} ${y1} L${x} ${y2}`); }
 function Hln(y,x1,x2){ if(x2>x1) lines.push(`M${x1} ${y} L${x2} ${y}`); }
 
-// kolom: kepala (Mandor1/Krani1) + turunannya ditumpuk vertikal sesuai pita level
+// kolom: kepala (Mandor1/Krani1) + turunannya ditumpuk vertikal sesuai pita level.
+// Jika anak langsung berada di level Mandor/Krani (dibedakan oleh digit MDK), grup MDK
+// yang beranggota >1 (mis. "Mandor PWH" vs "Mandor Scaller") dipisah jadi cabang/kolom
+// sendiri; grup MDK tunggal (daftar pekerja sejenis, mis. Mandor Tanaman 01-05) tetap
+// ditumpuk lurus dalam kolom yang sama seperti sebelumnya.
 function placeColumn(n){
   const cx=curX, c=cx+CW/2;
   pos[n.k]={x:cx, y:BY(n.lv)};
   let bottom=BY(n.lv)+CH;
-  const stack=[n,...flat(n)];
-  for(let i=1;i<stack.length;i++){
-    const d=stack[i];
-    const y=Math.max(BY(d.lv), bottom+GAP);
-    pos[d.k]={x:cx, y};
-    V(c, bottom, y);
-    bottom=y+CH;
+
+  if(n.children.length && n.children[0].lv===5){
+    const mdkGroups={}; const order=[];
+    n.children.forEach(ch=>{
+      const key=ch.k.substr(8,2);
+      if(!mdkGroups[key]){ mdkGroups[key]=[]; order.push(key); }
+      mdkGroups[key].push(ch);
+    });
+    const simple=[], branches=[];
+    order.forEach(key=>{
+      const grp=mdkGroups[key];
+      if(grp.length===1 && !grp[0].children.length) simple.push(grp[0]);
+      else branches.push(grp);
+    });
+    simple.forEach(d=>{
+      const y=Math.max(BY(d.lv), bottom+GAP);
+      pos[d.k]={x:cx, y};
+      V(c, bottom, y);
+      bottom=y+CH;
+    });
+    if(branches.length){
+      const busY=bottom+(simple.length?GAP:22);
+      V(c, bottom, busY);
+      const centers=branches.map(grp=>placeStack(grp.flatMap(g=>[g,...flat(g)])));
+      Hln(busY, Math.min(...centers,c), Math.max(...centers,c));
+      centers.forEach((cc,i)=>V(cc, busY, pos[branches[i][0].k].y));
+    }
+  }else{
+    const stack=[n,...flat(n)];
+    for(let i=1;i<stack.length;i++){
+      const d=stack[i];
+      const y=Math.max(BY(d.lv), bottom+GAP);
+      pos[d.k]={x:cx, y};
+      V(c, bottom, y);
+      bottom=y+CH;
+    }
   }
   curX+=PW;
   return c;
