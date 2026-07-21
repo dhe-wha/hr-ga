@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Man Power Planning</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+  :root{
+    --hdr-bg:#cfe2f3; --bd:#444; --vacant:#c00000; --sub-bg:#cfe2f3;
+    --link:#1155cc;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:Arial,'Segoe UI',sans-serif; background:#fafafa; margin:0; padding:18px; color:#111;}
+  h1{font-size:20px; text-transform:uppercase; letter-spacing:.3px; margin-bottom:2px;}
+  .nav{font-size:12.5px; margin-bottom:10px;}
+  .nav a{color:var(--link); text-decoration:none; margin-right:14px;}
+  .nav a:hover{text-decoration:underline;}
+
+  .controls{display:flex; gap:10px; align-items:center; margin:12px 0; flex-wrap:wrap;}
+  .controls label{font-size:13px; font-weight:bold;}
+  .controls select{padding:6px 10px; font-size:13px; border:1px solid #bbb; border-radius:5px; background:#fff; min-width:240px; text-align:center; text-align-last:center;}
+  .toolbar{display:flex; gap:8px; margin:0 0 12px; flex-wrap:wrap;}
+  .toolbar button{background:#fff; border:1px solid #bbb; border-radius:5px; padding:5px 14px; cursor:pointer; font-size:12.5px;}
+  .toolbar button:hover{background:#f0f0f0;}
+
+  .note{font-size:11px; color:#666; margin-bottom:12px; line-height:1.5; background:#fff; border:1px solid #e2e2e2; border-radius:6px; padding:8px 12px;}
+
+  .tblwrap{overflow:auto; max-height:82vh; background:#fff; border:1px solid #ccc;}
+  table{border-collapse:collapse; font-size:12px; min-width:1150px; width:100%;}
+  th,td{border:1px solid var(--bd); padding:4px 8px; text-align:center; vertical-align:middle;}
+  thead th{background:var(--hdr-bg); font-weight:bold; position:sticky; z-index:2;}
+  thead tr:nth-child(1) th{top:0;}
+  thead tr:nth-child(2) th{top:23px;}
+  thead tr:nth-child(3) th{top:46px;}
+  td.level{font-weight:bold; background:#fff; white-space:nowrap;}
+  td.no{width:26px; color:#666;}
+  td.jab{text-align:left; font-weight:600; min-width:190px;}
+  td.num{width:56px;}
+  td.nik{white-space:nowrap; color:#444; font-family:Consolas,monospace; font-size:11px;}
+  td.nama{text-align:left; min-width:190px;}
+  td.nama.vac{color:var(--vacant); font-style:italic; font-weight:bold;}
+  tr.subtotal td{background:var(--sub-bg); font-weight:bold;}
+  tr.subtotal td.jab{text-align:center;}
+  .msg{padding:30px; text-align:center; color:#888;}
+  .msg.err{color:var(--vacant);}
+  @media print{
+    .toolbar,.controls,.nav,.note{display:none;}
+    body{padding:0;}
+    .tblwrap{border:none; max-height:none; overflow:visible;}
+    thead th{position:static;}
+  }
+</style>
+</head>
+<body>
+<div class="nav"><a href="index.html">&larr; Struktur Organisasi</a></div>
+<h1 id="title">Man Power Planning</h1>
+
+<div class="controls">
+  <label for="deptSel">Departemen:</label>
+  <select id="deptSel" onchange="render()"></select>
+</div>
+
+<div class="toolbar">
+  <button onclick="loadData()">&#8635; Muat Ulang Data</button>
+  <button onclick="window.print()">Print</button>
+</div>
+
+<div class="note">
+  Norma, Actual, dan Status diambil langsung dari kolom Norma/Actual/Status di sheet Struktur (dijumlahkan per jabatan).
+  Kolom Tetap/Kontrak dipisah berdasarkan kolom Status per baris; kolom Kebutuhan mengikuti nilai Norma.
+</div>
+
+<div class="tblwrap"><div class="msg" id="chart">Memuat data…</div></div>
+
+<script>
+const SHEET_ID='1mHMrWu6yQ7p6gL_fQz_G6fa8ew2V2LcJ3WHZXwYZo7c';
+const CSV = sheet => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheet)}&t=${Date.now()}`;
+
+// urutan & label level (harus sama dgn kolom "Level" di sheet Struktur)
+const LEVELS=[
+  ['Manager','Manager'],
+  ['Asisten Kepala','Asisten Kepala'],
+  ['Koordinator','Koordinator'],
+  ['Asisten','Asisten'],
+  ['Mandor1/Krani1','Mandor 1 / Krani 1'],
+  ['Mandor/Krani','Mandor / Krani'],
+  ['Sub Mandor/Krani','Sub Mandor / Krani'],
+  ['Worker','Worker']
+];
+
+function parseCSV(text){
+  const rows=[]; let row=[], cur='', q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){cur+='"'; i++;} else q=false; } else cur+=c; }
+    else{
+      if(c==='"') q=true;
+      else if(c===','){ row.push(cur); cur=''; }
+      else if(c==='\n'){ row.push(cur); rows.push(row); row=[]; cur=''; }
+      else if(c!=='\r') cur+=c;
+    }
+  }
+  if(cur!=='' || row.length){ row.push(cur); rows.push(row); }
+  return rows;
+}
+const norm = s => (s||'').trim();
+const baseJabatan = j => norm(j).replace(/^Act\.\s*/i,'').trim();
+const isVac = n => { const s=norm(n).toLowerCase(); return s===''||s==='vacant'; };
+
+let deptData={}, deptOrder=[];
+
+async function loadData(){
+  const el=document.getElementById('chart');
+  el.className='msg'; el.textContent='Memuat data dari Google Sheet…';
+  document.querySelector('.tblwrap').innerHTML=''; document.querySelector('.tblwrap').appendChild(el);
+  try{
+    const res=await fetch(CSV('Struktur'));
+    if(!res.ok) throw new Error('Gagal mengambil sheet Struktur ('+res.status+')');
+    const rows=parseCSV(await res.text());
+    const head=rows[0].map(h=>h.trim().toLowerCase());
+    const iJ=head.indexOf('nama jabatan'), iN=head.indexOf('nama'), iL=head.indexOf('level'),
+          iNik=head.indexOf('nik'), iDept=head.indexOf('departemen'),
+          iNorma=head.indexOf('norma'), iActual=head.indexOf('actual'), iStatus=head.indexOf('status');
+    if(iJ<0||iN<0||iL<0) throw new Error('Kolom Nama Jabatan / Nama / Level tidak ditemukan di sheet Struktur');
+
+    deptData={}; deptOrder=[];
+    rows.slice(1).forEach(r=>{
+      const jab=norm(r[iJ]), lv=norm(r[iL]);
+      if(!jab || !lv) return;
+      const dept = iDept>=0 ? (norm(r[iDept])||'(Tanpa Departemen)') : '(Semua)';
+      const nama=norm(r[iN]), nik=iNik>=0?norm(r[iNik]):'';
+      const norma = iNorma>=0 ? (parseFloat(norm(r[iNorma]))||0) : (isVac(nama)?0:1);
+      const actual = iActual>=0 ? (parseFloat(norm(r[iActual]))||0) : (isVac(nama)?0:1);
+      const status = iStatus>=0 ? norm(r[iStatus]).toLowerCase() : (isVac(nama)?'':'tetap');
+      if(!deptData[dept]){ deptData[dept]={}; deptOrder.push(dept); }
+      if(!deptData[dept][lv]) deptData[dept][lv]={groups:{}, order:[]};
+      const key=baseJabatan(jab);
+      const g=deptData[dept][lv];
+      if(!g.groups[key]){ g.groups[key]={jab:key, rows:[]}; g.order.push(key); }
+      g.groups[key].rows.push({nama, nik, norma, actual, status});
+    });
+
+    const sel=document.getElementById('deptSel');
+    const prev=sel.value;
+    sel.innerHTML='';
+    deptOrder.forEach((d,i)=>{
+      const o=document.createElement('option'); o.value=i; o.textContent=d; sel.appendChild(o);
+    });
+    if(prev && sel.querySelector(`option[value="${prev}"]`)) sel.value=prev;
+    render();
+  }catch(e){
+    el.className='msg err';
+    el.innerHTML='Gagal memuat data: '+e.message+
+      '<br><small>Pastikan Google Sheet di-share "Siapa saja yang memiliki link — Viewer", lalu klik Muat Ulang Data.</small>';
+  }
+}
+
+function render(){
+  const wrap=document.querySelector('.tblwrap');
+  const dept=deptOrder[+document.getElementById('deptSel').value||0];
+  if(!dept) return;
+  document.getElementById('title').textContent='Man Power Planning — '+dept;
+  const data=deptData[dept];
+
+  let body='';
+  let grand={norma:0,keb:0,tetap:0,kontrak:0,total:0,thN:0,thK:0};
+
+  LEVELS.forEach(([key,label])=>{
+    const lvData=data[key];
+    if(!lvData || !lvData.order.length) return;
+    let levelRows=0;
+    const jabHtml=[];
+    let sub={norma:0,keb:0,tetap:0,kontrak:0,total:0,thN:0,thK:0};
+    lvData.order.forEach((k,idx)=>{
+      const grp=lvData.groups[k];
+      const filled=grp.rows.filter(r=>!isVac(r.nama));
+      const norma=grp.rows.reduce((s,r)=>s+r.norma,0);
+      const keb=norma;
+      const tetap=grp.rows.filter(r=>r.status.includes('tetap')).reduce((s,r)=>s+r.actual,0);
+      const kontrak=grp.rows.filter(r=>r.status.includes('kontrak')).reduce((s,r)=>s+r.actual,0);
+      const total=grp.rows.reduce((s,r)=>s+r.actual,0);
+      const thN=total-norma, thK=total-keb;
+      const rs=Math.max(1, filled.length);
+      levelRows+=rs;
+      sub.norma+=norma; sub.keb+=keb; sub.tetap+=tetap; sub.kontrak+=kontrak; sub.total+=total; sub.thN+=thN; sub.thK+=thK;
+
+      const numsTd = extra => `
+        <td class="no" rowspan="${rs}">${idx+1}</td>
+        <td class="jab" rowspan="${rs}">${grp.jab}</td>
+        <td class="num" rowspan="${rs}">${norma}</td>
+        <td class="num" rowspan="${rs}">${keb}</td>
+        <td class="num" rowspan="${rs}">${tetap}</td>
+        <td class="num" rowspan="${rs}">${kontrak}</td>
+        <td class="num" rowspan="${rs}">${total}</td>
+        <td class="num" rowspan="${rs}">${thN}</td>
+        <td class="num" rowspan="${rs}">${thK}</td>${extra}`;
+
+      if(filled.length){
+        jabHtml.push(`<tr>${numsTd(`<td class="nik">${filled[0].nik||''}</td><td class="nama">${filled[0].nama}</td>`)}</tr>`);
+        for(let i=1;i<filled.length;i++){
+          jabHtml.push(`<tr><td class="nik">${filled[i].nik||''}</td><td class="nama">${filled[i].nama}</td></tr>`);
+        }
+      }else{
+        jabHtml.push(`<tr>${numsTd(`<td class="nik"></td><td class="nama"></td>`)}</tr>`);
+      }
+    });
+
+    // sisipkan <td level rowspan> ke baris pertama blok
+    let inserted=false;
+    const blockRows = jabHtml.map(rowStr=>{
+      if(!inserted){
+        inserted=true;
+        return rowStr.replace('<tr>', `<tr><td class="level" rowspan="${levelRows+1}">${label}</td>`);
+      }
+      return rowStr;
+    }).join('');
+
+    body += blockRows +
+      `<tr class="subtotal"><td colspan="2">Sub Total</td><td class="num">${sub.norma}</td><td class="num">${sub.keb}</td><td class="num">${sub.tetap}</td><td class="num">${sub.kontrak}</td><td class="num">${sub.total}</td><td class="num">${sub.thN}</td><td class="num">${sub.thK}</td><td colspan="2"></td></tr>`;
+
+    grand.norma+=sub.norma; grand.keb+=sub.keb; grand.tetap+=sub.tetap; grand.kontrak+=sub.kontrak;
+    grand.total+=sub.total; grand.thN+=sub.thN; grand.thK+=sub.thK;
+  });
+
+  body += `<tr class="subtotal" style="background:#9fc5e8"><td colspan="2">TOTAL DEPARTEMEN</td><td class="num">${grand.norma}</td><td class="num">${grand.keb}</td><td class="num">${grand.tetap}</td><td class="num">${grand.kontrak}</td><td class="num">${grand.total}</td><td class="num">${grand.thN}</td><td class="num">${grand.thK}</td><td colspan="2"></td></tr>`;
+
+  const html=`<table>
+    <thead>
+      <tr>
+        <th rowspan="3">LEVEL</th>
+        <th colspan="2" rowspan="3">JABATAN</th>
+        <th colspan="5">MP</th>
+        <th rowspan="3">Thd Norma<br>+/-</th>
+        <th rowspan="3">Thd Kebutuhan<br>+/-</th>
+        <th colspan="2">Incumbent</th>
+      </tr>
+      <tr>
+        <th rowspan="2">Norma</th>
+        <th rowspan="2">Kebutuhan</th>
+        <th colspan="3">Real saat ini</th>
+        <th rowspan="2">NIK</th>
+        <th rowspan="2">NAMA</th>
+      </tr>
+      <tr>
+        <th>Tetap</th><th>Kontrak</th><th>Total</th>
+      </tr>
+    </thead>
+    <tbody>${body}</tbody>
+  </table>`;
+  wrap.innerHTML=html;
+  // tandai nama vacant (harusnya sudah tersaring, jaga-jaga saja)
+  wrap.querySelectorAll('td.nama').forEach(td=>{ if(isVac(td.textContent)) td.classList.add('vac'); });
+}
+
+loadData();
+</script>
+</body>
+</html>
