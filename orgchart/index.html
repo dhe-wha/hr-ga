@@ -60,6 +60,7 @@
     color:var(--jab); padding:3px 6px; line-height:1.2;
     border-bottom:1.2px solid var(--bd);
   }
+  .card .jab.flag{color:var(--vacant);}
   .card .nm{
     font-size:11.5px; color:var(--nama); font-style:italic; font-weight:600;
     padding:4px 6px; line-height:1.15; background:rgba(255,255,255,.5);
@@ -372,8 +373,9 @@ function render(){
   all.forEach(n=>{
     const p=pos[n.k]; if(!p) return;
     const jabTxt = n.lv===6 ? n.k.substr(10,2)+' '+n.j : n.j;
+    const jabFlag = /^(sakit|resign)/i.test(n.j.trim());
     html+=`<div class="card l${n.lv}" style="left:${p.x}px; top:${p.y}px; width:${CW}px; height:${CH}px">
-      <div class="jab">${jabTxt}</div>
+      <div class="jab${jabFlag?' flag':''}">${jabTxt}</div>
       <div class="nm${isVac(n)?' vac':''}">${n.n?n.n:'Vacant'}</div>
     </div>`;
   });
