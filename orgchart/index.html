@@ -300,7 +300,7 @@ function placeColumn(n){
   pos[n.k]={x:cx, y:BY(n.lv)};
   let bottom=BY(n.lv)+CH;
 
-  if(n.children.length && n.children[0].lv===5){
+  if(n.children.length && n.children[0].lv>=5){
     const mdkGroups={}; const order=[];
     n.children.forEach(ch=>{
       const key=ch.k.substr(8,2);
