@@ -172,8 +172,8 @@ function render(){
       const norma=grp.rows.reduce((s,r)=>s+r.norma,0);
       const keb=norma;
       const tetap=grp.rows.filter(r=>r.status.includes('tetap')).reduce((s,r)=>s+r.actual,0);
-      const kontrak=grp.rows.filter(r=>r.status.includes('kontrak')).reduce((s,r)=>s+r.actual,0);
       const total=grp.rows.reduce((s,r)=>s+r.actual,0);
+      const kontrak=total-tetap; // sisanya (bukan "tetap") dihitung Kontrak, supaya Tetap+Kontrak selalu = Total
       const thN=total-norma, thK=total-keb;
       const rs=Math.max(1, grp.rows.length);
       levelRows+=rs;
