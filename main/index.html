@@ -566,6 +566,11 @@
               <option value="semua">Semua PT</option>
             </select>
           </div>
+          <div class="group-select">
+            <select id="kryDeptFilter">
+              <option value="semua">Semua Departemen</option>
+            </select>
+          </div>
           <button class="refresh-btn" id="kryRefreshBtn">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
             Refresh
@@ -1442,6 +1447,7 @@
   let kryTahunValue = null;
   let kryPtValue = 'semua';
   let kryBulanValue = 'semua';
+  let kryDeptValue = 'semua';
 
   function kryParseNum(v){
     if(v===undefined || v===null) return 0;
@@ -1507,6 +1513,12 @@
           klasProvinsi: kryParseNum(cols[32]),
           klasSulawesi: kryParseNum(cols[33]),
           klasNonSulawesi: kryParseNum(cols[34]),
+          pendSD: kryParseNum(cols[35]),
+          pendSMP: kryParseNum(cols[36]),
+          pendSMA: kryParseNum(cols[37]),
+          pendD123: kryParseNum(cols[38]),
+          pendS1: kryParseNum(cols[39]),
+          pendS2: kryParseNum(cols[40]),
         })).filter(r => r.pt && r.dept);
 
         /* Tahap 2: kolom "Bulan" adalah sel yang di-merge di Google Sheet. Kadang
@@ -1595,6 +1607,20 @@
     kryPtValue = ptSel.value;
 
     kryPopulateBulanFilter();
+    kryPopulateDeptFilter();
+  }
+
+  /* Isi dropdown Departemen mengikuti PT yang sedang dipilih (reset ke "Semua Departemen"
+     kalau departemen yang sebelumnya dipilih tidak ada di cakupan PT baru) */
+  function kryPopulateDeptFilter(){
+    const deptSel = document.getElementById('kryDeptFilter');
+    const scoped = kryPtValue==='semua' ? KRY_ROWS : KRY_ROWS.filter(r=>r.pt===kryPtValue);
+    const depts = Array.from(new Set(scoped.map(r=>r.dept).filter(Boolean))).sort();
+
+    const curDept = kryDeptValue || 'semua';
+    deptSel.innerHTML = `<option value="semua">Semua Departemen</option>` + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+    deptSel.value = (curDept==='semua' || depts.includes(curDept)) ? curDept : 'semua';
+    kryDeptValue = deptSel.value;
   }
 
   /* Isi dropdown Bulan mengikuti Tahun yang sedang dipilih, urut kronologis */
@@ -1647,7 +1673,7 @@
     if(!kryLoaded) return;
     const grid = document.getElementById('kryGrid');
 
-    const rowsInYear = KRY_ROWS.filter(r => r.tahun===kryTahunValue && (kryPtValue==='semua' || r.pt===kryPtValue));
+    const rowsInYear = KRY_ROWS.filter(r => r.tahun===kryTahunValue && (kryPtValue==='semua' || r.pt===kryPtValue) && (kryDeptValue==='semua' || r.dept===kryDeptValue));
 
     if(rowsInYear.length===0){
       grid.innerHTML = `<div class="state-msg">Tidak ada data untuk filter ini.</div>`;
@@ -1699,6 +1725,7 @@
     const statusBulanan = sum(snapshotRows,'statusBulanan'), statusSKU = sum(snapshotRows,'statusSKU'), statusPKWT = sum(snapshotRows,'statusPKWT'), statusBHL = sum(snapshotRows,'statusBHL');
     const pangkatStaff = sum(snapshotRows,'pangkatStaff'), pangkatMandor1 = sum(snapshotRows,'pangkatMandor1'), pangkatMandorKerani = sum(snapshotRows,'pangkatMandorKerani'), pangkatWorker = sum(snapshotRows,'pangkatWorker');
     const klasDesaBinaan = sum(snapshotRows,'klasDesaBinaan'), klasKecamatan = sum(snapshotRows,'klasKecamatan'), klasKabupaten = sum(snapshotRows,'klasKabupaten'), klasProvinsi = sum(snapshotRows,'klasProvinsi'), klasSulawesi = sum(snapshotRows,'klasSulawesi'), klasNonSulawesi = sum(snapshotRows,'klasNonSulawesi');
+    const pendSD = sum(snapshotRows,'pendSD'), pendSMP = sum(snapshotRows,'pendSMP'), pendSMA = sum(snapshotRows,'pendSMA'), pendD123 = sum(snapshotRows,'pendD123'), pendS1 = sum(snapshotRows,'pendS1'), pendS2 = sum(snapshotRows,'pendS2');
 
     const gajiBrutoByDept = groupSum(snapshotRows, 'dept', 'gajiBruto');
     const gajiNettoByDept = groupSum(snapshotRows, 'dept', 'gajiNetto');
@@ -1726,6 +1753,7 @@
       <div class="kry-card"><h3>Karyawan per Status</h3><div class="bar-list" id="kryStatus"></div></div>
       <div class="kry-card"><h3>Karyawan per Pangkat</h3><div class="bar-list" id="kryPangkat"></div></div>
       <div class="kry-card"><h3>Karyawan per Klasifikasi</h3><div class="bar-list" id="kryKlasifikasi"></div></div>
+      <div class="kry-card"><h3>Karyawan per Tingkat Pendidikan</h3><div class="bar-list" id="kryPendidikan"></div></div>
       <div class="kry-card wide"><h3>Gaji Bruto per Departemen</h3><table class="kry-table" id="kryGajiBruto"></table></div>
       <div class="kry-card wide"><h3>Gaji Netto per Departemen</h3><table class="kry-table" id="kryGajiNetto"></table></div>
     `;
@@ -1774,6 +1802,14 @@
       {label:'Sulawesi', value: klasSulawesi},
       {label:'Non Sulawesi', value: klasNonSulawesi},
     ]);
+    renderBarList('kryPendidikan', [
+      {label:'SD', value: pendSD},
+      {label:'SMP', value: pendSMP},
+      {label:'SMA', value: pendSMA},
+      {label:'D1/D2/D3', value: pendD123},
+      {label:'S1', value: pendS1},
+      {label:'S2', value: pendS2},
+    ]);
 
     renderGajiTable('kryGajiBruto', Object.entries(gajiBrutoByDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value), totalBruto);
     renderGajiTable('kryGajiNetto', Object.entries(gajiNettoByDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value), totalNetto);
@@ -1791,6 +1827,11 @@
   });
   document.getElementById('kryPtFilter').addEventListener('change', e=>{
     kryPtValue = e.target.value;
+    kryPopulateDeptFilter(); // daftar departemen bisa beda per PT, sesuaikan pilihannya
+    renderKaryawan();
+  });
+  document.getElementById('kryDeptFilter').addEventListener('change', e=>{
+    kryDeptValue = e.target.value;
     renderKaryawan();
   });
   document.getElementById('kryRefreshBtn').addEventListener('click', loadKaryawanData);
