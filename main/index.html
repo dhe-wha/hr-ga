@@ -1,7 +1,3 @@
-https://raw.githubusercontent.com/dhe-wha/hr-ga/main/main/index.html
-→ https://raw.githubusercontent.com/dhe-wha/hr-ga/main/main/index.html
-Content-Type: text/plain; charset=utf-8
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -617,9 +613,6 @@ Content-Type: text/plain; charset=utf-8
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
             Refresh
           </button>
-          <a href="/rekruts/" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:#4F46E5;color:#fff;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;letter-spacing:.3px;white-space:nowrap">
-            📊 Dashboard Rekrutmen
-          </a>
           <p class="kry-note" id="recNote">Hanya menampilkan posisi yang kolom "posting" di sheet recap_jobs dicentang (TRUE).</p>
         </div>
       </div>
@@ -1555,4 +1548,1288 @@ Content-Type: text/plain; charset=utf-8
           });
 
           const maxBlock = parsedRows[parsedRows.length-1].blockIndex;
-          for(let b=0; b<=max
+          for(let b=0; b<=maxBlock; b++){
+            if(!blockLabel[b] && blockLabel[b-1]){
+              let mi = blockLabel[b-1].monthIdx+1, ty = blockLabel[b-1].tahun;
+              if(mi>11){ mi=0; ty++; }
+              blockLabel[b] = {monthIdx:mi, tahun:ty};
+            }
+          }
+          for(let b=maxBlock-1; b>=0; b--){
+            if(!blockLabel[b] && blockLabel[b+1]){
+              let mi = blockLabel[b+1].monthIdx-1, ty = blockLabel[b+1].tahun;
+              if(mi<0){ mi=11; ty--; }
+              blockLabel[b] = {monthIdx:mi, tahun:ty};
+            }
+          }
+
+          parsedRows.forEach(r=>{
+            const lbl = blockLabel[r.blockIndex];
+            r.monthIdx = lbl ? lbl.monthIdx : -1;
+            r.tahun = lbl ? lbl.tahun : null;
+            r.bulan = lbl ? `${MONTH_ORDER[lbl.monthIdx]}-${String(lbl.tahun%100).padStart(2,'0')}` : r.bulanRaw;
+            r.sortKey = (r.tahun||0)*100 + (r.monthIdx>=0?r.monthIdx:0);
+          });
+        }
+
+        KRY_ROWS = parsedRows;
+
+        kryPopulateFilters();
+        kryLoaded = true;
+        renderKaryawan();
+
+        dashPopulateFilters();
+        renderDashboardCharts();
+      },
+      error: function(){
+        btn.classList.remove('spinning');
+        grid.innerHTML = `<div class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="kryRetryBtn">Coba Lagi</button></div>`;
+        const retry = document.getElementById('kryRetryBtn');
+        if(retry) retry.addEventListener('click', loadKaryawanData);
+      }
+    });
+  }
+
+  function kryPopulateFilters(){
+    const tahunSel = document.getElementById('kryTahunFilter');
+    const ptSel = document.getElementById('kryPtFilter');
+
+    const tahuns = Array.from(new Set(KRY_ROWS.map(r=>r.tahun).filter(Boolean))).sort((a,b)=>b-a);
+    const curTahun = kryTahunValue || tahuns[0];
+    tahunSel.innerHTML = tahuns.map(t=>`<option value="${t}">${t}</option>`).join('');
+    tahunSel.value = tahuns.includes(curTahun) ? curTahun : tahuns[0];
+    kryTahunValue = parseInt(tahunSel.value, 10);
+
+    const pts = Array.from(new Set(KRY_ROWS.map(r=>r.pt).filter(Boolean))).sort();
+    const curPt = kryPtValue || 'semua';
+    ptSel.innerHTML = `<option value="semua">Semua PT</option>` + pts.map(p=>`<option value="${p}">${p}</option>`).join('');
+    ptSel.value = (curPt==='semua' || pts.includes(curPt)) ? curPt : 'semua';
+    kryPtValue = ptSel.value;
+
+    kryPopulateBulanFilter();
+    kryPopulateDeptFilter();
+  }
+
+  /* Isi dropdown Departemen mengikuti PT yang sedang dipilih (reset ke "Semua Departemen"
+     kalau departemen yang sebelumnya dipilih tidak ada di cakupan PT baru) */
+  function kryPopulateDeptFilter(){
+    const deptSel = document.getElementById('kryDeptFilter');
+    const scoped = kryPtValue==='semua' ? KRY_ROWS : KRY_ROWS.filter(r=>r.pt===kryPtValue);
+    const depts = Array.from(new Set(scoped.map(r=>r.dept).filter(Boolean))).sort();
+
+    const curDept = kryDeptValue || 'semua';
+    deptSel.innerHTML = `<option value="semua">Semua Departemen</option>` + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+    deptSel.value = (curDept==='semua' || depts.includes(curDept)) ? curDept : 'semua';
+    kryDeptValue = deptSel.value;
+  }
+
+  /* Isi dropdown Bulan mengikuti Tahun yang sedang dipilih, urut kronologis */
+  function kryPopulateBulanFilter(){
+    const bulanSel = document.getElementById('kryBulanFilter');
+    const bulanOptions = Array.from(
+      new Map(
+        KRY_ROWS.filter(r=>r.tahun===kryTahunValue).map(r=>[r.bulan, r.sortKey])
+      ).entries()
+    ).sort((a,b)=>a[1]-b[1]).map(([bulan])=>bulan);
+
+    const curBulan = kryBulanValue || 'semua';
+    bulanSel.innerHTML = `<option value="semua">Semua Bulan</option>` + bulanOptions.map(b=>`<option value="${b}">${b}</option>`).join('');
+    bulanSel.value = (curBulan==='semua' || bulanOptions.includes(curBulan)) ? curBulan : 'semua';
+    kryBulanValue = bulanSel.value;
+  }
+
+  function renderBarList(containerId, entries, colorClass){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+    const max = Math.max(...entries.map(e=>e.value), 1);
+    el.innerHTML = entries.map(e => `
+      <div class="bar-row">
+        <div class="label">${e.label}</div>
+        <div class="bar-track"><div class="bar-fill ${colorClass||''}" style="width:${(e.value/max*100).toFixed(1)}%"></div></div>
+        <div class="bar-value">${e.value.toLocaleString('id-ID')}</div>
+      </div>`).join('');
+  }
+
+  function renderBarListPct(containerId, entries, colorClass){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+    const max = Math.max(...entries.map(e=>e.value), 1);
+    el.innerHTML = entries.map(e => `
+      <div class="bar-row">
+        <div class="label">${e.label}</div>
+        <div class="bar-track"><div class="bar-fill ${colorClass||''}" style="width:${(e.value/max*100).toFixed(1)}%"></div></div>
+        <div class="bar-value wide">${e.value.toLocaleString('id-ID')}<span class="bar-pct">(${e.pct.toFixed(1)}%)</span></div>
+      </div>`).join('');
+  }
+
+  function renderGajiTable(containerId, deptEntries, total){
+    const el = document.getElementById(containerId);
+    if(!el) return;
+    const rows = deptEntries.map(e => `<tr><td>${e.label}</td><td>${kryFmtRupiah(e.value)}</td></tr>`).join('');
+    el.innerHTML = `${rows}<tr class="total"><td>Total</td><td>${kryFmtRupiah(total)}</td></tr>`;
+  }
+
+  function renderKaryawan(){
+    if(!kryLoaded) return;
+    const grid = document.getElementById('kryGrid');
+
+    const rowsInYear = KRY_ROWS.filter(r => r.tahun===kryTahunValue && (kryPtValue==='semua' || r.pt===kryPtValue) && (kryDeptValue==='semua' || r.dept===kryDeptValue));
+
+    if(rowsInYear.length===0){
+      grid.innerHTML = `<div class="state-msg">Tidak ada data untuk filter ini.</div>`;
+      document.getElementById('kryTotal').textContent = '0';
+      document.getElementById('kryMasukTotal').textContent = '0';
+      document.getElementById('kryKeluarTotal').textContent = '0';
+      document.getElementById('kryNote').innerHTML = '';
+      return;
+    }
+
+    /* Jika Bulan = "Semua Bulan": data jumlah/stok karyawan diambil dari snapshot
+       bulan terakhir yang tersedia di tahun ini, dan masuk/keluar dijumlah
+       sepanjang tahun (YTD). Jika user memilih bulan tertentu, semuanya
+       (stok maupun masuk/keluar) dihitung hanya untuk bulan itu saja. */
+    let snapshotRows, flowRows, isSingleMonth;
+    if(kryBulanValue==='semua'){
+      const maxSortKey = Math.max(...rowsInYear.map(r=>r.sortKey));
+      snapshotRows = rowsInYear.filter(r=>r.sortKey===maxSortKey);
+      flowRows = rowsInYear;
+      isSingleMonth = false;
+    }else{
+      const monthRows = rowsInYear.filter(r=>r.bulan===kryBulanValue);
+      snapshotRows = monthRows;
+      flowRows = monthRows;
+      isSingleMonth = true;
+    }
+    const snapshotBulanLabel = snapshotRows[0] ? snapshotRows[0].bulan : kryBulanValue;
+
+    const sum = (rows, field) => rows.reduce((s,r)=>s+r[field], 0);
+    const groupSum = (rows, keyField, valField) => {
+      const map = {};
+      rows.forEach(r=>{ const k=r[keyField]; map[k]=(map[k]||0)+r[valField]; });
+      return map;
+    };
+
+    const totalKry = sum(snapshotRows, 'total');
+    const byPT = groupSum(snapshotRows, 'pt', 'total');
+    const byDept = groupSum(snapshotRows, 'dept', 'total');
+
+    const kabLokal = sum(snapshotRows,'kabLokal'), kabNonLokal = sum(snapshotRows,'kabNonLokal');
+    const provLokal = sum(snapshotRows,'provLokal'), provNonLokal = sum(snapshotRows,'provNonLokal');
+
+    const masukTotal = sum(flowRows,'masukPenambahan')+sum(flowRows,'masukPenggantian')+sum(flowRows,'masukMutasi')+sum(flowRows,'masukPromosi');
+    const keluarTotal = sum(flowRows,'keluarResign')+sum(flowRows,'keluarMutasi')+sum(flowRows,'keluarPromosi')+sum(flowRows,'keluarHabisKontrak')+sum(flowRows,'keluarMeninggal');
+
+    const resignByPT = groupSum(flowRows, 'pt', 'keluarResign');
+
+    const genderL = sum(snapshotRows,'genderL'), genderP = sum(snapshotRows,'genderP');
+    const statusBulanan = sum(snapshotRows,'statusBulanan'), statusSKU = sum(snapshotRows,'statusSKU'), statusPKWT = sum(snapshotRows,'statusPKWT'), statusBHL = sum(snapshotRows,'statusBHL');
+    const pangkatStaff = sum(snapshotRows,'pangkatStaff'), pangkatMandor1 = sum(snapshotRows,'pangkatMandor1'), pangkatMandorKerani = sum(snapshotRows,'pangkatMandorKerani'), pangkatWorker = sum(snapshotRows,'pangkatWorker');
+    const klasDesaBinaan = sum(snapshotRows,'klasDesaBinaan'), klasKecamatan = sum(snapshotRows,'klasKecamatan'), klasKabupaten = sum(snapshotRows,'klasKabupaten'), klasProvinsi = sum(snapshotRows,'klasProvinsi'), klasSulawesi = sum(snapshotRows,'klasSulawesi'), klasNonSulawesi = sum(snapshotRows,'klasNonSulawesi');
+    const pendSD = sum(snapshotRows,'pendSD'), pendSMP = sum(snapshotRows,'pendSMP'), pendSMA = sum(snapshotRows,'pendSMA'), pendD123 = sum(snapshotRows,'pendD123'), pendS1 = sum(snapshotRows,'pendS1'), pendS2 = sum(snapshotRows,'pendS2');
+
+    const gajiBrutoByDept = groupSum(snapshotRows, 'dept', 'gajiBruto');
+    const gajiNettoByDept = groupSum(snapshotRows, 'dept', 'gajiNetto');
+    const totalBruto = sum(snapshotRows,'gajiBruto');
+    const totalNetto = sum(snapshotRows,'gajiNetto');
+
+    document.getElementById('kryTotal').textContent = totalKry.toLocaleString('id-ID');
+    document.getElementById('kryMasukTotal').textContent = masukTotal.toLocaleString('id-ID');
+    document.getElementById('kryKeluarTotal').textContent = keluarTotal.toLocaleString('id-ID');
+    document.getElementById('kryMasukLabel').textContent = isSingleMonth ? 'Masuk (Bulan Ini)' : 'Masuk (YTD)';
+    document.getElementById('kryKeluarLabel').textContent = isSingleMonth ? 'Keluar (Bulan Ini)' : 'Keluar (YTD)';
+    document.getElementById('kryNote').innerHTML = isSingleMonth
+      ? `Data jumlah karyawan, masuk, dan keluar untuk bulan <b>${snapshotBulanLabel}</b>.`
+      : `Data jumlah karyawan per <b>${snapshotBulanLabel}</b>. Data masuk/keluar akumulasi sepanjang tahun <b>${kryTahunValue}</b>.`;
+
+    grid.innerHTML = `
+      <div class="kry-card"><h3>Karyawan per PT</h3><div class="bar-list" id="kryByPT"></div></div>
+      <div class="kry-card"><h3>Karyawan Resign per PT</h3><div class="bar-list" id="kryResignPT"></div></div>
+      <div class="kry-card wide"><h3>Karyawan per Departemen</h3><div class="bar-list" id="kryByDept"></div></div>
+      <div class="kry-card"><h3>Lokal / Non-Lokal &middot; by Kabupaten</h3><div class="bar-list" id="kryKab"></div></div>
+      <div class="kry-card"><h3>Lokal / Non-Lokal &middot; by Provinsi</h3><div class="bar-list" id="kryProv"></div></div>
+      <div class="kry-card"><h3>Karyawan Masuk per Kategori (YTD)</h3><div class="bar-list" id="kryMasukList"></div></div>
+      <div class="kry-card"><h3>Karyawan Keluar per Kategori (YTD)</h3><div class="bar-list" id="kryKeluarList"></div></div>
+      <div class="kry-card"><h3>Karyawan per Gender</h3><div class="bar-list" id="kryGender"></div></div>
+      <div class="kry-card"><h3>Karyawan per Status</h3><div class="bar-list" id="kryStatus"></div></div>
+      <div class="kry-card"><h3>Karyawan per Pangkat</h3><div class="bar-list" id="kryPangkat"></div></div>
+      <div class="kry-card"><h3>Karyawan per Klasifikasi</h3><div class="bar-list" id="kryKlasifikasi"></div></div>
+      <div class="kry-card"><h3>Karyawan per Tingkat Pendidikan</h3><div class="bar-list" id="kryPendidikan"></div></div>
+      <div class="kry-card wide"><h3>Gaji Bruto per Departemen</h3><table class="kry-table" id="kryGajiBruto"></table></div>
+      <div class="kry-card wide"><h3>Gaji Netto per Departemen</h3><table class="kry-table" id="kryGajiNetto"></table></div>
+    `;
+
+    renderBarList('kryByPT', Object.entries(byPT).map(([k,v])=>({label:k,value:v})));
+    const resignPtKeys = Array.from(new Set([...Object.keys(byPT), ...Object.keys(resignByPT)]));
+    renderBarListPct('kryResignPT', resignPtKeys.map(k => {
+      const resign = resignByPT[k] || 0;
+      const headcount = byPT[k] || 0;
+      return {label:k, value:resign, pct: headcount ? (resign/headcount*100) : 0};
+    }).sort((a,b)=>b.value-a.value), 'red');
+    renderBarList('kryByDept', Object.entries(byDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value));
+    renderBarList('kryKab', [{label:'Lokal',value:kabLokal},{label:'Non Lokal',value:kabNonLokal}]);
+    renderBarList('kryProv', [{label:'Lokal',value:provLokal},{label:'Non Lokal',value:provNonLokal}]);
+    renderBarList('kryMasukList', [
+      {label:'Penambahan', value: sum(flowRows,'masukPenambahan')},
+      {label:'Penggantian', value: sum(flowRows,'masukPenggantian')},
+      {label:'Mutasi', value: sum(flowRows,'masukMutasi')},
+      {label:'Promosi', value: sum(flowRows,'masukPromosi')},
+    ], 'green');
+    renderBarList('kryKeluarList', [
+      {label:'Resign', value: sum(flowRows,'keluarResign')},
+      {label:'Mutasi', value: sum(flowRows,'keluarMutasi')},
+      {label:'Promosi', value: sum(flowRows,'keluarPromosi')},
+      {label:'Habis Kontrak', value: sum(flowRows,'keluarHabisKontrak')},
+      {label:'Meninggal', value: sum(flowRows,'keluarMeninggal')},
+    ], 'red');
+    renderBarList('kryGender', [{label:'Laki-laki',value:genderL},{label:'Perempuan',value:genderP}]);
+    renderBarList('kryStatus', [
+      {label:'Bulanan', value: statusBulanan},
+      {label:'SKU', value: statusSKU},
+      {label:'PKWT', value: statusPKWT},
+      {label:'BHL', value: statusBHL},
+    ]);
+    renderBarList('kryPangkat', [
+      {label:'Staff', value: pangkatStaff},
+      {label:'Mandor 1 / Kerani 1', value: pangkatMandor1},
+      {label:'Mandor / Kerani / Operator', value: pangkatMandorKerani},
+      {label:'Worker', value: pangkatWorker},
+    ]);
+    renderBarList('kryKlasifikasi', [
+      {label:'Desa Binaan', value: klasDesaBinaan},
+      {label:'Satu Kecamatan', value: klasKecamatan},
+      {label:'Satu Kabupaten', value: klasKabupaten},
+      {label:'Satu Provinsi', value: klasProvinsi},
+      {label:'Sulawesi', value: klasSulawesi},
+      {label:'Non Sulawesi', value: klasNonSulawesi},
+    ]);
+    renderBarList('kryPendidikan', [
+      {label:'SD', value: pendSD},
+      {label:'SMP', value: pendSMP},
+      {label:'SMA', value: pendSMA},
+      {label:'D1/D2/D3', value: pendD123},
+      {label:'S1', value: pendS1},
+      {label:'S2', value: pendS2},
+    ]);
+
+    renderGajiTable('kryGajiBruto', Object.entries(gajiBrutoByDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value), totalBruto);
+    renderGajiTable('kryGajiNetto', Object.entries(gajiNettoByDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value), totalNetto);
+  }
+
+  document.getElementById('kryTahunFilter').addEventListener('change', e=>{
+    kryTahunValue = parseInt(e.target.value,10);
+    kryBulanValue = 'semua'; // daftar bulan berbeda per tahun, reset ke "Semua Bulan"
+    kryPopulateBulanFilter();
+    renderKaryawan();
+  });
+  document.getElementById('kryBulanFilter').addEventListener('change', e=>{
+    kryBulanValue = e.target.value;
+    renderKaryawan();
+  });
+  document.getElementById('kryPtFilter').addEventListener('change', e=>{
+    kryPtValue = e.target.value;
+    kryPopulateDeptFilter(); // daftar departemen bisa beda per PT, sesuaikan pilihannya
+    renderKaryawan();
+  });
+  document.getElementById('kryDeptFilter').addEventListener('change', e=>{
+    kryDeptValue = e.target.value;
+    renderKaryawan();
+  });
+  document.getElementById('kryRefreshBtn').addEventListener('click', loadKaryawanData);
+
+  /* =====================================================================
+     DASHBOARD (landing page) - chart Chart.js, sumber data sama dengan
+     Dashboard Karyawan di atas (KRY_ROWS, sheet Summary).
+     ===================================================================== */
+  let dashTahunValue = null;
+  let dashBulanValue = 'semua';
+  let dashPtValue = 'semua';
+  let dashTrendChartType = 'line';
+  let dashLineChart = null, dashPieKabChart = null, dashPieProvChart = null, dashDoughnutChart = null;
+  const DASH_PT_COLORS = { BJA:'#E8A33D', BTL:'#4C8DF5', IGL:'#3FB6A8' };
+  const DASH_PT_FALLBACK_COLORS = ['#F2B705','#E08A3E','#9AA1B4','#8FCB84','#E8825A'];
+
+  function dashPtColor(pt, idx){
+    return DASH_PT_COLORS[pt] || DASH_PT_FALLBACK_COLORS[idx % DASH_PT_FALLBACK_COLORS.length];
+  }
+
+  /* Plugin ringan buatan sendiri untuk menampilkan nilai data langsung di atas
+     titik/bar - supaya tidak perlu tambah dependency CDN baru (chartjs-plugin-datalabels). */
+  const dashDataLabelsPlugin = {
+    id: 'dashDataLabels',
+    afterDatasetsDraw(chart){
+      const { ctx } = chart;
+      chart.data.datasets.forEach((dataset, dsIndex) => {
+        const meta = chart.getDatasetMeta(dsIndex);
+        if(meta.hidden) return;
+        meta.data.forEach((element, index) => {
+          const value = dataset.data[index];
+          if(value === null || value === undefined || value === 0) return;
+          ctx.save();
+          ctx.fillStyle = dataset.borderColor || dataset.backgroundColor || '#ECEAE4';
+          ctx.font = "10px 'IBM Plex Mono', monospace";
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          const pos = element.tooltipPosition ? element.tooltipPosition() : element.getCenterPoint();
+          ctx.fillText(value, pos.x, pos.y - 6);
+          ctx.restore();
+        });
+      });
+    }
+  };
+
+  /* Plugin terpisah khusus untuk doughnut Klasifikasi Asal Karyawan - sengaja
+     dibuat berdiri sendiri (tidak berbagi kode dengan dashDataLabelsPlugin di
+     atas) supaya perubahan di sini tidak bisa memengaruhi chart Line/Bar. */
+  const dashDoughnutLabelsPlugin = {
+    id: 'dashDoughnutLabels',
+    afterDatasetsDraw(chart){
+      const { ctx } = chart;
+      const meta = chart.getDatasetMeta(0);
+      if(!meta || meta.hidden) return;
+      const dataset = chart.data.datasets[0];
+      const total = dataset.data.reduce((s,v)=>s+(v||0),0);
+      meta.data.forEach((arc, index) => {
+        const value = dataset.data[index];
+        if(!value) return;
+        const pct = total ? Math.round(value/total*100) : 0;
+        const line1 = String(value);
+        const line2 = `(${pct}%)`;
+        const pos = arc.getCenterPoint();
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(20,24,26,0.9)';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = "bold 12px 'IBM Plex Mono', monospace";
+        ctx.textBaseline = 'bottom';
+        ctx.strokeText(line1, pos.x, pos.y);
+        ctx.fillText(line1, pos.x, pos.y);
+        ctx.font = "10px 'IBM Plex Mono', monospace";
+        ctx.textBaseline = 'top';
+        ctx.strokeText(line2, pos.x, pos.y + 1);
+        ctx.fillText(line2, pos.x, pos.y + 1);
+        ctx.restore();
+      });
+    }
+  };
+
+  function dashPopulateFilters(){
+    const tahunSel = document.getElementById('dashTahunFilter');
+    const ptSel = document.getElementById('dashPtFilter');
+
+    const tahuns = Array.from(new Set(KRY_ROWS.map(r=>r.tahun).filter(Boolean))).sort((a,b)=>b-a);
+    const curTahun = dashTahunValue || tahuns[0];
+    tahunSel.innerHTML = tahuns.map(t=>`<option value="${t}">${t}</option>`).join('');
+    tahunSel.value = tahuns.includes(curTahun) ? curTahun : tahuns[0];
+    dashTahunValue = parseInt(tahunSel.value, 10);
+
+    const pts = Array.from(new Set(KRY_ROWS.map(r=>r.pt).filter(Boolean))).sort();
+    const curPt = dashPtValue || 'semua';
+    ptSel.innerHTML = `<option value="semua">Semua PT</option>` + pts.map(p=>`<option value="${p}">${p}</option>`).join('');
+    ptSel.value = (curPt==='semua' || pts.includes(curPt)) ? curPt : 'semua';
+    dashPtValue = ptSel.value;
+
+    dashPopulateBulanFilter();
+  }
+
+  /* Isi dropdown Bulan mengikuti Tahun yang sedang dipilih, urut kronologis.
+     Filter ini hanya berlaku utk snapshot pie/doughnut di section Human Resources. */
+  function dashPopulateBulanFilter(){
+    const bulanSel = document.getElementById('dashBulanFilter');
+    const bulanOptions = Array.from(
+      new Map(
+        KRY_ROWS.filter(r=>r.tahun===dashTahunValue).map(r=>[r.bulan, r.sortKey])
+      ).entries()
+    ).sort((a,b)=>a[1]-b[1]).map(([bulan])=>bulan);
+
+    const curBulan = dashBulanValue || 'semua';
+    bulanSel.innerHTML = `<option value="semua">Semua Bulan</option>` + bulanOptions.map(b=>`<option value="${b}">${b}</option>`).join('');
+    bulanSel.value = (curBulan==='semua' || bulanOptions.includes(curBulan)) ? curBulan : 'semua';
+    dashBulanValue = bulanSel.value;
+  }
+
+  function dashPieOptions(){
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position:'bottom', labels: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, boxWidth:12, padding:10 } },
+        tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
+      },
+    };
+  }
+
+  function renderDashboardCharts(){
+    if(!KRY_ROWS.length) return;
+
+    if(typeof Chart === 'undefined'){
+      document.getElementById('dashNote').textContent = 'Gagal memuat library chart (Chart.js). Cek koneksi internet lalu refresh halaman.';
+      return;
+    }
+
+    try{
+      renderDashboardChartsInner();
+    }catch(err){
+      console.error('renderDashboardCharts error:', err);
+      document.getElementById('dashNote').textContent = 'Terjadi error saat menggambar chart: ' + (err && err.message ? err.message : err);
+    }
+  }
+
+  function renderDashboardChartsInner(){
+    /* ---------- Line chart: total karyawan per PT per bulan (tahun terpilih) ---------- */
+    const yearRows = KRY_ROWS.filter(r=>r.tahun===dashTahunValue);
+    const months = Array.from(
+      new Map(yearRows.map(r=>[r.bulan, r.sortKey])).entries()
+    ).sort((a,b)=>a[1]-b[1]).map(([bulan])=>bulan);
+
+    const ptsForLine = dashPtValue==='semua'
+      ? Array.from(new Set(yearRows.map(r=>r.pt))).sort()
+      : [dashPtValue];
+
+    const isBar = dashTrendChartType === 'bar';
+    const lineDatasets = ptsForLine.map((pt, idx)=>{
+      const data = months.map(bulan=> yearRows.filter(r=>r.pt===pt && r.bulan===bulan).reduce((s,r)=>s+r.total,0));
+      const color = dashPtColor(pt, idx);
+      const base = {
+        label: pt,
+        data,
+        borderColor: color,
+        backgroundColor: isBar ? color + 'CC' : color,
+      };
+      if(isBar){
+        base.borderWidth = 0;
+        base.borderRadius = 4;
+        base.maxBarThickness = 34;
+      } else {
+        base.tension = 0.3;
+        base.borderWidth = 2.5;
+        base.pointRadius = 3;
+        base.pointBackgroundColor = color;
+        base.fill = false;
+      }
+      return base;
+    });
+
+    if(dashLineChart) dashLineChart.destroy();
+    dashLineChart = new Chart(document.getElementById('dashLineChart'), {
+      type: dashTrendChartType,
+      data: { labels: months, datasets: lineDatasets },
+      plugins: [dashDataLabelsPlugin],
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        layout: { padding: { top: 16 } },
+        plugins: {
+          legend: { labels: { color: '#9BA3A0', font: { family: 'IBM Plex Mono', size: 11 } } },
+          tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
+        },
+        scales: {
+          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
+          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
+        },
+      },
+    });
+
+    /* ---------- Snapshot bulan (untuk pie/doughnut, khusus section Human Resources) ----------
+       Jika dashBulanValue==='semua', ambil bulan terakhir yang tersedia dalam cakupan filter.
+       Jika bulan tertentu dipilih, pakai bulan itu sebagai snapshot. */
+    const scopedRows = dashPtValue==='semua' ? yearRows : yearRows.filter(r=>r.pt===dashPtValue);
+    let snapshotBulan = null;
+    if(dashBulanValue==='semua'){
+      let snapshotSortKey = -1;
+      scopedRows.forEach(r=>{
+        if(r.sortKey > snapshotSortKey){ snapshotSortKey = r.sortKey; snapshotBulan = r.bulan; }
+      });
+    } else {
+      snapshotBulan = scopedRows.some(r=>r.bulan===dashBulanValue) ? dashBulanValue : null;
+    }
+    const snapshotRows = scopedRows.filter(r=>r.bulan===snapshotBulan);
+    const sum = (field) => snapshotRows.reduce((s,r)=>s+r[field],0);
+
+    document.getElementById('dashNote').innerHTML = snapshotBulan
+      ? `Tren tahun <b>${dashTahunValue}</b>. Snapshot pie/doughnut per <b>${snapshotBulan}</b>.`
+      : `Tidak ada data karyawan untuk bulan yang dipilih.`;
+
+    /* ---------- Pie: Lokal/Non-Lokal by Kabupaten ---------- */
+    const kabLokal = sum('kabLokal'), kabNonLokal = sum('kabNonLokal');
+    if(dashPieKabChart) dashPieKabChart.destroy();
+    dashPieKabChart = new Chart(document.getElementById('dashPieKabChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Lokal','Non Lokal'],
+        datasets: [{ data: [kabLokal, kabNonLokal], backgroundColor: ['#8FCB84','#E8825A'], borderColor:'#1E2426', borderWidth:2 }],
+      },
+      options: dashPieOptions(),
+    });
+    const kabTotal = kabLokal + kabNonLokal;
+    document.getElementById('dashPieKabNote').textContent = kabTotal
+      ? `Lokal ${kabLokal} (${Math.round(kabLokal/kabTotal*100)}%) · Non Lokal ${kabNonLokal} (${Math.round(kabNonLokal/kabTotal*100)}%)`
+      : 'Tidak ada data.';
+
+    /* ---------- Pie: Lokal/Non-Lokal by Provinsi ---------- */
+    const provLokal = sum('provLokal'), provNonLokal = sum('provNonLokal');
+    if(dashPieProvChart) dashPieProvChart.destroy();
+    dashPieProvChart = new Chart(document.getElementById('dashPieProvChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Lokal','Non Lokal'],
+        datasets: [{ data: [provLokal, provNonLokal], backgroundColor: ['#4C8DF5','#F2B705'], borderColor:'#1E2426', borderWidth:2 }],
+      },
+      options: dashPieOptions(),
+    });
+    const provTotal = provLokal + provNonLokal;
+    document.getElementById('dashPieProvNote').textContent = provTotal
+      ? `Lokal ${provLokal} (${Math.round(provLokal/provTotal*100)}%) · Non Lokal ${provNonLokal} (${Math.round(provNonLokal/provTotal*100)}%)`
+      : 'Tidak ada data.';
+
+    /* ---------- Doughnut: Klasifikasi asal karyawan ---------- */
+    const klas = {
+      'Desa Binaan': sum('klasDesaBinaan'),
+      'Satu Kecamatan': sum('klasKecamatan'),
+      'Satu Kabupaten': sum('klasKabupaten'),
+      'Satu Provinsi': sum('klasProvinsi'),
+      'Sulawesi': sum('klasSulawesi'),
+      'Non Sulawesi': sum('klasNonSulawesi'),
+    };
+    if(dashDoughnutChart) dashDoughnutChart.destroy();
+    dashDoughnutChart = new Chart(document.getElementById('dashDoughnutChart'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(klas),
+        datasets: [{ data: Object.values(klas), backgroundColor: ['#E8A33D','#4C8DF5','#8FCB84','#E8825A','#3FB6A8','#F2B705'], borderColor:'#1E2426', borderWidth:2 }],
+      },
+      plugins: [dashDoughnutLabelsPlugin],
+      options: dashPieOptions(),
+    });
+    const klasTotal = Object.values(klas).reduce((a,b)=>a+b,0);
+    document.getElementById('dashDoughnutNote').textContent = klasTotal ? `Total ${klasTotal} karyawan` : 'Tidak ada data.';
+  }
+
+  /* =====================================================================
+     Total Kendaraan per Kategori (bar 3D) - sumber data sheet "Kendaraan"
+     yang sama dengan halaman General Affair > Kendaraan (variabel ASSETS).
+     Plugin di bawah sengaja dibuat berdiri sendiri (tidak berbagi kode
+     dengan dashDataLabelsPlugin/dashDoughnutLabelsPlugin) supaya perubahan
+     di sini tidak bisa memengaruhi chart lain yang sudah berjalan baik.
+     ===================================================================== */
+  let dashVehicleChart = null;
+  let dashVehicleFilter = 'semua'; // 'semua' | 'wajib'
+  const DASH_VEHICLE_3D_DEPTH = 7;
+
+  function shadeHexColor(hex, percent){
+    hex = (hex||'#4C8DF5').replace('#','');
+    if(hex.length===3) hex = hex.split('').map(c=>c+c).join('');
+    const num = parseInt(hex, 16);
+    let r = (num >> 16) + Math.round(2.55*percent);
+    let g = ((num >> 8) & 0x00FF) + Math.round(2.55*percent);
+    let b = (num & 0x0000FF) + Math.round(2.55*percent);
+    r = Math.max(0, Math.min(255, r));
+    g = Math.max(0, Math.min(255, g));
+    b = Math.max(0, Math.min(255, b));
+    return '#' + (0x1000000 + r*0x10000 + g*0x100 + b).toString(16).slice(1);
+  }
+
+  /* Menggambar "tutup atas" + "sisi kanan" di setiap bar supaya terlihat
+     seperti balok 3D - Chart.js sendiri sudah menggambar sisi depan (rect
+     datar) secara normal, plugin ini cuma menambah 2 bidang semu di atasnya. */
+  const dashVehicle3DPlugin = {
+    id: 'dashVehicle3D',
+    afterDatasetsDraw(chart){
+      const { ctx } = chart;
+      const depth = DASH_VEHICLE_3D_DEPTH;
+      chart.data.datasets.forEach((dataset, dsIndex) => {
+        const meta = chart.getDatasetMeta(dsIndex);
+        if(meta.hidden) return;
+        meta.data.forEach((bar, index) => {
+          const value = dataset.data[index];
+          if(!value) return;
+          const colorRaw = Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[index] : dataset.backgroundColor;
+          const color = colorRaw || '#4C8DF5';
+          const left = bar.x - bar.width/2;
+          const right = bar.x + bar.width/2;
+          const top = bar.y;
+          const base = bar.base;
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(left, top);
+          ctx.lineTo(left+depth, top-depth);
+          ctx.lineTo(right+depth, top-depth);
+          ctx.lineTo(right, top);
+          ctx.closePath();
+          ctx.fillStyle = shadeHexColor(color, 25);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(right, top);
+          ctx.lineTo(right+depth, top-depth);
+          ctx.lineTo(right+depth, base-depth);
+          ctx.lineTo(right, base);
+          ctx.closePath();
+          ctx.fillStyle = shadeHexColor(color, -20);
+          ctx.fill();
+          ctx.restore();
+        });
+      });
+    }
+  };
+
+  const dashVehicleLabelsPlugin = {
+    id: 'dashVehicleLabels',
+    afterDatasetsDraw(chart){
+      const { ctx } = chart;
+      const meta = chart.getDatasetMeta(0);
+      if(!meta || meta.hidden) return;
+      const dataset = chart.data.datasets[0];
+      meta.data.forEach((bar, index) => {
+        const value = dataset.data[index];
+        if(!value) return;
+        ctx.save();
+        ctx.font = "bold 11px 'IBM Plex Mono', monospace";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillStyle = '#ECEAE4';
+        ctx.fillText(String(value), bar.x, bar.y - DASH_VEHICLE_3D_DEPTH - 6);
+        ctx.restore();
+      });
+    }
+  };
+
+  function renderDashVehicleChart(){
+    if(!ASSETS.length) return;
+    if(typeof Chart === 'undefined'){
+      document.getElementById('dashVehicleNote').textContent = 'Gagal memuat library chart (Chart.js). Cek koneksi internet lalu refresh halaman.';
+      return;
+    }
+    try{
+      const scoped = dashVehicleFilter === 'wajib'
+        ? ASSETS.filter(a => (a['Kewajiban']||'').trim().toLowerCase() === 'ya')
+        : ASSETS;
+
+      const counts = {};
+      scoped.forEach(a => {
+        const k = (a['Kategori']||'').trim() || 'Tanpa Kategori';
+        counts[k] = (counts[k]||0) + 1;
+      });
+      const entries = Object.entries(counts).sort((a,b)=> b[1]-a[1]);
+      const labels = entries.map(e=>e[0]);
+      const data = entries.map(e=>e[1]);
+      const palette = ['#E8A33D','#4C8DF5','#3FB6A8','#8FCB84','#E8825A','#F2B705','#E08A3E','#9AA1B4'];
+      const colors = labels.map((_,i)=> palette[i % palette.length]);
+
+      if(dashVehicleChart) dashVehicleChart.destroy();
+      dashVehicleChart = new Chart(document.getElementById('dashVehicleBarChart'), {
+        type: 'bar',
+        data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth:0, borderRadius:0, maxBarThickness:46, categoryPercentage:0.6, barPercentage:0.9 }] },
+        plugins: [dashVehicle3DPlugin, dashVehicleLabelsPlugin],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: { top: 26, right: DASH_VEHICLE_3D_DEPTH + 4 } },
+          plugins: {
+            legend: { display:false },
+            tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
+          },
+          scales: {
+            x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { display:false } },
+            y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, precision:0 }, grid: { color:'#333B3D' } },
+          },
+        },
+      });
+
+      const total = data.reduce((s,v)=>s+v,0);
+      document.getElementById('dashVehicleNote').textContent = dashVehicleFilter==='wajib'
+        ? `Total ${total} kendaraan wajib pajak (Kewajiban = Ya) dari ${ASSETS.length} unit.`
+        : `Total ${total} kendaraan dari seluruh kelompok (${ASSETS.length} unit terdata).`;
+    }catch(err){
+      console.error('renderDashVehicleChart error:', err);
+      document.getElementById('dashVehicleNote').textContent = 'Terjadi error saat menggambar chart: ' + (err && err.message ? err.message : err);
+    }
+  }
+
+  document.querySelectorAll('#dashVehicleFilterToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(btn.dataset.filter === dashVehicleFilter) return;
+      dashVehicleFilter = btn.dataset.filter;
+      document.querySelectorAll('#dashVehicleFilterToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+      renderDashVehicleChart();
+      renderDashVehicleJenisChart();
+    });
+  });
+
+  /* Total Kendaraan per Jenis Kendaraan (sheet Kendaraan, kolom K "Jenis") -
+     tampil sebagai bar-list horizontal (sama seperti "Karyawan per Departemen"
+     di section Human Resources), bukan chart Chart.js. Ikut filter
+     Semua/Wajib Pajak yang sama dengan chart "Total Kendaraan per Kategori"
+     di atasnya (variabel dashVehicleFilter dipakai bersama). */
+  function renderDashVehicleJenisChart(){
+    if(!ASSETS.length) return;
+    const scoped = dashVehicleFilter === 'wajib'
+      ? ASSETS.filter(a => (a['Kewajiban']||'').trim().toLowerCase() === 'ya')
+      : ASSETS;
+
+    const counts = {};
+    scoped.forEach(a => {
+      const k = (a['Jenis']||'').trim() || 'Tanpa Jenis';
+      counts[k] = (counts[k]||0) + 1;
+    });
+    const entries = Object.entries(counts).map(([k,v])=>({label:k, value:v})).sort((a,b)=>b.value-a.value);
+    renderBarList('dashVehicleJenisList', entries);
+
+    const total = entries.reduce((s,e)=>s+e.value,0);
+    document.getElementById('dashVehicleJenisNote').textContent = dashVehicleFilter==='wajib'
+      ? `Total ${total} kendaraan wajib pajak dari ${entries.length} jenis berbeda.`
+      : `Total ${total} kendaraan dari ${entries.length} jenis berbeda.`;
+  }
+
+  /* Total Bangunan per Kategori (sheet "Bangunan", variabel BUILDINGS - sudah
+     dipakai halaman General Affair > Bangunan) - bar-list horizontal gaya
+     sama seperti "Karyawan per Departemen", TAPI tiap baris Kategori punya
+     sub bar-list di bawahnya yang merinci jumlah per Jenis di kategori itu
+     (renderBarList generik tidak mendukung nested, jadi dirakit manual di sini). */
+  function renderDashBuildingChart(){
+    if(!BUILDINGS.length) return;
+
+    const catCounts = {};
+    const catJenisCounts = {};
+    BUILDINGS.forEach(a => {
+      const kat = (a['Kategori']||'').trim() || 'Tanpa Kategori';
+      const jenis = (a['Jenis']||'').trim() || 'Tanpa Jenis';
+      catCounts[kat] = (catCounts[kat]||0) + 1;
+      if(!catJenisCounts[kat]) catJenisCounts[kat] = {};
+      catJenisCounts[kat][jenis] = (catJenisCounts[kat][jenis]||0) + 1;
+    });
+
+    const catEntries = Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);
+    const maxCat = Math.max(...catEntries.map(([,v])=>v), 1);
+
+    const html = catEntries.map(([kat, total]) => {
+      const jenisEntries = Object.entries(catJenisCounts[kat]||{}).sort((a,b)=>b[1]-a[1]);
+      const maxJenis = Math.max(...jenisEntries.map(([,v])=>v), 1);
+      const subRows = jenisEntries.map(([jenis, v]) => `
+        <div class="bar-row sub">
+          <div class="label">${jenis}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(v/maxJenis*100).toFixed(1)}%"></div></div>
+          <div class="bar-value">${v.toLocaleString('id-ID')}</div>
+        </div>`).join('');
+      return `
+        <div class="bar-group">
+          <div class="bar-row main">
+            <div class="label">${kat}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${(total/maxCat*100).toFixed(1)}%"></div></div>
+            <div class="bar-value">${total.toLocaleString('id-ID')}</div>
+          </div>
+          <div class="bar-subgroup">${subRows}</div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('dashBuildingList').innerHTML = html;
+    document.getElementById('dashBuildingNote').textContent = `Total ${BUILDINGS.length} bangunan dari ${catEntries.length} kategori.`;
+  }
+
+  document.querySelectorAll('#dashTrendTypeToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(btn.dataset.type === dashTrendChartType) return;
+      dashTrendChartType = btn.dataset.type;
+      document.querySelectorAll('#dashTrendTypeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+      renderDashboardCharts();
+    });
+  });
+
+  document.getElementById('dashTahunFilter').addEventListener('change', e=>{
+    dashTahunValue = parseInt(e.target.value,10);
+    dashBulanValue = 'semua'; // daftar bulan berbeda per tahun, reset ke "Semua Bulan"
+    dashPopulateBulanFilter();
+    renderDashboardCharts();
+  });
+  document.getElementById('dashBulanFilter').addEventListener('change', e=>{
+    dashBulanValue = e.target.value;
+    renderDashboardCharts();
+  });
+  document.getElementById('dashPtFilter').addEventListener('change', e=>{
+    dashPtValue = e.target.value;
+    renderDashboardCharts();
+  });
+  document.getElementById('dashRefreshBtn').addEventListener('click', loadKaryawanData);
+
+  /* =====================================================================
+     PROGRES REKRUTMEN (Human Resources > Rekrutmen)
+     Sumber data: Google Sheet "Recruitment" - sheet "recap_jobs" (daftar
+     kebutuhan per jabatan) dan sheet "candidate" (data pelamar).
+
+     CATATAN PENTING: sheet "candidate" isinya 3000+ baris, tapi endpoint
+     export CSV Google Sheets (gviz) membatasi HANYA sekitar 250 baris per
+     satu kali request, berapa pun besar range yang diminta. Jadi baris
+     candidate diambil bertahap (paging) per 250 baris sampai baris kosong/
+     habis, lalu digabung. Sheet "recap_jobs" jauh lebih kecil jadi cukup
+     satu kali fetch dengan range eksplisit (fetch tanpa range kadang hanya
+     mengembalikan sebagian kolom saja).
+     ===================================================================== */
+  const REC_SHEET_ID = '1Tj2ZNCW04lOGoB5hcCxT_d3GvqdAj854daY4dVDN3sU';
+  let REC_JOBS = [];
+  let REC_CANDIDATES = [];
+  let recLoaded = false;
+  let recDeptValue = 'semua';
+
+  function recParseBool(v){ return String(v||'').trim().toUpperCase()==='TRUE'; }
+
+  async function recFetchText(url){
+    const res = await fetch(url);
+    const text = await res.text();
+    return text;
+  }
+
+  async function recFetchRecapJobs(){
+    const url = `https://docs.google.com/spreadsheets/d/${REC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('recap_jobs')}&range=A1:K300`;
+    const text = await recFetchText(url);
+    const rows = Papa.parse(text.trim(), { header:false }).data.slice(1); // lewati baris header
+    return rows.filter(r => (r[0]||'').trim()!=='').map(r => ({
+      id: (r[0]||'').trim(),
+      departemen: (r[1]||'').trim(),
+      bagian: (r[2]||'').trim(),
+      jabatan: (r[3]||'').trim(),
+      kebutuhan: kryParseNum(r[4]),
+      terpenuhi: kryParseNum(r[5]),
+      kekurangan: kryParseNum(r[6]),
+      kondisiSebelum: (r[7]||'').trim(),
+      kondisiSaatIni: (r[8]||'').trim(),
+      posting: recParseBool(r[9]),
+    }));
+  }
+
+  function recSleep(ms){ return new Promise(resolve=>setTimeout(resolve, ms)); }
+
+  /* Ambil 1 chunk CSV dengan retry, karena request beruntun ke gviz kadang
+     gagal sesaat (rate limit / hiccup jaringan) - jangan langsung dianggap
+     "data habis" kalau itu yang terjadi, supaya kandidat di baris jauh
+     (mis. baris 3000+) tidak ikut hilang gara-gara 1 request doang gagal. */
+  async function recFetchChunkWithRetry(url, retries){
+    for(let attempt=0; attempt<=retries; attempt++){
+      try{
+        const text = await recFetchText(url);
+        if(text && text.trim()!=='' ) return text;
+      }catch(e){ /* coba lagi */ }
+      if(attempt<retries) await recSleep(400 + attempt*400);
+    }
+    return null;
+  }
+
+  async function recFetchAllCandidates(onProgress){
+    const CHUNK = 250;
+    let startRow = 2; // baris 1 = header, dilewati
+    let all = [];
+    for(let i=0;i<60;i++){ // batas aman ~15.000 baris
+      const endRow = startRow + CHUNK - 1;
+      const url = `https://docs.google.com/spreadsheets/d/${REC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('candidate')}&range=A${startRow}:AC${endRow}`;
+      const text = await recFetchChunkWithRetry(url, 2);
+      if(!text || text.trim().startsWith('{')) break; // benar-benar habis / range tidak valid
+      const parsed = Papa.parse(text.trim(), { header:false }).data;
+      const real = parsed.filter(r => r.some(c => (c||'').trim()!==''));
+      if(real.length===0) break;
+      all = all.concat(real.map(cols=>({
+        nama: (cols[1]||'').trim(),
+        noTelp: (cols[3]||'').trim(),
+        posisi: (cols[16]||'').trim(),
+        status: (cols[22]||'').trim(),
+        progress: (cols[25]||'').trim(),
+        statusProgress: (cols[26]||'').trim(),
+      })));
+      if(typeof onProgress==='function') onProgress(all.length);
+      if(parsed.length < CHUNK) break; // baris terakhir yang tersedia
+      startRow = endRow + 1;
+      await recSleep(120); // jeda kecil antar request supaya tidak kena rate limit
+    }
+    return all;
+  }
+
+  async function loadRekrutmenData(){
+    const body = document.getElementById('recTableBody');
+    const setLoadingMsg = (n) => {
+      const el = document.getElementById('recLoadingMsg');
+      if(el) el.textContent = `Memuat data dari Google Sheet... (${n} data kandidat dimuat)`;
+    };
+    body.innerHTML = `<tr><td colspan="8" class="state-msg" id="recLoadingMsg">Memuat data dari Google Sheet...</td></tr>`;
+    const btn = document.getElementById('recRefreshBtn');
+    btn.classList.add('spinning');
+    try{
+      const [jobs, candidates] = await Promise.all([
+        recFetchRecapJobs(),
+        recFetchAllCandidates(setLoadingMsg)
+      ]);
+      REC_JOBS = jobs;
+      REC_CANDIDATES = candidates;
+      recPopulateDeptFilter();
+      recLoaded = true;
+      renderRekrutmen();
+      if(fullLoaded) renderFulfillment();
+      document.getElementById('recNote').innerHTML = `Hanya menampilkan posisi yang kolom "posting" di sheet recap_jobs dicentang (TRUE). Total data kandidat dimuat: <b>${candidates.length}</b>.`;
+    }catch(e){
+      body.innerHTML = `<tr><td colspan="8" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="recRetryBtn">Coba Lagi</button></td></tr>`;
+      const retry = document.getElementById('recRetryBtn');
+      if(retry) retry.addEventListener('click', loadRekrutmenData);
+    }
+    btn.classList.remove('spinning');
+  }
+
+  /* Daftar Departemen di dropdown ini diambil dari GABUNGAN sheet fulfillment
+     (sumber utama - paling lengkap, termasuk departemen yang sedang tidak
+     ada open posisi tapi punya riwayat penempatan) dan recap_jobs (supaya
+     departemen dengan open posisi tapi belum ada riwayat penempatan tetap
+     muncul). Dipanggil ulang setelah masing-masing sumber selesai dimuat. */
+  function recPopulateDeptFilter(){
+    const sel = document.getElementById('recDeptFilter');
+    const depts = Array.from(new Set([
+      ...FULL_ROWS.map(r=>r.departemen),
+      ...REC_JOBS.filter(j=>j.posting).map(j=>j.departemen)
+    ].filter(Boolean))).sort();
+    const cur = recDeptValue || 'semua';
+    sel.innerHTML = `<option value="semua">Semua Departemen</option>` + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+    sel.value = (cur==='semua' || depts.includes(cur)) ? cur : 'semua';
+    recDeptValue = sel.value;
+  }
+
+  function candStatusClass(status){
+    const s = (status||'').trim().toLowerCase().replace(/\s+/g,'_');
+    return s || 'unknown';
+  }
+
+  function renderRekrutmen(){
+    const body = document.getElementById('recTableBody');
+    const postingJobs = REC_JOBS.filter(j=>j.posting);
+
+    const openPosisi = postingJobs.length;
+    const totalKebutuhan = postingJobs.reduce((s,j)=>s+j.kebutuhan,0);
+    const totalTerpenuhi = postingJobs.reduce((s,j)=>s+j.terpenuhi,0);
+    const totalKekurangan = postingJobs.reduce((s,j)=>s+j.kekurangan,0);
+    document.getElementById('recOpenPosisi').textContent = openPosisi;
+    document.getElementById('recKebutuhan').textContent = totalKebutuhan;
+    document.getElementById('recTerpenuhi').textContent = totalTerpenuhi;
+    document.getElementById('recKekurangan').textContent = totalKekurangan;
+
+    const filtered = postingJobs.filter(j => recDeptValue==='semua' || j.departemen===recDeptValue);
+
+    if(filtered.length===0){
+      body.innerHTML = `<tr><td colspan="8" class="empty">Tidak ada posisi (posting=TRUE) untuk filter ini.</td></tr>`;
+      return;
+    }
+
+    body.innerHTML = filtered.map(j=>{
+      const candCount = REC_CANDIDATES.filter(c=>c.progress===j.id).length;
+      return `
+        <tr>
+          <td>${j.departemen}</td>
+          <td class="name">${j.jabatan}</td>
+          <td>${j.kebutuhan}</td>
+          <td class="cell-terpenuhi">${j.terpenuhi}</td>
+          <td class="cell-kekurangan">${j.kekurangan}</td>
+          <td>${fmtVal(j.kondisiSebelum)}</td>
+          <td>${fmtVal(j.kondisiSaatIni)}</td>
+          <td><button class="kandidat-btn" data-job-id="${j.id}" data-job-label="${j.jabatan}">${candCount} Kandidat</button></td>
+        </tr>`;
+    }).join('');
+
+    body.querySelectorAll('.kandidat-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>openCandidateModal(btn.dataset.jobId, btn.dataset.jobLabel));
+    });
+  }
+
+  function openCandidateModal(jobId, jobLabel){
+    const list = REC_CANDIDATES.filter(c=>c.progress===jobId);
+    const rows = list.map(c=>`
+      <tr>
+        <td>${fmtVal(c.statusProgress)}</td>
+        <td class="name">${fmtVal(c.nama)}</td>
+        <td>${fmtVal(c.posisi)}</td>
+        <td><span class="cand-badge ${candStatusClass(c.status)}">${fmtVal(c.status)}</span></td>
+        <td>${fmtVal(c.noTelp)}</td>
+      </tr>`).join('');
+
+    const dossier = document.getElementById('dossier');
+    dossier.innerHTML = `
+      <div class="dossier-header">
+        <div>
+          <p class="dossier-tag">${jobId} &middot; ${list.length} kandidat ditemukan</p>
+          <h2 class="dossier-title">Kandidat &mdash; ${jobLabel}</h2>
+        </div>
+        <button class="close-btn" id="closeBtn" aria-label="Tutup">&#10005;</button>
+      </div>
+      <div class="dossier-body">
+        ${list.length ? `
+          <table class="cand-table">
+            <thead><tr><th>Status Progress</th><th>Nama</th><th>Posisi Dilamar</th><th>Status</th><th>No. Telp</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>` : `<div class="empty">Belum ada kandidat yang tercatat untuk posisi ini.</div>`}
+      </div>
+    `;
+    document.getElementById('closeBtn').addEventListener('click', closeDossier);
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  document.getElementById('recDeptFilter').addEventListener('change', e=>{
+    recDeptValue = e.target.value;
+    renderRekrutmen();
+    if(fullLoaded){
+      fullPage = 1;
+      renderFulfillment();
+    }
+  });
+  document.getElementById('recRefreshBtn').addEventListener('click', loadRekrutmenData);
+
+  /* =====================================================================
+     PROGRESS PENEMPATAN KARYAWAN (di bawah Progres Rekrutmen)
+     Sumber data: Google Sheet "Recruitment" - sheet "fulfillment".
+     Kolom terpakai: pt(C), departemen(H), bagian(I), jabatan(J),
+     tgl-gabung(K, format "D-Mon-YYYY" dengan singkatan bulan Indonesia).
+     Sheet ini bisa 1000+ baris, jadi dipakai paging 250 baris/reques
+     seperti sheet "candidate" di atas.
+     ===================================================================== */
+  let FULL_ROWS = [];
+  let fullLoaded = false;
+  let fullYearValue = null;
+  let fullPage = 1;
+  const FULL_PAGE_SIZE = 10;
+  const FULL_MONTH_ABBR = ['jan','feb','mar','apr','mei','jun','jul','agu','sep','okt','nov','des'];
+
+  function fullParseTanggal(str){
+    const s = (str||'').trim();
+    if(!s) return null;
+    const parts = s.split('-');
+    if(parts.length!==3) return null;
+    const monIdx = FULL_MONTH_ABBR.indexOf(parts[1].trim().toLowerCase());
+    const year = parseInt(parts[2],10);
+    if(monIdx===-1 || isNaN(year)) return null;
+    return { month: monIdx+1, year };
+  }
+
+  async function fullFetchAllRows(onProgress){
+    const CHUNK = 250;
+    let startRow = 2; // baris 1 = header, dilewati
+    let all = [];
+    for(let i=0;i<30;i++){ // batas aman ~7.500 baris
+      const endRow = startRow + CHUNK - 1;
+      const url = `https://docs.google.com/spreadsheets/d/${REC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('fulfillment')}&range=A${startRow}:M${endRow}`;
+      const text = await recFetchChunkWithRetry(url, 2);
+      if(!text || text.trim().startsWith('{')) break; // benar-benar habis / range tidak valid
+      const parsed = Papa.parse(text.trim(), { header:false }).data;
+      const real = parsed.filter(r => r.some(c => (c||'').trim()!==''));
+      if(real.length===0) break;
+      all = all.concat(real);
+      if(typeof onProgress==='function') onProgress(all.length);
+      if(parsed.length < CHUNK) break; // baris terakhir yang tersedia
+      startRow = endRow + 1;
+      await recSleep(120);
+    }
+    return all;
+  }
+
+  async function loadFulfillmentData(){
+    const body = document.getElementById('fullTableBody');
+    const setLoadingMsg = (n) => {
+      const el = document.getElementById('fullLoadingMsg');
+      if(el) el.textContent = `Memuat data dari Google Sheet... (${n} baris dimuat)`;
+    };
+    body.innerHTML = `<tr><td colspan="17" class="state-msg" id="fullLoadingMsg">Memuat data dari Google Sheet...</td></tr>`;
+    const btn = document.getElementById('fullRefreshBtn');
+    btn.classList.add('spinning');
+    try{
+      const raw = await fullFetchAllRows(setLoadingMsg);
+      FULL_ROWS = raw.map(r=>({
+        pt: (r[2]||'').trim(),
+        departemen: (r[7]||'').trim(),
+        bagian: (r[8]||'').trim(),
+        jabatan: (r[9]||'').trim(),
+        tgl: fullParseTanggal(r[10]),
+      })).filter(x=>x.jabatan && x.tgl);
+      fullPopulateFilters();
+      recPopulateDeptFilter(); // sinkronkan dropdown Departemen bersama dengan daftar lengkap dari fulfillment
+      fullLoaded = true;
+      fullPage = 1;
+      if(recLoaded) renderRekrutmen();
+      renderFulfillment();
+    }catch(e){
+      body.innerHTML = `<tr><td colspan="17" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="fullRetryBtn">Coba Lagi</button></td></tr>`;
+      const retry = document.getElementById('fullRetryBtn');
+      if(retry) retry.addEventListener('click', loadFulfillmentData);
+    }
+    btn.classList.remove('spinning');
+  }
+
+  function fullPopulateFilters(){
+    const yearSel = document.getElementById('fullYearFilter');
+    const years = Array.from(new Set(FULL_ROWS.map(r=>r.tgl.year))).sort((a,b)=>b-a);
+    const curYear = fullYearValue || years[0];
+    yearSel.innerHTML = years.map(y=>`<option value="${y}">${y}</option>`).join('');
+    yearSel.value = (years.includes(curYear)) ? curYear : years[0];
+    fullYearValue = parseInt(yearSel.value,10);
+  }
+
+  function renderFulfillment(){
+    const body = document.getElementById('fullTableBody');
+    const filteredRows = FULL_ROWS.filter(r =>
+      (recDeptValue==='semua' || r.departemen===recDeptValue) &&
+      r.tgl.year===fullYearValue
+    );
+
+    const groups = new Map();
+    filteredRows.forEach(r=>{
+      const key = [r.pt, r.departemen, r.bagian, r.jabatan].join('|||');
+      if(!groups.has(key)){
+        groups.set(key, { pt:r.pt, departemen:r.departemen, bagian:r.bagian, jabatan:r.jabatan, months:new Array(12).fill(0), total:0 });
+      }
+      const g = groups.get(key);
+      g.months[r.tgl.month-1]++;
+      g.total++;
+    });
+
+    let rowsArr = Array.from(groups.values());
+    rowsArr.sort((a,b)=> a.departemen.localeCompare(b.departemen) || a.jabatan.localeCompare(b.jabatan));
+
+    const totalJabatan = rowsArr.length;
+    const totalKaryawan = rowsArr.reduce((s,r)=>s+r.total,0);
+    document.getElementById('fullSummary').innerHTML = `<b>${totalJabatan}</b> jabatan &middot; <b>${totalKaryawan}</b> karyawan ditempatkan`;
+
+    if(rowsArr.length===0){
+      body.innerHTML = `<tr><td colspan="17" class="state-msg">Tidak ada data penempatan untuk filter ini.</td></tr>`;
+      document.getElementById('fullTotalRow').innerHTML = '';
+      document.getElementById('fullPageInfo').textContent = '';
+      document.getElementById('fullPageNav').innerHTML = '';
+      return;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(rowsArr.length / FULL_PAGE_SIZE));
+    if(fullPage>totalPages) fullPage = totalPages;
+    if(fullPage<1) fullPage = 1;
+    const startIdx = (fullPage-1)*FULL_PAGE_SIZE;
+    const pageRows = rowsArr.slice(startIdx, startIdx+FULL_PAGE_SIZE);
+
+    body.innerHTML = pageRows.map(r=>{
+      const monthCells = r.months.map(m=>`<td class="num${m===0?' zero':''}">${m||'—'}</td>`).join('');
+      return `
+        <tr>
+          <td>${fmtVal(r.pt)}</td>
+          <td>${fmtVal(r.departemen)}</td>
+          <td>${fmtVal(r.bagian)}</td>
+          <td class="name">${fmtVal(r.jabatan)}</td>
+          ${monthCells}
+          <td class="num total-col">${r.total}</td>
+        </tr>`;
+    }).join('');
+
+    const monthTotals = new Array(12).fill(0);
+    rowsArr.forEach(r=> r.months.forEach((m,i)=> monthTotals[i]+=m));
+    const totalMonthCells = monthTotals.map(m=>`<td>${m||'—'}</td>`).join('');
+    document.getElementById('fullTotalRow').innerHTML = `<td colspan="4">TOTAL (semua)</td>${totalMonthCells}<td>${totalKaryawan}</td>`;
+
+    const startShown = startIdx+1;
+    const endShown = Math.min(startIdx+FULL_PAGE_SIZE, rowsArr.length);
+    document.getElementById('fullPageInfo').textContent = `Menampilkan ${startShown}-${endShown} dari ${rowsArr.length} jabatan`;
+
+    const nav = document.getElementById('fullPageNav');
+    let navHtml = `<button class="page-btn" ${fullPage<=1?'disabled':''} onclick="fullGoToPage(${fullPage-1})">&lsaquo;</button>`;
+    for(let p=1;p<=totalPages;p++){
+      navHtml += `<button class="page-btn${p===fullPage?' active':''}" onclick="fullGoToPage(${p})">${p}</button>`;
+    }
+    navHtml += `<button class="page-btn" ${fullPage>=totalPages?'disabled':''} onclick="fullGoToPage(${fullPage+1})">&rsaquo;</button>`;
+    nav.innerHTML = navHtml;
+  }
+
+  function fullGoToPage(p){
+    fullPage = p;
+    renderFulfillment();
+  }
+
+  document.getElementById('fullYearFilter').addEventListener('change', e=>{
+    fullYearValue = parseInt(e.target.value,10);
+    fullPage = 1;
+    renderFulfillment();
+  });
+  document.getElementById('fullRefreshBtn').addEventListener('click', loadFulfillmentData);
+
+  /* ===================== SIDEBAR NAVIGATION ===================== */
+  function toggleSubmenu(key){
+    const toggle = document.getElementById(key+'Toggle');
+    const submenu = document.getElementById(key+'Submenu');
+    const isOpen = submenu.classList.contains('open');
+    submenu.classList.toggle('open', !isOpen);
+    toggle.classList.toggle('expanded', !isOpen);
+  }
+  document.getElementById('hrToggle').addEventListener('click', ()=>toggleSubmenu('hr'));
+  document.getElementById('gaToggle').addEventListener('click', ()=>toggleSubmenu('ga'));
+
+  const KNOWN_PAGES = ['dashboard','kendaraan','bangunan','karyawan','rekrutmen','orgchart'];
+  function showPage(page, label){
+    document.getElementById('page-dashboard').style.display = (page==='dashboard') ? '' : 'none';
+    document.getElementById('page-kendaraan').style.display = (page==='kendaraan') ? '' : 'none';
+    document.getElementById('page-bangunan').style.display = (page==='bangunan') ? '' : 'none';
+    document.getElementById('page-karyawan').style.display = (page==='karyawan') ? '' : 'none';
+    document.getElementById('page-rekrutmen').style.display = (page==='rekrutmen') ? '' : 'none';
+    document.getElementById('page-orgchart').style.display = (page==='orgchart') ? '' : 'none';
+    document.getElementById('page-placeholder').style.display = KNOWN_PAGES.includes(page) ? 'none' : '';
+    if(page==='dashboard'){
+      if(!kryLoaded){
+        loadKaryawanData();
+      } else {
+        dashPopulateFilters();
+        renderDashboardCharts();
+      }
+      if(!kendaraanLoaded){
+        kendaraanLoaded = true;
+        loadData();
+      } else {
+        renderDashVehicleChart();
+        renderDashVehicleJenisChart();
+      }
+      if(!bldLoaded){
+        bldLoaded = true;
+        loadBangunanData();
+      } else {
+        renderDashBuildingChart();
+      }
+    }
+    if(page==='kendaraan' && !kendaraanLoaded){
+      kendaraanLoaded = true;
+      loadData();
+    }
+    if(page==='bangunan' && !bldLoaded){
+      bldLoaded = true;
+      loadBangunanData();
+    }
+    if(page==='karyawan' && !kryLoaded){
+      loadKaryawanData();
+    }
+    if(page==='rekrutmen' && !recLoaded){
+      loadRekrutmenData();
+    }
+    if(page==='rekrutmen' && !fullLoaded){
+      loadFulfillmentData();
+    }
+    if(!KNOWN_PAGES.includes(page)){
+      document.getElementById('placeholderTitle').textContent = label;
+      document.getElementById('crumb').textContent = 'Menu aktif: ' + label;
+    }
+  }
+
+  function setActive(el, label, page){
+    document.querySelectorAll('.item, .sub-item').forEach(i=>i.classList.remove('active'));
+    el.classList.add('active');
+    showPage(page, label);
+  }
+
+  document.querySelectorAll('.item[data-nav]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const page = el.dataset.nav==='Dashboard' ? 'dashboard' : 'placeholder';
+      setActive(el, el.dataset.nav, page);
+    });
+  });
+  document.querySelectorAll('.sub-item').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const page = el.dataset.page || 'placeholder';
+      setActive(el, el.textContent, page);
+    });
+  });
+
+  /* Halaman awal: Dashboard */
+  showPage('dashboard', 'Dashboard');
+</script>
+</body>
+</html>
