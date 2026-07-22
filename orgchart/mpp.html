@@ -80,9 +80,12 @@ const LEVELS=[
   ['Asisten','Asisten'],
   ['Mandor1/Krani1','Mandor 1 / Krani 1'],
   ['Mandor/Krani','Mandor / Krani'],
-  ['Sub Mandor/Krani','Sub Mandor / Krani'],
   ['Worker','Worker']
 ];
+// di MPP, "Sub Mandor/Krani" digabung jadi satu level dgn "Mandor/Krani"
+// (di Org Chart, Sub tetap dipakai terpisah hanya sbg pemisah cabang)
+const LEVEL_MERGE = { 'sub mandor/krani':'Mandor/Krani' };
+const mergeLevel = lv => LEVEL_MERGE[lv.toLowerCase()] || lv;
 
 function parseCSV(text){
   const rows=[]; let row=[], cur='', q=false;
@@ -121,8 +124,10 @@ async function loadData(){
 
     deptData={}; deptOrder=[];
     rows.slice(1).forEach(r=>{
-      const jab=norm(r[iJ]), lv=norm(r[iL]);
+      const jab=norm(r[iJ]);
+      let lv=norm(r[iL]);
       if(!jab || !lv) return;
+      lv=mergeLevel(lv);
       const dept = iDept>=0 ? (norm(r[iDept])||'(Tanpa Departemen)') : '(Semua)';
       const nama=norm(r[iN]), nik=iNik>=0?norm(r[iNik]):'';
       const norma = iNorma>=0 ? (parseFloat(norm(r[iNorma]))||0) : (isVac(nama)?0:1);
