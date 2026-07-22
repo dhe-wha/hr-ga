@@ -322,9 +322,13 @@ function placeColumn(n){
     if(branches.length){
       const busY=bottom+(simple.length?GAP:22);
       V(c, bottom, busY);
+      // cabang pertama memakai kolom yang sama dgn induk (curX belum bergeser),
+      // jadi total lebar yg terpakai = branches.length * PW (tidak perlu tambahan lagi).
       const centers=branches.map(grp=>placeStack(grp.flatMap(g=>[g,...flat(g)])));
       Hln(busY, Math.min(...centers,c), Math.max(...centers,c));
       centers.forEach((cc,i)=>V(cc, busY, pos[branches[i][0].k].y));
+    }else{
+      curX+=PW;
     }
   }else{
     const stack=[n,...flat(n)];
@@ -335,8 +339,8 @@ function placeColumn(n){
       V(c, bottom, y);
       bottom=y+CH;
     }
+    curX+=PW;
   }
-  curX+=PW;
   return c;
 }
 // tumpukan Mandor/Krani langsung (tanpa Mandor 1) dalam satu kolom
