@@ -749,6 +749,10 @@
           <div class="group-select">
             <select id="jabatanCompareFilter"></select>
           </div>
+          <div class="chart-type-toggle" id="jabatanCompareTypeToggle">
+            <button type="button" data-type="line" class="active">Line</button>
+            <button type="button" data-type="bar">Bar</button>
+          </div>
           <p class="kry-note" id="jabatanCompareNote">Tren bulanan masuk (penempatan) vs keluar untuk 1 jabatan. Mengikuti filter Departemen dan Tahun di atas.</p>
         </div>
       </div>
@@ -3016,6 +3020,7 @@
      ===================================================================== */
   let jabatanCompareValue = null;
   let jabatanCompareChart = null;
+  let jabatanCompareChartType = 'line';
   const ID_MONTH_LABELS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
   function populateJabatanCompareFilter(){
@@ -3057,34 +3062,31 @@
       note.innerHTML = `<b>${jabatanCompareValue}</b> &middot; tahun <b>${fullYearValue}</b> &middot; Masuk: <b>${totalMasuk}</b> &middot; Keluar: <b>${totalKeluar}</b>`;
     }
 
+    const isBar = jabatanCompareChartType === 'bar';
+    const buildDataset = (label, data, color) => {
+      const base = { label, data, borderColor: color, backgroundColor: isBar ? color + 'CC' : color };
+      if(isBar){
+        base.borderWidth = 0;
+        base.borderRadius = 4;
+        base.maxBarThickness = 34;
+      } else {
+        base.tension = 0.3;
+        base.borderWidth = 2.5;
+        base.pointRadius = 3;
+        base.pointBackgroundColor = color;
+        base.fill = false;
+      }
+      return base;
+    };
+
     if(jabatanCompareChart) jabatanCompareChart.destroy();
     jabatanCompareChart = new Chart(canvas, {
-      type: 'line',
+      type: jabatanCompareChartType,
       data: {
         labels: ID_MONTH_LABELS,
         datasets: [
-          {
-            label: 'Masuk',
-            data: masukMonths,
-            borderColor: '#8FCB84',
-            backgroundColor: '#8FCB84',
-            tension: 0.3,
-            borderWidth: 2.5,
-            pointRadius: 3,
-            pointBackgroundColor: '#8FCB84',
-            fill: false,
-          },
-          {
-            label: 'Keluar',
-            data: keluarMonths,
-            borderColor: '#E8825A',
-            backgroundColor: '#E8825A',
-            tension: 0.3,
-            borderWidth: 2.5,
-            pointRadius: 3,
-            pointBackgroundColor: '#E8825A',
-            fill: false,
-          },
+          buildDataset('Masuk', masukMonths, '#8FCB84'),
+          buildDataset('Keluar', keluarMonths, '#E8825A'),
         ],
       },
       options: {
@@ -3106,6 +3108,15 @@
   document.getElementById('jabatanCompareFilter').addEventListener('change', e=>{
     jabatanCompareValue = e.target.value;
     renderJabatanCompareChart();
+  });
+
+  document.querySelectorAll('#jabatanCompareTypeToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(btn.dataset.type === jabatanCompareChartType) return;
+      jabatanCompareChartType = btn.dataset.type;
+      document.querySelectorAll('#jabatanCompareTypeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+      renderJabatanCompareChart();
+    });
   });
 
   /* ===================== SIDEBAR NAVIGATION ===================== */
