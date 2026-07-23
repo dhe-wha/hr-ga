@@ -691,6 +691,53 @@
         <p class="kry-note" id="fullPageInfo"></p>
         <div class="page-nav" id="fullPageNav"></div>
       </div>
+
+      <!-- ===== Rekap Karyawan Keluar per Jabatan per Bulan (sheet: TK_Out) ===== -->
+      <div class="sticky-bar section-gap" style="position:static;">
+        <header class="asset-header">
+          <div>
+            <p class="eyebrow">Human Resources &middot; Rekrutmen</p>
+            <h1 class="asset-title" style="font-size:22px;">Rekap Karyawan Keluar per Jabatan per Bulan</h1>
+            <p class="kry-note" id="tkoutSummary" style="margin-top:8px;">Memuat ringkasan...</p>
+          </div>
+        </header>
+
+        <div class="controls">
+          <div class="group-select">
+            <select id="tkoutYearFilter"></select>
+          </div>
+          <button class="refresh-btn" id="tkoutRefreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            Refresh
+          </button>
+          <p class="kry-note" id="tkoutNote">Data karyawan keluar per bulan (sheet "TK_Out"). Mengikuti filter Departemen di atas.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap" id="tkoutTableWrap">
+        <table class="asset-table full-table">
+          <thead>
+            <tr>
+              <th>Departemen</th>
+              <th>Jabatan</th>
+              <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>Mei</th><th>Jun</th>
+              <th>Jul</th><th>Agu</th><th>Sep</th><th>Okt</th><th>Nov</th><th>Des</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="tkoutTableBody">
+            <tr><td colspan="15" class="state-msg" id="tkoutLoadingMsg">Memuat data dari Google Sheet...</td></tr>
+          </tbody>
+          <tfoot>
+            <tr id="tkoutTotalRow"></tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="page-bar" id="tkoutPageBar">
+        <p class="kry-note" id="tkoutPageInfo"></p>
+        <div class="page-nav" id="tkoutPageNav"></div>
+      </div>
     </div>
   </div>
 
@@ -2478,14 +2525,16 @@
 
   /* Daftar Departemen di dropdown ini diambil dari GABUNGAN sheet fulfillment
      (sumber utama - paling lengkap, termasuk departemen yang sedang tidak
-     ada open posisi tapi punya riwayat penempatan) dan recap_jobs (supaya
+     ada open posisi tapi punya riwayat penempatan), recap_jobs (supaya
      departemen dengan open posisi tapi belum ada riwayat penempatan tetap
-     muncul). Dipanggil ulang setelah masing-masing sumber selesai dimuat. */
+     muncul), dan TK_Out (supaya departemen yang hanya punya riwayat karyawan
+     keluar tetap muncul). Dipanggil ulang setelah masing-masing sumber selesai dimuat. */
   function recPopulateDeptFilter(){
     const sel = document.getElementById('recDeptFilter');
     const depts = Array.from(new Set([
       ...FULL_ROWS.map(r=>r.departemen),
-      ...REC_JOBS.filter(j=>j.posting).map(j=>j.departemen)
+      ...REC_JOBS.filter(j=>j.posting).map(j=>j.departemen),
+      ...TKOUT_ROWS.map(r=>r.departemen)
     ].filter(Boolean))).sort();
     const cur = recDeptValue || 'semua';
     sel.innerHTML = `<option value="semua">Semua Departemen</option>` + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
@@ -2576,6 +2625,10 @@
     if(fullLoaded){
       fullPage = 1;
       renderFulfillment();
+    }
+    if(tkoutLoaded){
+      tkoutPage = 1;
+      renderTkout();
     }
   });
   document.getElementById('recRefreshBtn').addEventListener('click', loadRekrutmenData);
@@ -2750,6 +2803,172 @@
   });
   document.getElementById('fullRefreshBtn').addEventListener('click', loadFulfillmentData);
 
+  /* =====================================================================
+     REKAP KARYAWAN KELUAR PER JABATAN PER BULAN (di bawah Progress Penempatan Karyawan)
+     Sumber data: Google Sheet "report_karyawan" (sheet Summary/KRY_SHEET_ID) - sheet "TK_Out".
+     Kolom terpakai: bulan(A, format "Jan-26"), jabatan(D), departemen(E).
+     Sheet ini bisa terus bertambah tiap bulan, jadi dipakai paging 250 baris/request
+     seperti sheet "fulfillment".
+     ===================================================================== */
+  let TKOUT_ROWS = [];
+  let tkoutLoaded = false;
+  let tkoutYearValue = null;
+  let tkoutPage = 1;
+  const TKOUT_PAGE_SIZE = 10;
+
+  function tkoutParseBulan(str){
+    const s = (str||'').trim();
+    if(!s) return null;
+    const parts = s.split('-');
+    if(parts.length!==2) return null;
+    const monIdx = MONTH_ORDER.indexOf(parts[0].trim());
+    const yy = parseInt(parts[1],10);
+    if(monIdx===-1 || isNaN(yy)) return null;
+    return { month: monIdx+1, year: 2000+yy };
+  }
+
+  async function tkoutFetchAllRows(onProgress){
+    const CHUNK = 250;
+    let startRow = 2; // baris 1 = header, dilewati
+    let all = [];
+    for(let i=0;i<30;i++){ // batas aman ~7.500 baris
+      const endRow = startRow + CHUNK - 1;
+      const url = `https://docs.google.com/spreadsheets/d/${KRY_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('TK_Out')}&range=A${startRow}:F${endRow}`;
+      const text = await recFetchChunkWithRetry(url, 2);
+      if(!text || text.trim().startsWith('{')) break; // benar-benar habis / range tidak valid
+      const parsed = Papa.parse(text.trim(), { header:false }).data;
+      const real = parsed.filter(r => r.some(c => (c||'').trim()!==''));
+      if(real.length===0) break;
+      all = all.concat(real);
+      if(typeof onProgress==='function') onProgress(all.length);
+      if(parsed.length < CHUNK) break; // baris terakhir yang tersedia
+      startRow = endRow + 1;
+      await recSleep(120);
+    }
+    return all;
+  }
+
+  async function loadTkoutData(){
+    const body = document.getElementById('tkoutTableBody');
+    const setLoadingMsg = (n) => {
+      const el = document.getElementById('tkoutLoadingMsg');
+      if(el) el.textContent = `Memuat data dari Google Sheet... (${n} baris dimuat)`;
+    };
+    body.innerHTML = `<tr><td colspan="15" class="state-msg" id="tkoutLoadingMsg">Memuat data dari Google Sheet...</td></tr>`;
+    const btn = document.getElementById('tkoutRefreshBtn');
+    btn.classList.add('spinning');
+    try{
+      const raw = await tkoutFetchAllRows(setLoadingMsg);
+      TKOUT_ROWS = raw.map(r=>({
+        nik: (r[1]||'').trim(),
+        nama: (r[2]||'').trim(),
+        jabatan: (r[3]||'').trim(),
+        departemen: (r[4]||'').trim(),
+        alasan: (r[5]||'').trim(),
+        tgl: tkoutParseBulan(r[0]),
+      })).filter(x=>x.jabatan && x.tgl);
+      tkoutPopulateFilters();
+      recPopulateDeptFilter(); // sinkronkan dropdown Departemen bersama dengan daftar TK_Out juga
+      tkoutLoaded = true;
+      tkoutPage = 1;
+      renderTkout();
+    }catch(e){
+      body.innerHTML = `<tr><td colspan="15" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="tkoutRetryBtn">Coba Lagi</button></td></tr>`;
+      const retry = document.getElementById('tkoutRetryBtn');
+      if(retry) retry.addEventListener('click', loadTkoutData);
+    }
+    btn.classList.remove('spinning');
+  }
+
+  function tkoutPopulateFilters(){
+    const yearSel = document.getElementById('tkoutYearFilter');
+    const years = Array.from(new Set(TKOUT_ROWS.map(r=>r.tgl.year))).sort((a,b)=>b-a);
+    const curYear = tkoutYearValue || years[0];
+    yearSel.innerHTML = years.map(y=>`<option value="${y}">${y}</option>`).join('');
+    yearSel.value = (years.includes(curYear)) ? curYear : years[0];
+    tkoutYearValue = parseInt(yearSel.value,10);
+  }
+
+  function renderTkout(){
+    const body = document.getElementById('tkoutTableBody');
+    const filteredRows = TKOUT_ROWS.filter(r =>
+      (recDeptValue==='semua' || r.departemen===recDeptValue) &&
+      r.tgl.year===tkoutYearValue
+    );
+
+    const groups = new Map();
+    filteredRows.forEach(r=>{
+      const key = [r.departemen, r.jabatan].join('|||');
+      if(!groups.has(key)){
+        groups.set(key, { departemen:r.departemen, jabatan:r.jabatan, months:new Array(12).fill(0), total:0 });
+      }
+      const g = groups.get(key);
+      g.months[r.tgl.month-1]++;
+      g.total++;
+    });
+
+    let rowsArr = Array.from(groups.values());
+    rowsArr.sort((a,b)=> a.departemen.localeCompare(b.departemen) || a.jabatan.localeCompare(b.jabatan));
+
+    const totalJabatan = rowsArr.length;
+    const totalKaryawan = rowsArr.reduce((s,r)=>s+r.total,0);
+    document.getElementById('tkoutSummary').innerHTML = `<b>${totalJabatan}</b> jabatan &middot; <b>${totalKaryawan}</b> karyawan keluar`;
+
+    if(rowsArr.length===0){
+      body.innerHTML = `<tr><td colspan="15" class="state-msg">Tidak ada data karyawan keluar untuk filter ini.</td></tr>`;
+      document.getElementById('tkoutTotalRow').innerHTML = '';
+      document.getElementById('tkoutPageInfo').textContent = '';
+      document.getElementById('tkoutPageNav').innerHTML = '';
+      return;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(rowsArr.length / TKOUT_PAGE_SIZE));
+    if(tkoutPage>totalPages) tkoutPage = totalPages;
+    if(tkoutPage<1) tkoutPage = 1;
+    const startIdx = (tkoutPage-1)*TKOUT_PAGE_SIZE;
+    const pageRows = rowsArr.slice(startIdx, startIdx+TKOUT_PAGE_SIZE);
+
+    body.innerHTML = pageRows.map(r=>{
+      const monthCells = r.months.map(m=>`<td class="num${m===0?' zero':''}">${m||'—'}</td>`).join('');
+      return `
+        <tr>
+          <td>${fmtVal(r.departemen)}</td>
+          <td class="name">${fmtVal(r.jabatan)}</td>
+          ${monthCells}
+          <td class="num total-col">${r.total}</td>
+        </tr>`;
+    }).join('');
+
+    const monthTotals = new Array(12).fill(0);
+    rowsArr.forEach(r=> r.months.forEach((m,i)=> monthTotals[i]+=m));
+    const totalMonthCells = monthTotals.map(m=>`<td>${m||'—'}</td>`).join('');
+    document.getElementById('tkoutTotalRow').innerHTML = `<td colspan="2">TOTAL (semua)</td>${totalMonthCells}<td>${totalKaryawan}</td>`;
+
+    const startShown = startIdx+1;
+    const endShown = Math.min(startIdx+TKOUT_PAGE_SIZE, rowsArr.length);
+    document.getElementById('tkoutPageInfo').textContent = `Menampilkan ${startShown}-${endShown} dari ${rowsArr.length} jabatan`;
+
+    const nav = document.getElementById('tkoutPageNav');
+    let navHtml = `<button class="page-btn" ${tkoutPage<=1?'disabled':''} onclick="tkoutGoToPage(${tkoutPage-1})">&lsaquo;</button>`;
+    for(let p=1;p<=totalPages;p++){
+      navHtml += `<button class="page-btn${p===tkoutPage?' active':''}" onclick="tkoutGoToPage(${p})">${p}</button>`;
+    }
+    navHtml += `<button class="page-btn" ${tkoutPage>=totalPages?'disabled':''} onclick="tkoutGoToPage(${tkoutPage+1})">&rsaquo;</button>`;
+    nav.innerHTML = navHtml;
+  }
+
+  function tkoutGoToPage(p){
+    tkoutPage = p;
+    renderTkout();
+  }
+
+  document.getElementById('tkoutYearFilter').addEventListener('change', e=>{
+    tkoutYearValue = parseInt(e.target.value,10);
+    tkoutPage = 1;
+    renderTkout();
+  });
+  document.getElementById('tkoutRefreshBtn').addEventListener('click', loadTkoutData);
+
   /* ===================== SIDEBAR NAVIGATION ===================== */
   function toggleSubmenu(key){
     const toggle = document.getElementById(key+'Toggle');
@@ -2807,6 +3026,9 @@
     }
     if(page==='rekrutmen' && !fullLoaded){
       loadFulfillmentData();
+    }
+    if(page==='rekrutmen' && !tkoutLoaded){
+      loadTkoutData();
     }
     if(!KNOWN_PAGES.includes(page)){
       document.getElementById('placeholderTitle').textContent = label;
