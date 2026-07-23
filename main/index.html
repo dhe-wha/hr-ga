@@ -760,6 +760,37 @@
       <div class="kry-card wide">
         <div class="chart-box tall"><canvas id="jabatanCompareChart"></canvas></div>
       </div>
+
+      <!-- ===== Karyawan Masuk per Departemen per Bulan (sheet: TK_In) ===== -->
+      <div class="sticky-bar section-gap" style="position:static;">
+        <header class="asset-header">
+          <div>
+            <p class="eyebrow">Human Resources &middot; Rekrutmen</p>
+            <h1 class="asset-title" style="font-size:22px;">Karyawan Masuk per Departemen per Bulan</h1>
+            <p class="kry-note" id="tkinSummary" style="margin-top:8px;">Memuat ringkasan...</p>
+          </div>
+        </header>
+
+        <div class="controls">
+          <div class="chart-type-toggle" id="tkinAlasanToggle">
+            <button type="button" data-mode="semua" class="active">Semua</button>
+            <button type="button" data-mode="nonmutasi">Non-Mutasi</button>
+          </div>
+          <div class="chart-type-toggle" id="tkinTypeToggle">
+            <button type="button" data-type="line" class="active">Line</button>
+            <button type="button" data-type="bar">Bar</button>
+          </div>
+          <button class="refresh-btn" id="tkinRefreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            Refresh
+          </button>
+          <p class="kry-note" id="tkinNote">Tren bulanan karyawan masuk per departemen (sheet "TK_In"). Mengikuti filter Tahun di atas. "Non-Mutasi" mengecualikan baris dengan Alasan = Mutasi.</p>
+        </div>
+      </div>
+
+      <div class="kry-card wide">
+        <div class="chart-box tall"><canvas id="tkinChart"></canvas></div>
+      </div>
     </div>
   </div>
 
@@ -2736,6 +2767,7 @@
         renderTkout();
       }
       if(typeof renderJabatanCompareChart === 'function') renderJabatanCompareChart();
+      if(typeof tkinLoaded !== 'undefined' && tkinLoaded) renderTkinChart();
     }catch(e){
       body.innerHTML = `<tr><td colspan="17" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="fullRetryBtn">Coba Lagi</button></td></tr>`;
       const retry = document.getElementById('fullRetryBtn');
@@ -2837,6 +2869,7 @@
       renderTkout();
     }
     if(typeof renderJabatanCompareChart === 'function') renderJabatanCompareChart();
+    if(typeof tkinLoaded !== 'undefined' && tkinLoaded) renderTkinChart();
   });
   document.getElementById('fullRefreshBtn').addEventListener('click', loadFulfillmentData);
 
@@ -3119,6 +3152,167 @@
     });
   });
 
+  /* =====================================================================
+     KARYAWAN MASUK PER DEPARTEMEN PER BULAN (chart, di bawah Masuk vs Keluar)
+     Sumber data: Google Sheet "report_karyawan" (KRY_SHEET_ID) - sheet "TK_In".
+     Struktur kolom sama seperti "TK_Out": bulan(A, merge vertikal, format
+     "Jan-26"), nik(B), nama(C), jabatan(D), departemen(E), alasan(F - bisa
+     berisi "Mutasi" untuk perpindahan internal). Karena kolom Bulan sama-sama
+     memakai cell merge, dipakai pola fetch chunk kecil (30 baris) + forward-fill
+     yang sama seperti TK_Out untuk menghindari bug gviz CSV export pada baris
+     yang banyak. Mengikuti Tahun (fullYearValue) dari section di atasnya;
+     tidak ada filter Departemen di sini karena chart ini justru membandingkan
+     ANTAR departemen (1 garis/bar per departemen).
+     ===================================================================== */
+  let TKIN_ROWS = [];
+  let tkinLoaded = false;
+  let tkinAlasanMode = 'semua'; // 'semua' | 'nonmutasi'
+  let tkinChartType = 'line';
+  let tkinChart = null;
+  const TKIN_DEPT_COLORS = ['#8FCB84','#4C8DF5','#E8A33D','#E8825A','#3FB6A8','#B98FE8','#E85A8A','#9AA1B4','#C9D14E','#5AC8E8'];
+  function tkinDeptColor(idx){ return TKIN_DEPT_COLORS[idx % TKIN_DEPT_COLORS.length]; }
+
+  async function tkinFetchAllRows(onProgress){
+    const CHUNK = 30;
+    let startRow = 2; // baris 1 = header, dilewati
+    let all = [];
+    for(let i=0;i<150;i++){ // batas aman ~4.500 baris
+      const endRow = startRow + CHUNK - 1;
+      const url = `https://docs.google.com/spreadsheets/d/${KRY_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('TK_In')}&range=A${startRow}:F${endRow}`;
+      const text = await recFetchChunkWithRetry(url, 2);
+      if(!text || text.trim().startsWith('{')) break; // benar-benar habis / range tidak valid
+      const parsed = Papa.parse(text.trim(), { header:false }).data;
+      const real = parsed.filter(r => r.some(c => (c||'').trim()!==''));
+      if(real.length===0) break;
+      all = all.concat(real);
+      if(typeof onProgress==='function') onProgress(all.length);
+      if(parsed.length < CHUNK) break; // baris terakhir yang tersedia
+      startRow = endRow + 1;
+      await recSleep(120);
+    }
+    return all;
+  }
+
+  async function loadTkinData(){
+    const btn = document.getElementById('tkinRefreshBtn');
+    const summary = document.getElementById('tkinSummary');
+    if(summary) summary.textContent = 'Memuat ringkasan...';
+    if(btn) btn.classList.add('spinning');
+    try{
+      const raw = await tkinFetchAllRows(()=>{});
+      // Jaring pengaman: forward-fill label Bulan yang masih kosong (baris lanjutan
+      // dari cell yang di-merge), sama seperti TK_Out.
+      let lastBulan = '';
+      raw.forEach(r=>{
+        const cur = (r[0]||'').trim();
+        if(cur){ lastBulan = cur; } else { r[0] = lastBulan; }
+      });
+      TKIN_ROWS = raw.map(r=>({
+        nik: (r[1]||'').trim(),
+        nama: (r[2]||'').trim(),
+        jabatan: (r[3]||'').trim(),
+        departemen: (r[4]||'').trim(),
+        alasan: (r[5]||'').trim(),
+        tgl: tkoutParseBulan(r[0]),
+      })).filter(x=>x.departemen && x.tgl);
+      tkinLoaded = true;
+      renderTkinChart();
+    }catch(e){
+      if(summary) summary.textContent = 'Gagal memuat data dari Google Sheet.';
+    }
+    if(btn) btn.classList.remove('spinning');
+  }
+
+  function renderTkinChart(){
+    const canvas = document.getElementById('tkinChart');
+    if(!canvas || typeof Chart === 'undefined') return;
+    const note = document.getElementById('tkinSummary');
+
+    const filteredRows = TKIN_ROWS.filter(r =>
+      r.tgl.year===fullYearValue &&
+      (tkinAlasanMode==='semua' || r.alasan.toLowerCase()!=='mutasi')
+    );
+
+    const depts = Array.from(new Set(filteredRows.map(r=>r.departemen))).sort();
+
+    if(depts.length===0){
+      if(tkinChart){ tkinChart.destroy(); tkinChart = null; }
+      if(note) note.textContent = `Tidak ada data karyawan masuk untuk tahun ${fullYearValue||'-'}.`;
+      return;
+    }
+
+    const deptMonths = depts.map(d=>{
+      const months = new Array(12).fill(0);
+      filteredRows.filter(r=>r.departemen===d).forEach(r=> months[r.tgl.month-1]++);
+      return { dept: d, months, total: months.reduce((a,b)=>a+b,0) };
+    });
+
+    const grandTotal = deptMonths.reduce((s,d)=>s+d.total,0);
+    if(note){
+      const modeLabel = tkinAlasanMode==='semua' ? 'semua alasan' : 'non-mutasi';
+      note.innerHTML = `Tahun <b>${fullYearValue}</b> &middot; <b>${depts.length}</b> departemen &middot; <b>${grandTotal}</b> karyawan masuk (${modeLabel})`;
+    }
+
+    const isBar = tkinChartType === 'bar';
+    const buildDataset = (label, data, color) => {
+      const base = { label, data, borderColor: color, backgroundColor: isBar ? color + 'CC' : color };
+      if(isBar){
+        base.borderWidth = 0;
+        base.borderRadius = 4;
+        base.maxBarThickness = 28;
+      } else {
+        base.tension = 0.3;
+        base.borderWidth = 2.2;
+        base.pointRadius = 2.5;
+        base.pointBackgroundColor = color;
+        base.fill = false;
+      }
+      return base;
+    };
+
+    if(tkinChart) tkinChart.destroy();
+    tkinChart = new Chart(canvas, {
+      type: tkinChartType,
+      data: {
+        labels: ID_MONTH_LABELS,
+        datasets: deptMonths.map((d,idx)=> buildDataset(d.dept, d.months, tkinDeptColor(idx))),
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#9BA3A0', font: { family: 'IBM Plex Mono', size: 11 } } },
+          tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
+        },
+        scales: {
+          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
+          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, precision:0 }, grid: { color:'#333B3D' } },
+        },
+      },
+    });
+  }
+
+  document.getElementById('tkinRefreshBtn').addEventListener('click', loadTkinData);
+
+  document.querySelectorAll('#tkinAlasanToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(btn.dataset.mode === tkinAlasanMode) return;
+      tkinAlasanMode = btn.dataset.mode;
+      document.querySelectorAll('#tkinAlasanToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+      renderTkinChart();
+    });
+  });
+
+  document.querySelectorAll('#tkinTypeToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(btn.dataset.type === tkinChartType) return;
+      tkinChartType = btn.dataset.type;
+      document.querySelectorAll('#tkinTypeToggle button').forEach(b=>b.classList.toggle('active', b===btn));
+      renderTkinChart();
+    });
+  });
+
   /* ===================== SIDEBAR NAVIGATION ===================== */
   function toggleSubmenu(key){
     const toggle = document.getElementById(key+'Toggle');
@@ -3179,6 +3373,9 @@
     }
     if(page==='rekrutmen' && !tkoutLoaded){
       loadTkoutData();
+    }
+    if(page==='rekrutmen' && !tkinLoaded){
+      loadTkinData();
     }
     if(!KNOWN_PAGES.includes(page)){
       document.getElementById('placeholderTitle').textContent = label;
