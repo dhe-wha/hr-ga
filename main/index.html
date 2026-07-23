@@ -703,14 +703,11 @@
         </header>
 
         <div class="controls">
-          <div class="group-select">
-            <select id="tkoutYearFilter"></select>
-          </div>
           <button class="refresh-btn" id="tkoutRefreshBtn">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
             Refresh
           </button>
-          <p class="kry-note" id="tkoutNote">Data karyawan keluar per bulan (sheet "TK_Out"). Mengikuti filter Departemen di atas.</p>
+          <p class="kry-note" id="tkoutNote">Data karyawan keluar per bulan (sheet "TK_Out"). Mengikuti filter Departemen dan Tahun (dari Progress Penempatan Karyawan) di atas.</p>
         </div>
       </div>
 
@@ -737,6 +734,27 @@
       <div class="page-bar" id="tkoutPageBar">
         <p class="kry-note" id="tkoutPageInfo"></p>
         <div class="page-nav" id="tkoutPageNav"></div>
+      </div>
+
+      <!-- ===== Perbandingan Karyawan Masuk vs Keluar per Jabatan (per Bulan) ===== -->
+      <div class="sticky-bar section-gap" style="position:static;">
+        <header class="asset-header">
+          <div>
+            <p class="eyebrow">Human Resources &middot; Rekrutmen</p>
+            <h1 class="asset-title" style="font-size:22px;">Karyawan Masuk vs Keluar per Jabatan</h1>
+          </div>
+        </header>
+
+        <div class="controls">
+          <div class="group-select">
+            <select id="jabatanCompareFilter"></select>
+          </div>
+          <p class="kry-note" id="jabatanCompareNote">Tren bulanan masuk (penempatan) vs keluar untuk 1 jabatan. Mengikuti filter Departemen dan Tahun di atas.</p>
+        </div>
+      </div>
+
+      <div class="kry-card wide">
+        <div class="chart-box tall"><canvas id="jabatanCompareChart"></canvas></div>
       </div>
     </div>
   </div>
@@ -2630,6 +2648,10 @@
       tkoutPage = 1;
       renderTkout();
     }
+    if(typeof populateJabatanCompareFilter === 'function'){
+      populateJabatanCompareFilter();
+      renderJabatanCompareChart();
+    }
   });
   document.getElementById('recRefreshBtn').addEventListener('click', loadRekrutmenData);
 
@@ -2700,10 +2722,16 @@
       })).filter(x=>x.jabatan && x.tgl);
       fullPopulateFilters();
       recPopulateDeptFilter(); // sinkronkan dropdown Departemen bersama dengan daftar lengkap dari fulfillment
+      populateJabatanCompareFilter();
       fullLoaded = true;
       fullPage = 1;
       if(recLoaded) renderRekrutmen();
       renderFulfillment();
+      if(tkoutLoaded){
+        tkoutPage = 1;
+        renderTkout();
+      }
+      if(typeof renderJabatanCompareChart === 'function') renderJabatanCompareChart();
     }catch(e){
       body.innerHTML = `<tr><td colspan="17" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="fullRetryBtn">Coba Lagi</button></td></tr>`;
       const retry = document.getElementById('fullRetryBtn');
@@ -2800,6 +2828,11 @@
     fullYearValue = parseInt(e.target.value,10);
     fullPage = 1;
     renderFulfillment();
+    if(tkoutLoaded){
+      tkoutPage = 1;
+      renderTkout();
+    }
+    if(typeof renderJabatanCompareChart === 'function') renderJabatanCompareChart();
   });
   document.getElementById('fullRefreshBtn').addEventListener('click', loadFulfillmentData);
 
@@ -2812,7 +2845,6 @@
      ===================================================================== */
   let TKOUT_ROWS = [];
   let tkoutLoaded = false;
-  let tkoutYearValue = null;
   let tkoutPage = 1;
   const TKOUT_PAGE_SIZE = 10;
 
@@ -2885,11 +2917,12 @@
         alasan: (r[5]||'').trim(),
         tgl: tkoutParseBulan(r[0]),
       })).filter(x=>x.jabatan && x.tgl);
-      tkoutPopulateFilters();
       recPopulateDeptFilter(); // sinkronkan dropdown Departemen bersama dengan daftar TK_Out juga
+      populateJabatanCompareFilter();
       tkoutLoaded = true;
       tkoutPage = 1;
       renderTkout();
+      renderJabatanCompareChart();
     }catch(e){
       body.innerHTML = `<tr><td colspan="15" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="tkoutRetryBtn">Coba Lagi</button></td></tr>`;
       const retry = document.getElementById('tkoutRetryBtn');
@@ -2898,20 +2931,13 @@
     btn.classList.remove('spinning');
   }
 
-  function tkoutPopulateFilters(){
-    const yearSel = document.getElementById('tkoutYearFilter');
-    const years = Array.from(new Set(TKOUT_ROWS.map(r=>r.tgl.year))).sort((a,b)=>b-a);
-    const curYear = tkoutYearValue || years[0];
-    yearSel.innerHTML = years.map(y=>`<option value="${y}">${y}</option>`).join('');
-    yearSel.value = (years.includes(curYear)) ? curYear : years[0];
-    tkoutYearValue = parseInt(yearSel.value,10);
-  }
-
+  /* Tahun mengikuti fullYearValue (dropdown Tahun di section "Progress Penempatan
+     Karyawan") - tidak ada dropdown Tahun terpisah lagi di section ini. */
   function renderTkout(){
     const body = document.getElementById('tkoutTableBody');
     const filteredRows = TKOUT_ROWS.filter(r =>
       (recDeptValue==='semua' || r.departemen===recDeptValue) &&
-      r.tgl.year===tkoutYearValue
+      r.tgl.year===fullYearValue
     );
 
     const groups = new Map();
@@ -2980,12 +3006,107 @@
     renderTkout();
   }
 
-  document.getElementById('tkoutYearFilter').addEventListener('change', e=>{
-    tkoutYearValue = parseInt(e.target.value,10);
-    tkoutPage = 1;
-    renderTkout();
-  });
   document.getElementById('tkoutRefreshBtn').addEventListener('click', loadTkoutData);
+
+  /* =====================================================================
+     KARYAWAN MASUK VS KELUAR PER JABATAN (chart line, di bawah Rekap Keluar)
+     Masuk = FULL_ROWS (sheet fulfillment, penempatan/join), Keluar = TKOUT_ROWS
+     (sheet TK_Out). Mengikuti Departemen (recDeptValue) dan Tahun (fullYearValue)
+     yang sama dengan section-section di atasnya. 1 jabatan dipilih lewat dropdown.
+     ===================================================================== */
+  let jabatanCompareValue = null;
+  let jabatanCompareChart = null;
+  const ID_MONTH_LABELS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+  function populateJabatanCompareFilter(){
+    const sel = document.getElementById('jabatanCompareFilter');
+    if(!sel) return;
+    const scopedFull = recDeptValue==='semua' ? FULL_ROWS : FULL_ROWS.filter(r=>r.departemen===recDeptValue);
+    const scopedOut = recDeptValue==='semua' ? TKOUT_ROWS : TKOUT_ROWS.filter(r=>r.departemen===recDeptValue);
+    const jabatans = Array.from(new Set([
+      ...scopedFull.map(r=>r.jabatan),
+      ...scopedOut.map(r=>r.jabatan)
+    ].filter(Boolean))).sort();
+
+    const cur = jabatanCompareValue;
+    sel.innerHTML = jabatans.map(j=>`<option value="${j}">${j}</option>`).join('');
+    sel.value = (cur && jabatans.includes(cur)) ? cur : (jabatans[0] || '');
+    jabatanCompareValue = sel.value || null;
+  }
+
+  function renderJabatanCompareChart(){
+    const canvas = document.getElementById('jabatanCompareChart');
+    if(!canvas || typeof Chart === 'undefined') return;
+    const note = document.getElementById('jabatanCompareNote');
+
+    if(!jabatanCompareValue){
+      if(jabatanCompareChart){ jabatanCompareChart.destroy(); jabatanCompareChart = null; }
+      if(note) note.textContent = 'Belum ada data jabatan untuk dibandingkan.';
+      return;
+    }
+
+    const matchScope = r => r.jabatan===jabatanCompareValue && r.tgl.year===fullYearValue && (recDeptValue==='semua' || r.departemen===recDeptValue);
+    const masukMonths = new Array(12).fill(0);
+    FULL_ROWS.filter(matchScope).forEach(r=> masukMonths[r.tgl.month-1]++);
+    const keluarMonths = new Array(12).fill(0);
+    TKOUT_ROWS.filter(matchScope).forEach(r=> keluarMonths[r.tgl.month-1]++);
+
+    const totalMasuk = masukMonths.reduce((a,b)=>a+b,0);
+    const totalKeluar = keluarMonths.reduce((a,b)=>a+b,0);
+    if(note){
+      note.innerHTML = `<b>${jabatanCompareValue}</b> &middot; tahun <b>${fullYearValue}</b> &middot; Masuk: <b>${totalMasuk}</b> &middot; Keluar: <b>${totalKeluar}</b>`;
+    }
+
+    if(jabatanCompareChart) jabatanCompareChart.destroy();
+    jabatanCompareChart = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: ID_MONTH_LABELS,
+        datasets: [
+          {
+            label: 'Masuk',
+            data: masukMonths,
+            borderColor: '#8FCB84',
+            backgroundColor: '#8FCB84',
+            tension: 0.3,
+            borderWidth: 2.5,
+            pointRadius: 3,
+            pointBackgroundColor: '#8FCB84',
+            fill: false,
+          },
+          {
+            label: 'Keluar',
+            data: keluarMonths,
+            borderColor: '#E8825A',
+            backgroundColor: '#E8825A',
+            tension: 0.3,
+            borderWidth: 2.5,
+            pointRadius: 3,
+            pointBackgroundColor: '#E8825A',
+            fill: false,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#9BA3A0', font: { family: 'IBM Plex Mono', size: 11 } } },
+          tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
+        },
+        scales: {
+          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
+          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, precision:0 }, grid: { color:'#333B3D' } },
+        },
+      },
+    });
+  }
+
+  document.getElementById('jabatanCompareFilter').addEventListener('change', e=>{
+    jabatanCompareValue = e.target.value;
+    renderJabatanCompareChart();
+  });
 
   /* ===================== SIDEBAR NAVIGATION ===================== */
   function toggleSubmenu(key){
