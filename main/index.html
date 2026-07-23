@@ -2827,11 +2827,22 @@
     return { month: monIdx+1, year: 2000+yy };
   }
 
+  /* PENTING: kolom Bulan di sheet TK_Out berisi CELL YANG DI-MERGE vertikal
+     (satu label bulan menaungi banyak baris). Google Sheets gviz CSV export
+     ternyata TIDAK KONSISTEN meng-handle merge ini untuk range/fetch yang besar -
+     sudah diuji langsung: fetch 250 baris sekaligus (bahkan fetch seluruh sheet
+     tanpa range sama sekali) membuat label bulan tertentu (mis. "May-26") jadi
+     KOSONG di semua barisnya, padahal fetch dengan potongan KECIL (~30 baris)
+     terbukti selalu menampilkan labelnya dengan benar di setiap baris. Karena itu
+     dipakai CHUNK kecil (30) di sini - beda dari fetch "fulfillment" yang boleh
+     pakai chunk besar karena kolom tanggalnya tidak di-merge. Sebagai jaring
+     pengaman tambahan, forward-fill juga tetap diterapkan di loadTkoutData()
+     kalau-kalau ada baris yang masih kosong. */
   async function tkoutFetchAllRows(onProgress){
-    const CHUNK = 250;
+    const CHUNK = 30;
     let startRow = 2; // baris 1 = header, dilewati
     let all = [];
-    for(let i=0;i<30;i++){ // batas aman ~7.500 baris
+    for(let i=0;i<150;i++){ // batas aman ~4.500 baris
       const endRow = startRow + CHUNK - 1;
       const url = `https://docs.google.com/spreadsheets/d/${KRY_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('TK_Out')}&range=A${startRow}:F${endRow}`;
       const text = await recFetchChunkWithRetry(url, 2);
@@ -2859,6 +2870,13 @@
     btn.classList.add('spinning');
     try{
       const raw = await tkoutFetchAllRows(setLoadingMsg);
+      // Jaring pengaman: forward-fill label Bulan yang masih kosong (baris lanjutan
+      // dari cell yang di-merge), pakai label bulan terakhir yang valid & terlihat.
+      let lastBulan = '';
+      raw.forEach(r=>{
+        const cur = (r[0]||'').trim();
+        if(cur){ lastBulan = cur; } else { r[0] = lastBulan; }
+      });
       TKOUT_ROWS = raw.map(r=>({
         nik: (r[1]||'').trim(),
         nama: (r[2]||'').trim(),
