@@ -761,12 +761,12 @@
         <div class="chart-box tall"><canvas id="jabatanCompareChart"></canvas></div>
       </div>
 
-      <!-- ===== Karyawan Masuk per Departemen per Bulan (sheet: TK_In) ===== -->
+      <!-- ===== Karyawan Masuk vs Keluar per Departemen (sheet: TK_In & TK_Out) ===== -->
       <div class="sticky-bar section-gap" style="position:static;">
         <header class="asset-header">
           <div>
             <p class="eyebrow">Human Resources &middot; Rekrutmen</p>
-            <h1 class="asset-title" style="font-size:22px;">Karyawan Masuk per Departemen per Bulan</h1>
+            <h1 class="asset-title" style="font-size:22px;">Karyawan Masuk vs Keluar per Departemen</h1>
             <p class="kry-note" id="tkinSummary" style="margin-top:8px;">Memuat ringkasan...</p>
           </div>
         </header>
@@ -784,7 +784,7 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
             Refresh
           </button>
-          <p class="kry-note" id="tkinNote">Tren bulanan karyawan masuk per departemen (sheet "TK_In"). Mengikuti filter Tahun di atas. "Non-Mutasi" mengecualikan baris dengan Alasan = Mutasi.</p>
+          <p class="kry-note" id="tkinNote">Tren bulanan masuk (sheet "TK_In") vs keluar (sheet "TK_Out"). Mengikuti filter Departemen dan Tahun di atas. "Non-Mutasi" mengecualikan baris dengan Alasan = Mutasi.</p>
         </div>
       </div>
 
@@ -2687,6 +2687,7 @@
       populateJabatanCompareFilter();
       renderJabatanCompareChart();
     }
+    if(typeof renderTkinChart === 'function') renderTkinChart();
   });
   document.getElementById('recRefreshBtn').addEventListener('click', loadRekrutmenData);
 
@@ -2960,6 +2961,7 @@
       tkoutPage = 1;
       renderTkout();
       renderJabatanCompareChart();
+      if(typeof renderTkinChart === 'function') renderTkinChart();
     }catch(e){
       body.innerHTML = `<tr><td colspan="15" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="tkoutRetryBtn">Coba Lagi</button></td></tr>`;
       const retry = document.getElementById('tkoutRetryBtn');
@@ -3153,24 +3155,24 @@
   });
 
   /* =====================================================================
-     KARYAWAN MASUK PER DEPARTEMEN PER BULAN (chart, di bawah Masuk vs Keluar)
-     Sumber data: Google Sheet "report_karyawan" (KRY_SHEET_ID) - sheet "TK_In".
-     Struktur kolom sama seperti "TK_Out": bulan(A, merge vertikal, format
-     "Jan-26"), nik(B), nama(C), jabatan(D), departemen(E), alasan(F - bisa
-     berisi "Mutasi" untuk perpindahan internal). Karena kolom Bulan sama-sama
-     memakai cell merge, dipakai pola fetch chunk kecil (30 baris) + forward-fill
-     yang sama seperti TK_Out untuk menghindari bug gviz CSV export pada baris
-     yang banyak. Mengikuti Tahun (fullYearValue) dari section di atasnya;
-     tidak ada filter Departemen di sini karena chart ini justru membandingkan
-     ANTAR departemen (1 garis/bar per departemen).
+     KARYAWAN MASUK VS KELUAR PER DEPARTEMEN (chart, di bawah Masuk vs Keluar
+     per Jabatan). Masuk = TKIN_ROWS (sheet TK_In), Keluar = TKOUT_ROWS (sheet
+     TK_Out). Mengikuti Departemen (recDeptValue) dan Tahun (fullYearValue)
+     yang sama dengan section-section lain di halaman ini - BUKAN
+     membandingkan antar departemen, tapi masuk-vs-keluar untuk departemen
+     yang sedang difilter di atas (atau total semua departemen jika
+     recDeptValue==='semua'). Struktur kolom TK_In sama seperti TK_Out: bulan
+     (A, merge vertikal, format "Jan-26"), nik(B), nama(C), jabatan(D),
+     departemen(E), alasan(F - bisa berisi "Mutasi" untuk perpindahan
+     internal). Karena kolom Bulan sama-sama memakai cell merge, dipakai pola
+     fetch chunk kecil (30 baris) + forward-fill yang sama seperti TK_Out
+     untuk menghindari bug gviz CSV export pada baris yang banyak.
      ===================================================================== */
   let TKIN_ROWS = [];
   let tkinLoaded = false;
   let tkinAlasanMode = 'semua'; // 'semua' | 'nonmutasi'
   let tkinChartType = 'line';
   let tkinChart = null;
-  const TKIN_DEPT_COLORS = ['#8FCB84','#4C8DF5','#E8A33D','#E8825A','#3FB6A8','#B98FE8','#E85A8A','#9AA1B4','#C9D14E','#5AC8E8'];
-  function tkinDeptColor(idx){ return TKIN_DEPT_COLORS[idx % TKIN_DEPT_COLORS.length]; }
 
   async function tkinFetchAllRows(onProgress){
     const CHUNK = 30;
@@ -3228,29 +3230,22 @@
     if(!canvas || typeof Chart === 'undefined') return;
     const note = document.getElementById('tkinSummary');
 
-    const filteredRows = TKIN_ROWS.filter(r =>
+    const scopeMatch = r =>
       r.tgl.year===fullYearValue &&
-      (tkinAlasanMode==='semua' || r.alasan.toLowerCase()!=='mutasi')
-    );
+      (recDeptValue==='semua' || r.departemen===recDeptValue) &&
+      (tkinAlasanMode==='semua' || r.alasan.toLowerCase()!=='mutasi');
 
-    const depts = Array.from(new Set(filteredRows.map(r=>r.departemen))).sort();
+    const masukMonths = new Array(12).fill(0);
+    TKIN_ROWS.filter(scopeMatch).forEach(r=> masukMonths[r.tgl.month-1]++);
+    const keluarMonths = new Array(12).fill(0);
+    TKOUT_ROWS.filter(scopeMatch).forEach(r=> keluarMonths[r.tgl.month-1]++);
 
-    if(depts.length===0){
-      if(tkinChart){ tkinChart.destroy(); tkinChart = null; }
-      if(note) note.textContent = `Tidak ada data karyawan masuk untuk tahun ${fullYearValue||'-'}.`;
-      return;
-    }
-
-    const deptMonths = depts.map(d=>{
-      const months = new Array(12).fill(0);
-      filteredRows.filter(r=>r.departemen===d).forEach(r=> months[r.tgl.month-1]++);
-      return { dept: d, months, total: months.reduce((a,b)=>a+b,0) };
-    });
-
-    const grandTotal = deptMonths.reduce((s,d)=>s+d.total,0);
+    const totalMasuk = masukMonths.reduce((a,b)=>a+b,0);
+    const totalKeluar = keluarMonths.reduce((a,b)=>a+b,0);
     if(note){
       const modeLabel = tkinAlasanMode==='semua' ? 'semua alasan' : 'non-mutasi';
-      note.innerHTML = `Tahun <b>${fullYearValue}</b> &middot; <b>${depts.length}</b> departemen &middot; <b>${grandTotal}</b> karyawan masuk (${modeLabel})`;
+      const deptLabel = recDeptValue==='semua' ? 'Semua Departemen' : recDeptValue;
+      note.innerHTML = `<b>${deptLabel}</b> &middot; tahun <b>${fullYearValue}</b> &middot; Masuk: <b>${totalMasuk}</b> &middot; Keluar: <b>${totalKeluar}</b> (${modeLabel})`;
     }
 
     const isBar = tkinChartType === 'bar';
@@ -3259,11 +3254,11 @@
       if(isBar){
         base.borderWidth = 0;
         base.borderRadius = 4;
-        base.maxBarThickness = 28;
+        base.maxBarThickness = 34;
       } else {
         base.tension = 0.3;
-        base.borderWidth = 2.2;
-        base.pointRadius = 2.5;
+        base.borderWidth = 2.5;
+        base.pointRadius = 3;
         base.pointBackgroundColor = color;
         base.fill = false;
       }
@@ -3275,7 +3270,10 @@
       type: tkinChartType,
       data: {
         labels: ID_MONTH_LABELS,
-        datasets: deptMonths.map((d,idx)=> buildDataset(d.dept, d.months, tkinDeptColor(idx))),
+        datasets: [
+          buildDataset('Masuk', masukMonths, '#8FCB84'),
+          buildDataset('Keluar', keluarMonths, '#E8825A'),
+        ],
       },
       options: {
         responsive: true,
