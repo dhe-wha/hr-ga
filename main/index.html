@@ -1768,6 +1768,14 @@
       </div>`).join('');
   }
 
+  /* Tambahkan field pct ke tiap entry = proporsi value terhadap total seluruh
+     entry di list yang sama (dipakai untuk kartu bar-list selain Resign per PT,
+     yang pct-nya dihitung terhadap total headcount, bukan proporsi internal). */
+  function withSharePct(entries){
+    const total = entries.reduce((s,e)=>s+e.value,0);
+    return entries.map(e=>({ ...e, pct: total ? (e.value/total*100) : 0 }));
+  }
+
   function renderGajiTable(containerId, deptEntries, total){
     const el = document.getElementById(containerId);
     if(!el) return;
@@ -1864,58 +1872,58 @@
       <div class="kry-card wide"><h3>Gaji Netto per Departemen</h3><table class="kry-table" id="kryGajiNetto"></table></div>
     `;
 
-    renderBarList('kryByPT', Object.entries(byPT).map(([k,v])=>({label:k,value:v})));
+    renderBarListPct('kryByPT', withSharePct(Object.entries(byPT).map(([k,v])=>({label:k,value:v}))));
     const resignPtKeys = Array.from(new Set([...Object.keys(byPT), ...Object.keys(resignByPT)]));
     renderBarListPct('kryResignPT', resignPtKeys.map(k => {
       const resign = resignByPT[k] || 0;
       const headcount = byPT[k] || 0;
       return {label:k, value:resign, pct: headcount ? (resign/headcount*100) : 0};
     }).sort((a,b)=>b.value-a.value), 'red');
-    renderBarList('kryByDept', Object.entries(byDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value));
-    renderBarList('kryKab', [{label:'Lokal',value:kabLokal},{label:'Non Lokal',value:kabNonLokal}]);
-    renderBarList('kryProv', [{label:'Lokal',value:provLokal},{label:'Non Lokal',value:provNonLokal}]);
-    renderBarList('kryMasukList', [
+    renderBarListPct('kryByDept', withSharePct(Object.entries(byDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value)));
+    renderBarListPct('kryKab', withSharePct([{label:'Lokal',value:kabLokal},{label:'Non Lokal',value:kabNonLokal}]));
+    renderBarListPct('kryProv', withSharePct([{label:'Lokal',value:provLokal},{label:'Non Lokal',value:provNonLokal}]));
+    renderBarListPct('kryMasukList', withSharePct([
       {label:'Penambahan', value: sum(flowRows,'masukPenambahan')},
       {label:'Penggantian', value: sum(flowRows,'masukPenggantian')},
       {label:'Mutasi', value: sum(flowRows,'masukMutasi')},
       {label:'Promosi', value: sum(flowRows,'masukPromosi')},
-    ], 'green');
-    renderBarList('kryKeluarList', [
+    ]), 'green');
+    renderBarListPct('kryKeluarList', withSharePct([
       {label:'Resign', value: sum(flowRows,'keluarResign')},
       {label:'Mutasi', value: sum(flowRows,'keluarMutasi')},
       {label:'Promosi', value: sum(flowRows,'keluarPromosi')},
       {label:'Habis Kontrak', value: sum(flowRows,'keluarHabisKontrak')},
       {label:'Meninggal', value: sum(flowRows,'keluarMeninggal')},
-    ], 'red');
-    renderBarList('kryGender', [{label:'Laki-laki',value:genderL},{label:'Perempuan',value:genderP}]);
-    renderBarList('kryStatus', [
+    ]), 'red');
+    renderBarListPct('kryGender', withSharePct([{label:'Laki-laki',value:genderL},{label:'Perempuan',value:genderP}]));
+    renderBarListPct('kryStatus', withSharePct([
       {label:'Bulanan', value: statusBulanan},
       {label:'SKU', value: statusSKU},
       {label:'PKWT', value: statusPKWT},
       {label:'BHL', value: statusBHL},
-    ]);
-    renderBarList('kryPangkat', [
+    ]));
+    renderBarListPct('kryPangkat', withSharePct([
       {label:'Staff', value: pangkatStaff},
       {label:'Mandor 1 / Kerani 1', value: pangkatMandor1},
       {label:'Mandor / Kerani / Operator', value: pangkatMandorKerani},
       {label:'Worker', value: pangkatWorker},
-    ]);
-    renderBarList('kryKlasifikasi', [
+    ]));
+    renderBarListPct('kryKlasifikasi', withSharePct([
       {label:'Desa Binaan', value: klasDesaBinaan},
       {label:'Satu Kecamatan', value: klasKecamatan},
       {label:'Satu Kabupaten', value: klasKabupaten},
       {label:'Satu Provinsi', value: klasProvinsi},
       {label:'Sulawesi', value: klasSulawesi},
       {label:'Non Sulawesi', value: klasNonSulawesi},
-    ]);
-    renderBarList('kryPendidikan', [
+    ]));
+    renderBarListPct('kryPendidikan', withSharePct([
       {label:'SD', value: pendSD},
       {label:'SMP', value: pendSMP},
       {label:'SMA', value: pendSMA},
       {label:'D1/D2/D3', value: pendD123},
       {label:'S1', value: pendS1},
       {label:'S2', value: pendS2},
-    ]);
+    ]));
 
     renderGajiTable('kryGajiBruto', Object.entries(gajiBrutoByDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value), totalBruto);
     renderGajiTable('kryGajiNetto', Object.entries(gajiNettoByDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value), totalNetto);
