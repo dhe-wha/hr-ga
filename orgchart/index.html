@@ -465,8 +465,9 @@ function render(){
   // sama, semua namanya ditumpuk di dalam kotak yg sama (lihat groupLeaves/unitInfo)
   Object.values(pos).forEach(p=>{
     const namesHtml = p.members.map(m=>`<div class="nm${m.vac?' vac':''}">${m.n?m.n:'Vacant'}</div>`).join('');
+    const jabTxt = p.j + (p.members.length>1 ? ` (${p.members.length})` : '');
     html+=`<div class="card l${p.lv}" style="left:${p.x}px; top:${p.y}px; width:${CW}px; height:${p.h}px">
-      <div class="jab${p.jabFlag?' flag':''}">${p.j}</div>
+      <div class="jab${p.jabFlag?' flag':''}">${jabTxt}</div>
       ${namesHtml}
     </div>`;
   });
