@@ -55,16 +55,19 @@
     display:flex; flex-direction:column;
   }
   .card .jab{
-    flex:1; display:flex; align-items:center; justify-content:center;
+    height:32px; flex:none; display:flex; align-items:center; justify-content:center;
     font-size:10px; font-weight:bold; text-transform:uppercase;
-    color:var(--jab); padding:3px 6px; line-height:1.2;
+    color:var(--jab); padding:2px 6px; line-height:1.15;
     border-bottom:1.2px solid var(--bd);
   }
   .card .jab.flag{color:var(--vacant);}
   .card .nm{
-    font-size:11.5px; color:var(--nama); font-style:italic; font-weight:600;
-    padding:4px 6px; line-height:1.15; background:rgba(255,255,255,.5);
+    height:28px; flex:none; display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:var(--nama); font-style:italic; font-weight:600;
+    padding:0 6px; line-height:1.1; background:rgba(255,255,255,.5);
+    border-bottom:1px solid rgba(0,0,0,.08);
   }
+  .card .nm:last-child{border-bottom:none;}
   .card .nm.vac{color:var(--vacant); font-weight:bold;}
   .l0{background:var(--mgr-bg);}
   .l1{background:var(--askep-bg);}
@@ -284,11 +287,42 @@ async function loadData(){
 
 /* ================== LAYOUT ================== */
 const CW=168, CH=60, PW=CW+18, GAP=16, BH=118;
+const HEAD_H=32, NAME_H=28; // tinggi header jabatan & tiap baris nama dlm kotak gabungan (1 nama = HEAD_H+NAME_H = CH)
 let pos={}, lines=[], curX=0, BY=null;
 
 function flat(n){ const o=[]; n.children.forEach(c=>{o.push(c); o.push(...flat(c));}); return o; }
 function V(x,y1,y2){ if(y2>y1) lines.push(`M${x} ${y1} L${x} ${y2}`); }
 function Hln(y,x1,x2){ if(x2>x1) lines.push(`M${x1} ${y} L${x2} ${y}`); }
+
+// orang2 dgn Nama Jabatan yg SAMA & induk yg sama digabung jadi satu kotak
+// (satu header jabatan, daftar nama di dalamnya) - dipakai utk daftar pekerja
+// sejenis (mis. Driver Dump Truck 01-08, Helper Mekanik) supaya tidak jadi
+// banyak kotak terpisah. Node yg punya anak sendiri (bukan pekerja biasa)
+// tetap jadi kotak tersendiri (tidak digabung).
+function groupLeaves(list){
+  const order=[]; const map={};
+  list.forEach(d=>{
+    if(d.children.length){ order.push({type:'single', node:d}); return; }
+    const key=d.j.trim().toLowerCase();
+    if(!map[key]){ map[key]={type:'group', j:d.j.trim(), lv:d.lv, k:d.k, list:[]}; order.push(map[key]); }
+    map[key].list.push(d);
+  });
+  return order;
+}
+function cardHeight(count){ return count<=1 ? CH : HEAD_H+count*NAME_H; }
+function unitInfo(u){
+  const list = u.type==='single' ? [u.node] : u.list;
+  const j = u.type==='single' ? u.node.j : u.j;
+  const lv = u.type==='single' ? u.node.lv : u.lv;
+  const k = u.type==='single' ? u.node.k : u.k;
+  return {
+    k, j, lv, h: cardHeight(list.length),
+    jabFlag: /^(sakit|resign)/i.test(j.trim()),
+    members: list.map(d=>({n:d.n, vac:isVac(d)}))
+  };
+}
+function headInfo(n){ return unitInfo({type:'single', node:n}); }
+function setPos(x, y, info){ pos[info.k]={x, y, h:info.h, j:info.j, lv:info.lv, jabFlag:info.jabFlag, members:info.members}; return info; }
 
 // kolom: kepala (Mandor1/Krani1) + turunannya ditumpuk vertikal sesuai pita level.
 // Jika anak langsung berada di level Mandor/Krani ke bawah, dikelompokkan per
@@ -297,10 +331,12 @@ function Hln(y,x1,x2){ if(x2>x1) lines.push(`M${x1} ${y} L${x2} ${y}`); }
 // vs "Compound"=Worker, sama2 anak Mandor Safety tapi harus jadi cabang terpisah).
 // Grup beranggota >1 dipisah jadi cabang/kolom sendiri; grup tunggal (daftar pekerja
 // sejenis, mis. Mandor Tanaman 01-05) tetap ditumpuk lurus dalam kolom yang sama.
+// Di dalam tiap kolom/cabang, orang2 dgn jabatan sama digabung jadi satu kotak (groupLeaves).
 function placeColumn(n){
   const cx=curX, c=cx+CW/2;
-  pos[n.k]={x:cx, y:BY(n.lv)};
-  let bottom=BY(n.lv)+CH;
+  const headI=headInfo(n);
+  setPos(cx, BY(n.lv), headI);
+  let bottom=BY(n.lv)+headI.h;
 
   if(n.children.length && n.children[0].lv>=5){
     const mdkGroups={}; const order=[];
@@ -315,55 +351,61 @@ function placeColumn(n){
       if(grp.length===1 && !grp[0].children.length) simple.push(grp[0]);
       else branches.push(grp);
     });
-    simple.forEach(d=>{
-      const y=Math.max(BY(d.lv), bottom+GAP);
-      pos[d.k]={x:cx, y};
+    groupLeaves(simple).forEach(u=>{
+      const info=unitInfo(u);
+      const y=Math.max(BY(info.lv), bottom+GAP);
+      setPos(cx, y, info);
       V(c, bottom, y);
-      bottom=y+CH;
+      bottom=y+info.h;
     });
     if(branches.length){
       const busY=bottom+(simple.length?GAP:22);
       V(c, bottom, busY);
       // cabang pertama memakai kolom yang sama dgn induk (curX belum bergeser),
       // jadi total lebar yg terpakai = branches.length * PW (tidak perlu tambahan lagi).
-      const centers=branches.map(grp=>placeStack(grp.flatMap(g=>[g,...flat(g)])));
+      const branchInfo=branches.map(grp=>placeStack(grp.flatMap(g=>[g,...flat(g)])));
+      const centers=branchInfo.map(bi=>bi.c);
       Hln(busY, Math.min(...centers,c), Math.max(...centers,c));
-      centers.forEach((cc,i)=>V(cc, busY, pos[branches[i][0].k].y));
+      centers.forEach((cc,i)=>V(cc, busY, branchInfo[i].topY));
     }else{
       curX+=PW;
     }
   }else{
-    const stack=[n,...flat(n)];
-    for(let i=1;i<stack.length;i++){
-      const d=stack[i];
-      const y=Math.max(BY(d.lv), bottom+GAP);
-      pos[d.k]={x:cx, y};
+    groupLeaves(flat(n)).forEach(u=>{
+      const info=unitInfo(u);
+      const y=Math.max(BY(info.lv), bottom+GAP);
+      setPos(cx, y, info);
       V(c, bottom, y);
-      bottom=y+CH;
-    }
+      bottom=y+info.h;
+    });
     curX+=PW;
   }
   return c;
 }
-// tumpukan Mandor/Krani langsung (tanpa Mandor 1) dalam satu kolom
+// tumpukan Mandor/Krani langsung (tanpa Mandor 1) dalam satu kolom; orang2 dgn
+// jabatan sama (mis. Mandor PWH x3, Mandor Scaller x7) digabung jadi satu kotak.
+// Return {c, topY} = center-x kolom & y kotak paling atas (utk sambungan garis).
 function placeStack(list){
   const cx=curX, c=cx+CW/2;
-  let bottom=-1;
-  list.forEach(d=>{
-    const y = bottom<0 ? BY(d.lv) : Math.max(BY(d.lv), bottom+GAP);
-    pos[d.k]={x:cx, y};
+  let bottom=-1, topY=null;
+  groupLeaves(list).forEach(u=>{
+    const info=unitInfo(u);
+    const y = bottom<0 ? BY(info.lv) : Math.max(BY(info.lv), bottom+GAP);
+    if(topY===null) topY=y;
+    setPos(cx, y, info);
     if(bottom>=0) V(c, bottom, y);
-    bottom=y+CH;
+    bottom=y+info.h;
   });
   curX+=PW;
-  return c;
+  return {c, topY};
 }
 // punya cucu? (anak yang masih punya anak)
 const hasGrand = n => n.children.some(c=>c.children.length);
 // node horizontal: level atas (lv<=3) atau node yang punya cucu
 function placeGroup(n){
   if(!n.children.length){
-    pos[n.k]={x:curX, y:BY(n.lv)};
+    const info=headInfo(n);
+    setPos(curX, BY(n.lv), info);
     const c=curX+CW/2; curX+=PW; return c;
   }
   // partisi anak:
@@ -381,19 +423,20 @@ function placeGroup(n){
     }
   });
   const centers=items.map(it=>{
-    if(it.type==='stack') return placeStack(it.list);
+    if(it.type==='stack'){ const r=placeStack(it.list); it.topY=r.topY; return r.c; }
     const ch=it.node;
     if(ch.lv<=3 || hasGrand(ch)) return placeGroup(ch);
     return ch.children.length ? placeColumn(ch) : placeGroup(ch);
   });
   const c=(Math.min(...centers)+Math.max(...centers))/2;
-  pos[n.k]={x:c-CW/2, y:BY(n.lv)};
-  const busY=BY(n.lv)+CH+22;
-  V(c, BY(n.lv)+CH, busY);
+  const headI=headInfo(n);
+  setPos(c-CW/2, BY(n.lv), headI);
+  const busY=BY(n.lv)+headI.h+22;
+  V(c, BY(n.lv)+headI.h, busY);
   Hln(busY, Math.min(...centers,c), Math.max(...centers,c));
   items.forEach((it,i)=>{
-    const head = it.type==='stack' ? it.list[0] : it.node;
-    V(centers[i], busY, pos[head.k].y);
+    const topY = it.type==='stack' ? it.topY : pos[it.node.k].y;
+    V(centers[i], busY, topY);
   });
   return c;
 }
@@ -414,17 +457,17 @@ function render(){
   dept.roots.forEach(r=>{ (r.lv<=3 || hasGrand(r) || !r.children.length) ? placeGroup(r) : placeColumn(r); });
 
   let maxX=0, maxY=0;
-  Object.values(pos).forEach(p=>{ maxX=Math.max(maxX,p.x+CW); maxY=Math.max(maxY,p.y+CH); });
+  Object.values(pos).forEach(p=>{ maxX=Math.max(maxX,p.x+CW); maxY=Math.max(maxY,p.y+p.h); });
 
   chartEl.style.width=maxX+'px'; chartEl.style.height=maxY+'px';
   let html=`<svg width="${maxX}" height="${maxY}"><path d="${lines.join(' ')}" stroke="#555" stroke-width="1.6" fill="none"/></svg>`;
-  all.forEach(n=>{
-    const p=pos[n.k]; if(!p) return;
-    const jabTxt = n.lv===6 ? n.k.substr(10,2)+' '+n.j : n.j;
-    const jabFlag = /^(sakit|resign)/i.test(n.j.trim());
-    html+=`<div class="card l${n.lv}" style="left:${p.x}px; top:${p.y}px; width:${CW}px; height:${CH}px">
-      <div class="jab${jabFlag?' flag':''}">${jabTxt}</div>
-      <div class="nm${isVac(n)?' vac':''}">${n.n?n.n:'Vacant'}</div>
+  // satu kotak = satu jabatan; kalau >1 orang menjabat jabatan yg sama & induk yg
+  // sama, semua namanya ditumpuk di dalam kotak yg sama (lihat groupLeaves/unitInfo)
+  Object.values(pos).forEach(p=>{
+    const namesHtml = p.members.map(m=>`<div class="nm${m.vac?' vac':''}">${m.n?m.n:'Vacant'}</div>`).join('');
+    html+=`<div class="card l${p.lv}" style="left:${p.x}px; top:${p.y}px; width:${CW}px; height:${p.h}px">
+      <div class="jab${p.jabFlag?' flag':''}">${p.j}</div>
+      ${namesHtml}
     </div>`;
   });
   chartEl.innerHTML=html;
