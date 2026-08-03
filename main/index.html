@@ -54,6 +54,30 @@
   .recruithub-btn .rh-recruit{color:var(--text-sb);}
   .recruithub-btn .rh-hub{color:var(--orange);}
   .brand{padding:22px 20px 18px; border-bottom:1px solid var(--border-sb);}
+  .sidebar-user{display:flex; align-items:center; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border-sb);}
+  .user-avatar{width:34px; height:34px; border-radius:50%; background:var(--purple-soft); color:var(--purple); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:14px; flex-shrink:0; text-transform:uppercase;}
+  .user-meta{flex:1; min-width:0;}
+  .user-name{margin:0; font-size:13px; font-weight:700; color:var(--text-sb); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .user-role{margin:2px 0 0; font-size:10.5px; color:var(--text-dim-sb); text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .user-logout-btn{background:transparent; border:1px solid var(--border-sb); color:var(--text-dim-sb); width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:.15s;}
+  .user-logout-btn:hover{color:var(--text-sb); border-color:var(--text-dim-sb);}
+
+  /* ---------- Login gate ---------- */
+  body.pre-auth .sidebar, body.pre-auth .content{display:none;}
+  .login-screen{display:none; position:fixed; inset:0; background:var(--bg); z-index:1000; align-items:center; justify-content:center; padding:20px;}
+  body.pre-auth .login-screen{display:flex;}
+  .login-card{width:100%; max-width:360px; background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:34px 30px; display:flex; flex-direction:column;}
+  .login-brand{font-size:25px; font-weight:800; letter-spacing:-0.3px; margin:0 0 6px; text-align:center;}
+  .login-brand .a{color:var(--text);}
+  .login-brand .b{color:var(--purple);}
+  .login-sub{font-size:12.5px; color:var(--text-dim); text-align:center; margin:0 0 24px; line-height:1.5;}
+  .login-label{font-family:var(--font-mono); font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--text-dim); margin:12px 0 6px;}
+  .login-input{background:var(--panel-alt); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:14px; padding:11px 13px; outline:none; transition:.15s; font-family:var(--font-body); width:100%;}
+  .login-input:focus{border-color:var(--purple);}
+  .login-error{color:var(--red); font-size:12px; margin:12px 0 0; min-height:14px; line-height:1.4;}
+  .login-btn{margin-top:18px; background:var(--purple); border:none; color:#1B1A05; font-family:var(--font-display); font-weight:700; letter-spacing:.3px; text-transform:uppercase; font-size:13.5px; padding:13px; border-radius:8px; cursor:pointer; transition:.15s;}
+  .login-btn:hover{opacity:.88;}
+  .login-btn:disabled{opacity:.6; cursor:default;}
   .brand-name{font-size:21px; font-weight:800; letter-spacing:-0.3px; margin:0;}
   .brand-name .a{color:var(--text-sb);}
   .brand-name .b{color:var(--purple);}
@@ -321,12 +345,26 @@
   .page-btn:disabled{opacity:.35; cursor:not-allowed;}
 </style>
 </head>
-<body>
+<body class="pre-auth">
+
+<div class="login-screen" id="loginScreen">
+  <form class="login-card" id="loginForm">
+    <p class="login-brand"><span class="a">HR</span> <span class="b">GA Hub</span></p>
+    <p class="login-sub">Masuk untuk melanjutkan ke HR &amp; General Affair Hub</p>
+    <label class="login-label" for="loginUsername">Username</label>
+    <input class="login-input" type="text" id="loginUsername" autocomplete="username" placeholder="Masukkan username">
+    <label class="login-label" for="loginPassword">Password</label>
+    <input class="login-input" type="password" id="loginPassword" autocomplete="current-password" placeholder="Masukkan password">
+    <p class="login-error" id="loginError"></p>
+    <button type="submit" class="login-btn" id="loginSubmitBtn">Masuk</button>
+  </form>
+</div>
 
 <nav class="sidebar">
   <div class="brand">
     <p class="brand-name"><span class="a">HR</span> <span class="b">GA Hub</span></p>
     <p class="brand-sub">HR &amp; General Affair</p>
+    <div class="sidebar-user" id="sidebarUserInfo" style="display:none;"></div>
   </div>
 
   <div class="menu-section">
@@ -3569,8 +3607,112 @@
     });
   });
 
-  /* Halaman awal: Dashboard */
-  showPage('dashboard', 'Dashboard');
+  /* =====================================================================
+     LOGIN GATE - autentikasi client-side terhadap Google Sheet "user"
+     (kolom: Nama, username, password, role) di spreadsheet terpisah
+     (USER_SHEET_ID). CATATAN PENTING: karena sheet-nya harus bisa diakses
+     publik supaya bisa di-fetch sebagai CSV dari browser (sama seperti
+     semua sumber data lain di dashboard ini), ini BUKAN proteksi keamanan
+     yang sesungguhnya - siapapun yang tahu URL sheet "user" tetap bisa
+     melihat isinya (termasuk password) langsung dari Google Sheets. Ini
+     hanya gerbang login sederhana supaya tidak sembarang orang yang buka
+     link dashboard langsung bisa lihat datanya. Status login disimpan di
+     sessionStorage supaya tidak perlu login ulang selama tab masih terbuka
+     (hilang otomatis kalau tab/browser ditutup).
+     ===================================================================== */
+  const USER_SHEET_ID = '1_B1SUrE4eIYJ-fcLBPyQmntKIXAX3YKFP6RsfHPKU9s';
+  const USER_SHEET_NAME = 'user';
+  const USER_CSV_URL = `https://docs.google.com/spreadsheets/d/${USER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(USER_SHEET_NAME)}`;
+  const LOGIN_SESSION_KEY = 'hrgaLoggedInUser';
+
+  function renderLoggedInUser(user){
+    const wrap = document.getElementById('sidebarUserInfo');
+    if(!wrap) return;
+    const nama = (user.nama || user.username || '?').trim();
+    const initial = nama.charAt(0) || '?';
+    wrap.style.display = 'flex';
+    wrap.innerHTML = `
+      <div class="user-avatar">${initial}</div>
+      <div class="user-meta">
+        <p class="user-name">${nama}</p>
+        <p class="user-role">${user.role ? user.role : '-'}</p>
+      </div>
+      <button type="button" class="user-logout-btn" id="logoutBtn" title="Keluar" aria-label="Keluar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+      </button>`;
+    document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+  }
+
+  function logoutUser(){
+    sessionStorage.removeItem(LOGIN_SESSION_KEY);
+    location.reload();
+  }
+
+  function showApp(user){
+    renderLoggedInUser(user);
+    document.body.classList.remove('pre-auth');
+    showPage('dashboard', 'Dashboard');
+  }
+
+  function tryRestoreSession(){
+    try{
+      const raw = sessionStorage.getItem(LOGIN_SESSION_KEY);
+      if(!raw) return false;
+      const user = JSON.parse(raw);
+      if(user && user.username){ showApp(user); return true; }
+    }catch(e){ /* sessionStorage rusak/diblokir - anggap belum login */ }
+    return false;
+  }
+
+  function handleLoginSubmit(e){
+    e.preventDefault();
+    const usernameEl = document.getElementById('loginUsername');
+    const passwordEl = document.getElementById('loginPassword');
+    const errEl = document.getElementById('loginError');
+    const btn = document.getElementById('loginSubmitBtn');
+    const username = (usernameEl.value || '').trim();
+    const password = (passwordEl.value || '').trim();
+    errEl.textContent = '';
+    if(!username || !password){
+      errEl.textContent = 'Username dan password wajib diisi.';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Memeriksa...';
+    Papa.parse(USER_CSV_URL, {
+      download:true,
+      header:true,
+      skipEmptyLines:true,
+      complete: function(results){
+        btn.disabled = false;
+        btn.textContent = 'Masuk';
+        const rows = results.data || [];
+        const match = rows.find(r =>
+          (r['username']||'').trim().toLowerCase() === username.toLowerCase() &&
+          (r['password']||'').trim() === password
+        );
+        if(match){
+          const user = { nama:(match['Nama']||'').trim(), username:(match['username']||'').trim(), role:(match['role']||'').trim() };
+          try{ sessionStorage.setItem(LOGIN_SESSION_KEY, JSON.stringify(user)); }catch(e){ /* sessionStorage diblokir - tetap lanjut tanpa persist */ }
+          showApp(user);
+        } else {
+          errEl.textContent = 'Username atau password salah.';
+        }
+      },
+      error: function(){
+        btn.disabled = false;
+        btn.textContent = 'Masuk';
+        errEl.textContent = 'Gagal memuat data akun. Periksa koneksi lalu coba lagi.';
+      }
+    });
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', handleLoginSubmit);
+
+  /* Halaman awal: kalau sesi login masih ada, langsung masuk ke Dashboard.
+     Kalau belum, layar login (yang tampil default lewat body.pre-auth) yang
+     jadi satu-satunya hal yang terlihat. */
+  tryRestoreSession();
 </script>
 </body>
 </html>
