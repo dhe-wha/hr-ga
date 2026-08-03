@@ -16,16 +16,13 @@
   .nav{font-size:12.5px; margin-bottom:10px;}
   .nav a{color:var(--link); text-decoration:none; margin-right:14px;}
   .nav a:hover{text-decoration:underline;}
-
   .controls{display:flex; gap:10px; align-items:center; margin:12px 0; flex-wrap:wrap;}
   .controls label{font-size:13px; font-weight:bold;}
   .controls select{padding:6px 10px; font-size:13px; border:1px solid #bbb; border-radius:5px; background:#fff; min-width:240px; text-align:center; text-align-last:center;}
   .toolbar{display:flex; gap:8px; margin:0 0 12px; flex-wrap:wrap;}
   .toolbar button{background:#fff; border:1px solid #bbb; border-radius:5px; padding:5px 14px; cursor:pointer; font-size:12.5px;}
   .toolbar button:hover{background:#f0f0f0;}
-
   .note{font-size:11px; color:#666; margin-bottom:12px; line-height:1.5; background:#fff; border:1px solid #e2e2e2; border-radius:6px; padding:8px 12px;}
-
   .tblwrap{overflow:auto; max-height:82vh; background:#fff; border:1px solid #ccc;}
   table{border-collapse:collapse; font-size:12px; min-width:1150px; width:100%;}
   th,td{border:1px solid var(--bd); padding:4px 8px; text-align:center; vertical-align:middle;}
@@ -58,26 +55,52 @@
     thead th{position:static;}
     .signblock{margin-top:24px;}
   }
+
+  /* ---------- Login gate (kredensial sama dgn HRGA Hub) ---------- */
+  body.pre-auth > *:not(#loginScreen){display:none;}
+  #loginScreen{display:none; position:fixed; inset:0; background:#fafafa; z-index:1000; align-items:center; justify-content:center; padding:20px;}
+  body.pre-auth #loginScreen{display:flex;}
+  .login-card{width:100%; max-width:340px; background:#fff; border:1px solid #ddd; border-radius:8px; padding:32px 28px; box-shadow:0 2px 12px rgba(0,0,0,.07);}
+  .login-card h2{margin:0 0 6px; font-size:19px; text-align:center; text-transform:uppercase; letter-spacing:.3px; color:#111;}
+  .login-card .sub{font-size:12px; color:#777; text-align:center; margin:0 0 20px; line-height:1.5;}
+  .login-card label{display:block; font-size:11px; font-weight:bold; color:#555; margin:12px 0 5px; text-transform:uppercase; letter-spacing:.3px;}
+  .login-card input{width:100%; padding:9px 11px; font-size:13.5px; border:1px solid #bbb; border-radius:5px;}
+  .login-card .err{color:var(--vacant); font-size:12px; min-height:14px; margin:10px 0 0;}
+  .login-card button{width:100%; margin-top:16px; padding:10px; background:#1a1a2e; color:#fff; border:none; border-radius:5px; font-size:13px; font-weight:bold; text-transform:uppercase; letter-spacing:.3px; cursor:pointer;}
+  .login-card button:disabled{opacity:.6; cursor:default;}
+  #loginInfo{text-align:right; font-size:11.5px; color:#666; margin-bottom:8px;}
+  #loginInfo a{color:#1155cc; text-decoration:none; cursor:pointer;}
+  #loginInfo a:hover{text-decoration:underline;}
 </style>
 </head>
-<body>
+<body class="pre-auth">
+
+<div id="loginScreen">
+  <form class="login-card" id="loginForm">
+    <h2>Man Power Planning</h2>
+    <p class="sub">Masuk dengan akun HRGA Hub untuk melanjutkan</p>
+    <label for="loginUsername">Username</label>
+    <input type="text" id="loginUsername" autocomplete="username" placeholder="Masukkan username">
+    <label for="loginPassword">Password</label>
+    <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Masukkan password">
+    <p class="err" id="loginError"></p>
+    <button type="submit" id="loginSubmitBtn">Masuk</button>
+  </form>
+</div>
+
+<div id="loginInfo"></div>
 <div class="nav"><a href="index.html">&larr; Struktur Organisasi</a></div>
 <h1 id="title">Man Power Planning</h1>
-
 <div class="controls">
   <label for="deptSel">Departemen:</label>
   <select id="deptSel" onchange="render()"></select>
 </div>
-
 <div class="toolbar">
   <button onclick="loadData()">&#8635; Muat Ulang Data</button>
   <button onclick="window.print()">Print</button>
 </div>
-
 <div class="tblwrap"><div class="msg" id="chart">Memuat data…</div></div>
-
 <div class="sig-date">Disepakati tanggal : _______________</div>
-
 <div class="signblock">
   <div class="sigcol">
     <div class="sig-role">Disusun Oleh</div>
@@ -100,11 +123,9 @@
     <div class="sig-jab">Direktur</div>
   </div>
 </div>
-
 <script>
 const SHEET_ID='1mHMrWu6yQ7p6gL_fQz_G6fa8ew2V2LcJ3WHZXwYZo7c';
 const CSV = sheet => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheet)}&t=${Date.now()}`;
-
 // urutan & label level (harus sama dgn kolom "Level" di sheet Struktur)
 const LEVELS=[
   ['Manager','Manager'],
@@ -119,7 +140,6 @@ const LEVELS=[
 // (di Org Chart, Sub tetap dipakai terpisah hanya sbg pemisah cabang)
 const LEVEL_MERGE = { 'sub mandor/krani':'Mandor/Krani' };
 const mergeLevel = lv => LEVEL_MERGE[lv.toLowerCase()] || lv;
-
 function parseCSV(text){
   const rows=[]; let row=[], cur='', q=false;
   for(let i=0;i<text.length;i++){
@@ -138,9 +158,7 @@ function parseCSV(text){
 const norm = s => (s||'').trim();
 const baseJabatan = j => norm(j).replace(/^Act\.\s*/i,'').trim();
 const isVac = n => { const s=norm(n).toLowerCase(); return s===''||s.startsWith('vacant'); };
-
 let deptData={}, deptOrder=[];
-
 async function loadData(){
   const el=document.getElementById('chart');
   el.className='msg'; el.textContent='Memuat data dari Google Sheet…';
@@ -154,7 +172,6 @@ async function loadData(){
           iNik=(head.indexOf('nik_fix')>=0?head.indexOf('nik_fix'):head.indexOf('nik')), iDept=head.indexOf('departemen'),
           iNorma=head.indexOf('norma'), iActual=head.indexOf('actual'), iStatus=head.indexOf('status');
     if(iJ<0||iN<0||iL<0) throw new Error('Kolom Nama Jabatan / Nama / Level tidak ditemukan di sheet Struktur');
-
     deptData={}; deptOrder=[];
     rows.slice(1).forEach(r=>{
       const jab=norm(r[iJ]);
@@ -173,7 +190,6 @@ async function loadData(){
       if(!g.groups[key]){ g.groups[key]={jab:key, rows:[]}; g.order.push(key); }
       g.groups[key].rows.push({nama, nik, norma, actual, status});
     });
-
     const sel=document.getElementById('deptSel');
     const prev=sel.value;
     sel.innerHTML='';
@@ -188,17 +204,14 @@ async function loadData(){
       '<br><small>Pastikan Google Sheet di-share "Siapa saja yang memiliki link — Viewer", lalu klik Muat Ulang Data.</small>';
   }
 }
-
 function render(){
   const wrap=document.querySelector('.tblwrap');
   const dept=deptOrder[+document.getElementById('deptSel').value||0];
   if(!dept) return;
   document.getElementById('title').textContent='Man Power Planning — '+dept;
   const data=deptData[dept];
-
   let body='';
   let grand={norma:0,keb:0,tetap:0,kontrak:0,total:0,thN:0,thK:0};
-
   LEVELS.forEach(([key,label])=>{
     const lvData=data[key];
     if(!lvData || !lvData.order.length) return;
@@ -216,7 +229,6 @@ function render(){
       const rs=Math.max(1, grp.rows.length);
       levelRows+=rs;
       sub.norma+=norma; sub.keb+=keb; sub.tetap+=tetap; sub.kontrak+=kontrak; sub.total+=total; sub.thN+=thN; sub.thK+=thK;
-
       const numsTd = extra => `
         <td class="no" rowspan="${rs}">${idx+1}</td>
         <td class="jab" rowspan="${rs}">${grp.jab}</td>
@@ -228,7 +240,6 @@ function render(){
         <td class="num" rowspan="${rs}">${thN}</td>
         <td class="num" rowspan="${rs}">${thK}</td>${extra}`;
       const cellFor = r => `<td class="nik">${r.nik||''}</td><td class="nama${isVac(r.nama)?' vac':''}">${r.nama?r.nama:'Vacant'}</td>`;
-
       if(grp.rows.length){
         jabHtml.push(`<tr>${numsTd(cellFor(grp.rows[0]))}</tr>`);
         for(let i=1;i<grp.rows.length;i++){
@@ -238,7 +249,6 @@ function render(){
         jabHtml.push(`<tr>${numsTd(`<td class="nik"></td><td class="nama vac">Vacant</td>`)}</tr>`);
       }
     });
-
     // sisipkan <td level rowspan> ke baris pertama blok
     let inserted=false;
     const blockRows = jabHtml.map(rowStr=>{
@@ -248,16 +258,12 @@ function render(){
       }
       return rowStr;
     }).join('');
-
     body += blockRows +
       `<tr class="subtotal"><td colspan="2">Sub Total</td><td class="num">${sub.norma}</td><td class="num">${sub.keb}</td><td class="num">${sub.tetap}</td><td class="num">${sub.kontrak}</td><td class="num">${sub.total}</td><td class="num">${sub.thN}</td><td class="num">${sub.thK}</td><td colspan="2"></td></tr>`;
-
     grand.norma+=sub.norma; grand.keb+=sub.keb; grand.tetap+=sub.tetap; grand.kontrak+=sub.kontrak;
     grand.total+=sub.total; grand.thN+=sub.thN; grand.thK+=sub.thK;
   });
-
   body += `<tr class="subtotal" style="background:#9fc5e8"><td colspan="3">TOTAL DEPARTEMEN</td><td class="num">${grand.norma}</td><td class="num">${grand.keb}</td><td class="num">${grand.tetap}</td><td class="num">${grand.kontrak}</td><td class="num">${grand.total}</td><td class="num">${grand.thN}</td><td class="num">${grand.thK}</td><td colspan="2"></td></tr>`;
-
   const html=`<table>
     <thead>
       <tr>
@@ -286,7 +292,125 @@ function render(){
   wrap.querySelectorAll('td.nama').forEach(td=>{ if(isVac(td.textContent)) td.classList.add('vac'); });
 }
 
-loadData();
+/* =====================================================================
+   LOGIN GATE - kredensial SAMA dengan HRGA Hub (https://hrga.btliglbja.site/main/)
+   dan halaman Struktur Organisasi (index.html), dicek terhadap sheet "user"
+   (Nama, username, password, role) di spreadsheet terpisah (USER_SHEET_ID).
+   Status login (termasuk password, supaya bisa divalidasi ulang) disimpan
+   di localStorage (bukan sessionStorage) supaya kalau sudah login di
+   halaman lain, halaman ini otomatis ikut ter-login tanpa perlu login ulang
+   - selama origin-nya sama dan belum logout. Setiap kali halaman
+   dimuat/di-refresh, kredensial yang ter-cache DICEK ULANG live ke sheet
+   "user": kalau masih cocok, sesi diteruskan; kalau sudah tidak cocok
+   (password diganti / user dihapus dari sheet), sesi otomatis dihapus dan
+   user diminta login ulang. CATATAN: sheet "user" harus bisa diakses publik
+   supaya bisa di-fetch sbg CSV dari browser, jadi ini bukan proteksi
+   keamanan sungguhan, cuma gerbang login sederhana.
+   ===================================================================== */
+const USER_SHEET_ID = '1_B1SUrE4eIYJ-fcLBPyQmntKIXAX3YKFP6RsfHPKU9s';
+function userCsvUrl(){
+  return `https://docs.google.com/spreadsheets/d/${USER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('user')}&t=${Date.now()}`;
+}
+const LOGIN_KEY = 'hrgaLoggedInUser';
+
+function renderLoginInfo(user){
+  const el=document.getElementById('loginInfo');
+  if(!el) return;
+  const nama=(user.nama||user.username||'?').trim();
+  el.innerHTML = `Masuk sebagai <b>${nama}</b>${user.role?' &middot; '+user.role:''} &middot; <a id="logoutLink">Keluar</a>`;
+  const logoutLink=document.getElementById('logoutLink');
+  if(logoutLink) logoutLink.addEventListener('click', ()=>{
+    localStorage.removeItem(LOGIN_KEY);
+    location.reload();
+  });
+}
+
+function showAppAfterLogin(user){
+  renderLoginInfo(user);
+  document.body.classList.remove('pre-auth');
+  loadData();
+}
+
+/* Sesi ter-cache di localStorage divalidasi ULANG live ke sheet "user"
+   setiap kali fungsi ini dipanggil (dipanggil sekali di awal, lihat paling
+   bawah) - bukan langsung dipercaya begitu saja. */
+function tryRestoreLogin(){
+  let cached;
+  try{
+    const raw = localStorage.getItem(LOGIN_KEY);
+    if(!raw) return;
+    cached = JSON.parse(raw);
+  }catch(e){ localStorage.removeItem(LOGIN_KEY); return; }
+  if(!cached || !cached.username || !cached.password){ localStorage.removeItem(LOGIN_KEY); return; }
+
+  fetch(userCsvUrl()).then(r=>{
+    if(!r.ok) throw new Error('fetch gagal');
+    return r.text();
+  }).then(text=>{
+    const rows=parseCSV(text);
+    const head=rows[0].map(h=>(h||'').trim().toLowerCase());
+    const iNama=head.indexOf('nama'), iUser=head.indexOf('username'), iPass=head.indexOf('password'), iRole=head.indexOf('role');
+    const match=rows.slice(1).find(r=>
+      (r[iUser]||'').trim().toLowerCase()===cached.username.toLowerCase() &&
+      (r[iPass]||'').trim()===cached.password
+    );
+    if(match){
+      const user={ nama:(iNama>=0?(match[iNama]||'').trim():''), username:(match[iUser]||'').trim(), role:(iRole>=0?(match[iRole]||'').trim():''), password: cached.password };
+      try{ localStorage.setItem(LOGIN_KEY, JSON.stringify(user)); }catch(e){ /* localStorage diblokir */ }
+      showAppAfterLogin(user);
+    } else {
+      // username/password sudah beda dari sheet (diganti/dihapus) - paksa logout,
+      // layar login (default tampil lewat body.pre-auth) yang jadi terlihat.
+      localStorage.removeItem(LOGIN_KEY);
+    }
+  }).catch(()=>{
+    // gagal fetch (mis. koneksi terputus sesaat) - jangan paksa logout hanya
+    // krn ini, tetap izinkan lanjut pakai sesi ter-cache.
+    showAppAfterLogin(cached);
+  });
+}
+
+function handleLoginSubmit(e){
+  e.preventDefault();
+  const uEl=document.getElementById('loginUsername'), pEl=document.getElementById('loginPassword');
+  const errEl=document.getElementById('loginError'), btn=document.getElementById('loginSubmitBtn');
+  const username=(uEl.value||'').trim(), password=(pEl.value||'').trim();
+  errEl.textContent='';
+  if(!username || !password){ errEl.textContent='Username dan password wajib diisi.'; return; }
+  btn.disabled=true; btn.textContent='Memeriksa...';
+  fetch(userCsvUrl()).then(r=>{
+    if(!r.ok) throw new Error('fetch gagal');
+    return r.text();
+  }).then(text=>{
+    const rows=parseCSV(text);
+    const head=rows[0].map(h=>(h||'').trim().toLowerCase());
+    const iNama=head.indexOf('nama'), iUser=head.indexOf('username'), iPass=head.indexOf('password'), iRole=head.indexOf('role');
+    const match=rows.slice(1).find(r=>
+      (r[iUser]||'').trim().toLowerCase()===username.toLowerCase() &&
+      (r[iPass]||'').trim()===password
+    );
+    btn.disabled=false; btn.textContent='Masuk';
+    if(match){
+      const user={ nama:(iNama>=0?(match[iNama]||'').trim():''), username:(match[iUser]||'').trim(), role:(iRole>=0?(match[iRole]||'').trim():''), password: password };
+      try{ localStorage.setItem(LOGIN_KEY, JSON.stringify(user)); }catch(e){ /* localStorage diblokir - tetap lanjut tanpa persist */ }
+      showAppAfterLogin(user);
+    } else {
+      errEl.textContent='Username atau password salah.';
+    }
+  }).catch(()=>{
+    btn.disabled=false; btn.textContent='Masuk';
+    errEl.textContent='Gagal memuat data akun. Periksa koneksi lalu coba lagi.';
+  });
+}
+
+document.getElementById('loginForm').addEventListener('submit', handleLoginSubmit);
+
+/* Halaman awal: kalau sudah pernah login (di sini atau di HRGA Hub / Struktur
+   Organisasi), kredensial ter-cache dicek ulang dulu ke sheet sebelum
+   dipercaya (lihat tryRestoreLogin). Kalau belum ada sesi, layar login
+   (default tampil lewat body.pre-auth) yang jadi satu-satunya hal yang
+   terlihat. */
+tryRestoreLogin();
 </script>
 </body>
 </html>
