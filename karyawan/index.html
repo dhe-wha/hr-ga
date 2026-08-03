@@ -74,14 +74,28 @@ tr.sel.act td{background:#dbeafe}
 .ht tr.cur td{background:#f0fdf4;font-weight:600}
 .empty-h{text-align:center;color:#bbb;padding:14px;font-size:.78rem}
 </style>
-</head>
+<style id="claude-agent-animation-styles">
+      @keyframes claude-pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+      #claude-agent-glow-border-inner {
+        animation: claude-pulse 2s ease-in-out infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #claude-agent-glow-border-inner {
+          animation: none;
+        }
+      }
+    </style></head>
 <body>
 <header>
   <div>
     <h1>📋 Data Karyawan BJA &amp; BTL <span style="opacity:.55;font-weight:400;font-size:.8rem">— LHM System</span></h1>
     <div class="sub">Data per 12 Juli 2026 &nbsp;|&nbsp; Biomasa Jaya Abadi, Banyan Tumbuh Lestari &amp; Inti Global Laksana</div>
   </div>
-  <div class="hbadge">Total 3,512 karyawan</div>
+  <div id="user-badge" style="display:none;align-items:center;gap:8px;padding:5px 14px;background:rgba(255,255,255,0.13);border-radius:20px;color:#fff;font-size:13px;cursor:pointer;white-space:nowrap;margin-right:8px" title="Logout" onclick="doLogout()">👤 <span id="ubname"></span><span style="opacity:.5;font-size:11px;margin-left:5px">↩</span></div>
+<div class="hbadge">Total 3,512 karyawan</div>
 </header>
 <div class="stats">
   <div class="sc b1"><div class="sc-label">BJA — Total</div><div class="sc-num">1,240</div><div class="sc-sub">Biomasa Jaya Abadi</div></div>
@@ -97,8 +111,8 @@ tr.sel.act td{background:#dbeafe}
       <input class="search-box" type="text" id="search" placeholder="🔍  Cari nama, No KTP, departemen…">
       <select id="fP"><option value="">Semua Perusahaan</option><option value="BJA">BJA</option><option value="BTL">BTL</option><option value="IGL">IGL</option></select>
       <select id="fS"><option value="">Semua Status</option><option value="Aktif">Aktif</option><option value="Tidak Aktif">Tidak Aktif</option></select>
-      <select id="fT"><option value="">Semua Tipe</option><option value="BHL">BHL</option><option value="BULANAN">BULANAN</option><option value="PKWT">PKWT</option><option value="SKU">SKU</option></select>
-      <select id="fD"><option value="">Semua Departemen</option><option value="ADMINISTRASI">ADMINISTRASI</option><option value="BIBITAN">BIBITAN</option><option value="COMMUNITY DEVELOPMENT">COMMUNITY DEVELOPMENT</option><option value="DATA CENTER">DATA CENTER</option><option value="DERMAGA">DERMAGA</option><option value="ELECTRIC">ELECTRIC</option><option value="GARDU INDUK">GARDU INDUK</option><option value="GUDANG PABRIK">GUDANG PABRIK</option><option value="GUDANG SENTRAL">GUDANG SENTRAL</option><option value="HRGA">HRGA</option><option value="IT">IT</option><option value="KEUANGAN">KEUANGAN</option><option value="LOG YARD">LOG YARD</option><option value="MAINTENANCE">MAINTENANCE</option><option value="MOTHER PLANT">MOTHER PLANT</option><option value="PABRIK">PABRIK</option><option value="PROCUREMENT">PROCUREMENT</option><option value="PROSES">PROSES</option><option value="PROTEKSI TANAMAN">PROTEKSI TANAMAN</option><option value="QC DAN LABORATORIUM">QC DAN LABORATORIUM</option><option value="RISET AND DEVELOPMENT">RISET AND DEVELOPMENT</option><option value="SAFETY HEALTH ENVIRONMENT(SHE)">SAFETY HEALTH ENVIRONMENT(SHE)</option><option value="TANAMAN">TANAMAN</option><option value="TATA USAHA KAYU">TATA USAHA KAYU</option><option value="TEKNIK">TEKNIK</option></select>
+      <select id="fT"><option value="">Semua Tipe</option><option value="BHL">BHL</option><option value="BULANAN">BULANAN</option><option value="PKWT">PKWT</option><option value="SKU">SKU</option><option value="BHL">BHL</option><option value="BULANAN">BULANAN</option><option value="PKWT">PKWT</option><option value="SKU">SKU</option></select>
+      <select id="fD"><option value="">Semua Departemen</option><option value="ADMINISTRASI">ADMINISTRASI</option><option value="BIBITAN">BIBITAN</option><option value="COMMUNITY DEVELOPMENT">COMMUNITY DEVELOPMENT</option><option value="DATA CENTER">DATA CENTER</option><option value="DERMAGA">DERMAGA</option><option value="ELECTRIC">ELECTRIC</option><option value="GARDU INDUK">GARDU INDUK</option><option value="GUDANG PABRIK">GUDANG PABRIK</option><option value="GUDANG SENTRAL">GUDANG SENTRAL</option><option value="HRGA">HRGA</option><option value="IT">IT</option><option value="KEUANGAN">KEUANGAN</option><option value="LOG YARD">LOG YARD</option><option value="MAINTENANCE">MAINTENANCE</option><option value="MOTHER PLANT">MOTHER PLANT</option><option value="PABRIK">PABRIK</option><option value="PROCUREMENT">PROCUREMENT</option><option value="PROSES">PROSES</option><option value="PROTEKSI TANAMAN">PROTEKSI TANAMAN</option><option value="QC DAN LABORATORIUM">QC DAN LABORATORIUM</option><option value="RISET AND DEVELOPMENT">RISET AND DEVELOPMENT</option><option value="SAFETY HEALTH ENVIRONMENT(SHE)">SAFETY HEALTH ENVIRONMENT(SHE)</option><option value="TANAMAN">TANAMAN</option><option value="TATA USAHA KAYU">TATA USAHA KAYU</option><option value="TEKNIK">TEKNIK</option><option value="ADMINISTRASI">ADMINISTRASI</option><option value="BIBITAN">BIBITAN</option><option value="COMMUNITY DEVELOPMENT">COMMUNITY DEVELOPMENT</option><option value="DATA CENTER">DATA CENTER</option><option value="DERMAGA">DERMAGA</option><option value="ELECTRIC">ELECTRIC</option><option value="GARDU INDUK">GARDU INDUK</option><option value="GUDANG PABRIK">GUDANG PABRIK</option><option value="GUDANG SENTRAL">GUDANG SENTRAL</option><option value="HRGA">HRGA</option><option value="IT">IT</option><option value="KEUANGAN">KEUANGAN</option><option value="LOG YARD">LOG YARD</option><option value="MAINTENANCE">MAINTENANCE</option><option value="MOTHER PLANT">MOTHER PLANT</option><option value="PABRIK">PABRIK</option><option value="PROCUREMENT">PROCUREMENT</option><option value="PROSES">PROSES</option><option value="PROTEKSI TANAMAN">PROTEKSI TANAMAN</option><option value="QC DAN LABORATORIUM">QC DAN LABORATORIUM</option><option value="RISET AND DEVELOPMENT">RISET AND DEVELOPMENT</option><option value="SAFETY HEALTH ENVIRONMENT(SHE)">SAFETY HEALTH ENVIRONMENT(SHE)</option><option value="TANAMAN">TANAMAN</option><option value="TATA USAHA KAYU">TATA USAHA KAYU</option><option value="TEKNIK">TEKNIK</option></select>
       <button class="btn btn-reset" onclick="resetFilters()">Reset</button>
       <button class="btn" style="background:#059669;color:#fff" onclick="exportCSV()">⬇ CSV</button>
       <span class="rinfo" id="rinfo">3.512 karyawan</span>
@@ -915,4 +929,82 @@ function exportCSV(){
   applyFilters();
   </script>
   
-  </body></html>
+  
+<style>
+#lov{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',Arial,sans-serif}
+.lbx{background:#162032;border:1px solid #2a4060;border-radius:14px;padding:44px 40px;width:340px;box-shadow:0 24px 80px rgba(0,0,0,.6);text-align:center}
+.lbx h2{margin:0 0 4px;color:#fff;font-size:20px;font-weight:700}
+.lbx .sub{margin:0 0 26px;color:#7a9cbf;font-size:13px}
+.lbx input{display:block;width:100%;box-sizing:border-box;padding:11px 14px;margin-bottom:11px;background:#0f1e2e;border:1px solid #2a4060;border-radius:8px;color:#fff;font-size:14px;outline:none}
+.lbx input:focus{border-color:#3a7bd5}
+.lbx button{width:100%;padding:12px;background:#2563eb;border:none;border-radius:8px;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+.lbx button:hover{background:#1d4ed8}
+.lbx button:disabled{background:#1a3a6a;cursor:not-allowed;opacity:.7}
+#lerr{margin-top:11px;color:#f87171;font-size:13px;min-height:18px}
+</style>
+<div id="lov">
+  <div class="lbx">
+    <div style="font-size:36px;margin-bottom:14px">🏢</div>
+    <h2>Data Karyawan</h2>
+    <p class="sub">PT Biomasa Jaya Abadi · HRGA</p>
+    <input id="lu" type="text" placeholder="Username" autocomplete="username">
+    <input id="lp" type="password" placeholder="Password" autocomplete="current-password">
+    <button id="lbtn" onclick="_doLogin()">Masuk</button>
+    <div id="lerr"></div>
+  </div>
+</div>
+<script>
+(function(){
+const GSID='1_B1SUrE4eIYJ-fcLBPyQmntKIXAX3YKFP6RsfHPKU9s';
+async function sha256(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function getCreds(){
+  const r=await fetch('https://docs.google.com/spreadsheets/d/'+GSID+'/gviz/tq?tqx=out:csv&sheet=user&_='+Date.now());
+  if(!r.ok)throw 'HTTP '+r.status;
+  const rows=[];
+  for(const line of (await r.text()).trim().split('\n').slice(1)){
+    const c=[];let cur='',q=false;
+    for(const ch of line){ch==='"'?q=!q:ch===','&&!q?(c.push(cur),cur=''):cur+=ch}
+    c.push(cur);
+    if(c[1]?.trim())rows.push({nama:c[0]?.trim(),username:c[1]?.trim(),password:c[2]?.trim(),role:c[3]?.trim()});
+  }
+  return rows;
+}
+function badge(show,nama,role){
+  const el=document.getElementById('user-badge'),nm=document.getElementById('ubname');
+  if(!el)return;
+  el.style.display=show?'flex':'none';
+  if(nm)nm.textContent=nama+(role?' ('+role+')':'');
+}
+window.doLogout=function(){sessionStorage.removeItem('_auth');document.getElementById('lov').style.display='flex';badge(false)};
+async function chkSession(){
+  const raw=sessionStorage.getItem('_auth');if(!raw)return;
+  const s=JSON.parse(raw);
+  try{
+    const creds=await getCreds();
+    const u=creds.find(c=>c.username===s.username);
+    if(!u){sessionStorage.removeItem('_auth');return}
+    if(await sha256(u.password)!==s.ph){sessionStorage.removeItem('_auth');window.location.reload();return}
+    document.getElementById('lov').style.display='none';badge(true,s.nama,s.role);
+  }catch(e){document.getElementById('lov').style.display='none';badge(true,s.nama,s.role)}
+}
+window._doLogin=async function(){
+  const user=document.getElementById('lu').value.trim(),pass=document.getElementById('lp').value;
+  const err=document.getElementById('lerr'),btn=document.getElementById('lbtn');
+  if(!user||!pass){err.textContent='Isi username dan password.';return}
+  btn.textContent='Mengecek...';btn.disabled=true;err.textContent='';
+  try{
+    const creds=await getCreds();
+    const u=creds.find(c=>c.username===user&&c.password===pass);
+    if(u){
+      sessionStorage.setItem('_auth',JSON.stringify({username:user,ph:await sha256(pass),nama:u.nama,role:u.role}));
+      document.getElementById('lov').style.display='none';badge(true,u.nama,u.role);
+    }else err.textContent='Username atau password salah.';
+  }catch(e){err.textContent='Gagal mengambil data. Coba lagi.'}
+  btn.textContent='Masuk';btn.disabled=false;
+};
+document.getElementById('lp')?.addEventListener('keydown',e=>e.key==='Enter'&&window._doLogin());
+document.getElementById('lu')?.addEventListener('keydown',e=>e.key==='Enter'&&document.getElementById('lp')?.focus());
+chkSession();
+})();
+</script>
+</body></html>
