@@ -3616,13 +3616,28 @@
      yang sesungguhnya - siapapun yang tahu URL sheet "user" tetap bisa
      melihat isinya (termasuk password) langsung dari Google Sheets. Ini
      hanya gerbang login sederhana supaya tidak sembarang orang yang buka
-     link dashboard langsung bisa lihat datanya. Status login disimpan di
-     sessionStorage supaya tidak perlu login ulang selama tab masih terbuka
-     (hilang otomatis kalau tab/browser ditutup).
+     link dashboard langsung bisa lihat datanya. Status login (termasuk
+     password, supaya bisa divalidasi ulang) disimpan di localStorage
+     (bukan sessionStorage) - ini SENGAJA supaya halaman lain yang satu
+     origin (mis. hrga.btliglbja.site/orgchart/ dan mpp.html) ikut otomatis
+     ter-login tanpa perlu login ulang, termasuk kalau dibuka di
+     tab/bookmark terpisah, bukan cuma lewat iframe di dalam Hub ini.
+     Setiap kali halaman dimuat/di-refresh, kredensial yang ter-cache di
+     localStorage DICEK ULANG live ke sheet "user": kalau username+password
+     masih cocok dengan salah satu baris di sheet, sesi diteruskan (data
+     nama/role juga di-refresh kalau ada perubahan); kalau sudah tidak
+     cocok (password diganti atau user dihapus dari sheet), sesi otomatis
+     dihapus dan user diminta login ulang. Sesi juga hilang kalau user
+     klik Keluar (logout) secara manual.
      ===================================================================== */
   const USER_SHEET_ID = '1_B1SUrE4eIYJ-fcLBPyQmntKIXAX3YKFP6RsfHPKU9s';
   const USER_SHEET_NAME = 'user';
-  const USER_CSV_URL = `https://docs.google.com/spreadsheets/d/${USER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(USER_SHEET_NAME)}`;
+  function userCsvUrl(){
+    // "&t=" (cache-bust) supaya selalu ambil data terbaru, bukan versi yang
+    // mungkin ke-cache di browser - penting krn ini dipakai utk validasi ulang
+    // tiap refresh, bukan cuma sekali waktu login.
+    return `https://docs.google.com/spreadsheets/d/${USER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(USER_SHEET_NAME)}&t=${Date.now()}`;
+  }
   const LOGIN_SESSION_KEY = 'hrgaLoggedInUser';
 
   function renderLoggedInUser(user){
@@ -3644,7 +3659,7 @@
   }
 
   function logoutUser(){
-    sessionStorage.removeItem(LOGIN_SESSION_KEY);
+    localStorage.removeItem(LOGIN_SESSION_KEY);
     location.reload();
   }
 
@@ -3654,14 +3669,45 @@
     showPage('dashboard', 'Dashboard');
   }
 
+  /* Dipanggil sekali di awal (lihat pemanggilan tryRestoreSession() di paling
+     bawah). Kalau ada sesi ter-cache, divalidasi ULANG live ke sheet "user"
+     sebelum dipercaya - bukan cuma dipercaya begitu saja seperti sebelumnya. */
   function tryRestoreSession(){
+    let cached;
     try{
-      const raw = sessionStorage.getItem(LOGIN_SESSION_KEY);
-      if(!raw) return false;
-      const user = JSON.parse(raw);
-      if(user && user.username){ showApp(user); return true; }
-    }catch(e){ /* sessionStorage rusak/diblokir - anggap belum login */ }
-    return false;
+      const raw = localStorage.getItem(LOGIN_SESSION_KEY);
+      if(!raw) return;
+      cached = JSON.parse(raw);
+    }catch(e){ localStorage.removeItem(LOGIN_SESSION_KEY); return; }
+    if(!cached || !cached.username || !cached.password){ localStorage.removeItem(LOGIN_SESSION_KEY); return; }
+
+    Papa.parse(userCsvUrl(), {
+      download:true,
+      header:true,
+      skipEmptyLines:true,
+      complete: function(results){
+        const rows = results.data || [];
+        const match = rows.find(r =>
+          (r['username']||'').trim().toLowerCase() === cached.username.toLowerCase() &&
+          (r['password']||'').trim() === cached.password
+        );
+        if(match){
+          const user = { nama:(match['Nama']||'').trim(), username:(match['username']||'').trim(), role:(match['role']||'').trim(), password: cached.password };
+          try{ localStorage.setItem(LOGIN_SESSION_KEY, JSON.stringify(user)); }catch(e){ /* localStorage diblokir */ }
+          showApp(user);
+        } else {
+          // username/password sudah beda dari sheet (diganti/dihapus) - paksa logout,
+          // layar login (default tampil lewat body.pre-auth) yang jadi terlihat.
+          localStorage.removeItem(LOGIN_SESSION_KEY);
+        }
+      },
+      error: function(){
+        // gagal fetch (mis. koneksi terputus sesaat) - jangan paksa logout hanya
+        // krn ini, tetap izinkan lanjut pakai sesi ter-cache supaya user tidak
+        // ke-lempar ke layar login gara-gara masalah jaringan sesaat.
+        showApp(cached);
+      }
+    });
   }
 
   function handleLoginSubmit(e){
@@ -3679,7 +3725,7 @@
     }
     btn.disabled = true;
     btn.textContent = 'Memeriksa...';
-    Papa.parse(USER_CSV_URL, {
+    Papa.parse(userCsvUrl(), {
       download:true,
       header:true,
       skipEmptyLines:true,
@@ -3692,8 +3738,8 @@
           (r['password']||'').trim() === password
         );
         if(match){
-          const user = { nama:(match['Nama']||'').trim(), username:(match['username']||'').trim(), role:(match['role']||'').trim() };
-          try{ sessionStorage.setItem(LOGIN_SESSION_KEY, JSON.stringify(user)); }catch(e){ /* sessionStorage diblokir - tetap lanjut tanpa persist */ }
+          const user = { nama:(match['Nama']||'').trim(), username:(match['username']||'').trim(), role:(match['role']||'').trim(), password: password };
+          try{ localStorage.setItem(LOGIN_SESSION_KEY, JSON.stringify(user)); }catch(e){ /* localStorage diblokir - tetap lanjut tanpa persist */ }
           showApp(user);
         } else {
           errEl.textContent = 'Username atau password salah.';
