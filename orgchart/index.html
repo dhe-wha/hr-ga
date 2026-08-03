@@ -25,28 +25,23 @@
   body{font-family:Arial,'Segoe UI',sans-serif; background:#fafafa; padding:18px;}
   h1{text-align:center; font-size:24px; letter-spacing:.5px; color:#111; text-transform:uppercase; margin-bottom:4px;}
   .sub-title{text-align:center; font-size:12px; color:#777; margin-bottom:14px;}
-
   .controls{display:flex; gap:10px; justify-content:center; align-items:center; margin-bottom:12px; flex-wrap:wrap;}
   .controls label{font-size:13px; font-weight:bold; color:#333;}
   .controls select{padding:6px 10px; font-size:13px; border:1px solid #bbb; border-radius:5px; background:#fff; min-width:260px; text-align:center; text-align-last:center;}
   .controls select option{text-align:center;}
-
   .stats{display:flex; gap:10px; justify-content:center; margin-bottom:10px; flex-wrap:wrap;}
   .stat{background:#fff; border:1px solid #ddd; border-radius:6px; padding:5px 14px; font-size:11.5px; color:#666;}
   .stat b{font-size:14px; color:#222; margin-right:4px;}
   .stat.vac b{color:var(--vacant);}
-
   .toolbar{display:flex; gap:8px; justify-content:center; margin-bottom:14px;}
   .toolbar button{background:#fff; border:1px solid #bbb; border-radius:5px; padding:5px 14px; cursor:pointer; font-size:12.5px;}
   .toolbar button:hover{background:#f0f0f0;}
-
   .viewport{overflow:auto; background:#fff; border:1px solid #ddd; padding:30px 24px; min-height:200px; cursor:grab; user-select:none;}
   .viewport.panning{cursor:grabbing;}
   .chart{transform-origin:top left; position:relative; margin:0 auto;}
   .chart svg{position:absolute; top:0; left:0; pointer-events:none;}
   .msg{text-align:center; color:#888; font-size:14px; padding:40px 0;}
   .msg.err{color:var(--vacant);}
-
   .card{
     position:absolute;
     background:#fff; border:1.6px solid var(--bd); border-radius:4px;
@@ -77,33 +72,59 @@
   .l5{background:var(--mdr-bg);}
   .l6{background:var(--sub-bg);}
   .l7{background:var(--wrk-bg);}
-
   .legend{display:flex; gap:14px; justify-content:center; margin-top:16px; font-size:11.5px; color:#555; flex-wrap:wrap;}
   .legend span{display:flex; align-items:center; gap:5px;}
   .dot{width:13px; height:13px; border:1.2px solid var(--bd); border-radius:2px; display:inline-block;}
-
   @media print{
     .toolbar,.stats,.legend,.controls{display:none;}
     body{padding:0;}
     .viewport{border:none; overflow:visible;}
   }
+
+  /* ---------- Login gate (kredensial sama dgn HRGA Hub) ---------- */
+  body.pre-auth > *:not(#loginScreen){display:none;}
+  #loginScreen{display:none; position:fixed; inset:0; background:#fafafa; z-index:1000; align-items:center; justify-content:center; padding:20px;}
+  body.pre-auth #loginScreen{display:flex;}
+  .login-card{width:100%; max-width:340px; background:#fff; border:1px solid #ddd; border-radius:8px; padding:32px 28px; box-shadow:0 2px 12px rgba(0,0,0,.07);}
+  .login-card h2{margin:0 0 6px; font-size:19px; text-align:center; text-transform:uppercase; letter-spacing:.3px; color:#111;}
+  .login-card .sub{font-size:12px; color:#777; text-align:center; margin:0 0 20px; line-height:1.5;}
+  .login-card label{display:block; font-size:11px; font-weight:bold; color:#555; margin:12px 0 5px; text-transform:uppercase; letter-spacing:.3px;}
+  .login-card input{width:100%; padding:9px 11px; font-size:13.5px; border:1px solid #bbb; border-radius:5px;}
+  .login-card .err{color:var(--vacant); font-size:12px; min-height:14px; margin:10px 0 0;}
+  .login-card button{width:100%; margin-top:16px; padding:10px; background:#1a1a2e; color:#fff; border:none; border-radius:5px; font-size:13px; font-weight:bold; text-transform:uppercase; letter-spacing:.3px; cursor:pointer;}
+  .login-card button:disabled{opacity:.6; cursor:default;}
+  #loginInfo{text-align:center; font-size:11.5px; color:#666; margin-bottom:8px;}
+  #loginInfo a{color:#1155cc; text-decoration:none; cursor:pointer;}
+  #loginInfo a:hover{text-decoration:underline;}
 </style>
 </head>
-<body>
-<div style="text-align:center; font-size:12.5px; margin-bottom:6px;"><a href="mpp.html" style="color:#1155cc; text-decoration:none;">Lihat Man Power Planning &rarr;</a></div>
-<h1 id="title">Struktur Organisasi</h1>
+<body class="pre-auth">
 
+<div id="loginScreen">
+  <form class="login-card" id="loginForm">
+    <h2>Struktur Organisasi</h2>
+    <p class="sub">Masuk dengan akun HRGA Hub untuk melanjutkan</p>
+    <label for="loginUsername">Username</label>
+    <input type="text" id="loginUsername" autocomplete="username" placeholder="Masukkan username">
+    <label for="loginPassword">Password</label>
+    <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Masukkan password">
+    <p class="err" id="loginError"></p>
+    <button type="submit" id="loginSubmitBtn">Masuk</button>
+  </form>
+</div>
+
+<div style="text-align:center; font-size:12.5px; margin-bottom:6px;"><a href="mpp.html" style="color:#1155cc; text-decoration:none;">Lihat Man Power Planning &rarr;</a></div>
+<div id="loginInfo"></div>
+<h1 id="title">Struktur Organisasi</h1>
 <div class="controls">
   <label for="deptSel">Departemen:</label>
   <select id="deptSel" onchange="render()"></select>
 </div>
-
 <div class="stats">
   <div class="stat"><b id="stTotal">0</b>Total Posisi</div>
   <div class="stat"><b id="stFilled">0</b>Terisi</div>
   <div class="stat vac"><b id="stVacant">0</b>Vacant</div>
 </div>
-
 <div class="toolbar">
   <button onclick="zoom(0.1)">Zoom +</button>
   <button onclick="zoom(-0.1)">Zoom −</button>
@@ -111,9 +132,7 @@
   <button onclick="loadData()">&#8635; Muat Ulang Data</button>
   <button onclick="window.print()">Print</button>
 </div>
-
 <div class="viewport"><div class="chart" id="chart"><div class="msg">Memuat data…</div></div></div>
-
 <div class="legend">
   <span><span class="dot" style="background:var(--mgr-bg)"></span>Manager</span>
   <span><span class="dot" style="background:var(--askep-bg)"></span>Asisten Kepala</span>
@@ -125,14 +144,12 @@
   <span><span class="dot" style="background:var(--wrk-bg)"></span>Worker</span>
   <span style="color:var(--vacant); font-weight:bold">Vacant = posisi kosong</span>
 </div>
-
 <script>
 /* ================== SUMBER DATA (REALTIME) ==================
    Sheet harus di-share "Siapa saja yang memiliki link — Viewer".
    Data diambil langsung setiap halaman dibuka / tombol Muat Ulang. */
 const SHEET_ID = '1mHMrWu6yQ7p6gL_fQz_G6fa8ew2V2LcJ3WHZXwYZo7c';
 const CSV = sheet => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheet)}&t=${Date.now()}`;
-
 /* ============ Ketentuan kode 14 digit ============
    Digit 1     : Perusahaan
    Digit 2-3   : Manager / Departemen
@@ -164,7 +181,6 @@ function levelOf(k){
   if(wrk===0) return 6;
   return 7;
 }
-
 /* ================== CSV parser ================== */
 function parseCSV(text){
   const rows=[]; let row=[], cur='', q=false;
@@ -183,11 +199,9 @@ function parseCSV(text){
   if(cur!=='' || row.length){ row.push(cur); rows.push(row); }
   return rows;
 }
-
 /* ================== STATE ================== */
 let companies={}, depts={}, deptList=[], nodes={};
 const isVac = n => !n.n || n.n.toLowerCase().startsWith('vacant');
-
 async function loadData(){
   const chartEl=document.getElementById('chart');
   chartEl.style.width=''; chartEl.style.height='';
@@ -284,16 +298,13 @@ async function loadData(){
       '<br><small>Pastikan Google Sheet di-share "Siapa saja yang memiliki link — Viewer", lalu klik Muat Ulang Data.</small></div>';
   }
 }
-
 /* ================== LAYOUT ================== */
 const CW=168, CH=60, PW=CW+18, GAP=16, BH=118;
 const HEAD_H=32, NAME_H=28; // tinggi header jabatan & tiap baris nama dlm kotak gabungan (1 nama = HEAD_H+NAME_H = CH)
 let pos={}, lines=[], curX=0, BY=null;
-
 function flat(n){ const o=[]; n.children.forEach(c=>{o.push(c); o.push(...flat(c));}); return o; }
 function V(x,y1,y2){ if(y2>y1) lines.push(`M${x} ${y1} L${x} ${y2}`); }
 function Hln(y,x1,x2){ if(x2>x1) lines.push(`M${x1} ${y} L${x2} ${y}`); }
-
 // orang2 dgn Nama Jabatan yg SAMA & induk yg sama digabung jadi satu kotak
 // (satu header jabatan, daftar nama di dalamnya) - dipakai utk daftar pekerja
 // sejenis (mis. Driver Dump Truck 01-08, Helper Mekanik) supaya tidak jadi
@@ -323,7 +334,6 @@ function unitInfo(u){
 }
 function headInfo(n){ return unitInfo({type:'single', node:n}); }
 function setPos(x, y, info){ pos[info.k]={x, y, h:info.h, j:info.j, lv:info.lv, jabFlag:info.jabFlag, members:info.members}; return info; }
-
 // kolom: kepala (Mandor1/Krani1) + turunannya ditumpuk vertikal sesuai pita level.
 // Jika anak langsung berada di level Mandor/Krani ke bawah, dikelompokkan per
 // (digit MDK + level) - dibedakan oleh MDK (mis. "Mandor PWH" vs "Mandor Scaller")
@@ -337,7 +347,6 @@ function placeColumn(n){
   const headI=headInfo(n);
   setPos(cx, BY(n.lv), headI);
   let bottom=BY(n.lv)+headI.h;
-
   if(n.children.length && n.children[0].lv>=5){
     const mdkGroups={}; const order=[];
     n.children.forEach(ch=>{
@@ -440,25 +449,20 @@ function placeGroup(n){
   });
   return c;
 }
-
 function render(){
   const chartEl=document.getElementById('chart');
   if(!deptList.length) return;
   const dept=deptList[+document.getElementById('deptSel').value||0];
   if(!dept) return;
-
   // pita level: hanya level yang terpakai di departemen ini
   const all=dept.roots.flatMap(r=>[r,...flat(r)]);
   const used=[...new Set(all.map(n=>n.lv))].sort((a,b)=>a-b);
   const bandIdx={}; used.forEach((lv,i)=>bandIdx[lv]=i);
   BY=lv=>bandIdx[lv]*BH;
-
   pos={}; lines=[]; curX=0;
   dept.roots.forEach(r=>{ (r.lv<=3 || hasGrand(r) || !r.children.length) ? placeGroup(r) : placeColumn(r); });
-
   let maxX=0, maxY=0;
   Object.values(pos).forEach(p=>{ maxX=Math.max(maxX,p.x+CW); maxY=Math.max(maxY,p.y+p.h); });
-
   chartEl.style.width=maxX+'px'; chartEl.style.height=maxY+'px';
   let html=`<svg width="${maxX}" height="${maxY}"><path d="${lines.join(' ')}" stroke="#555" stroke-width="1.6" fill="none"/></svg>`;
   // satu kotak = satu jabatan; kalau >1 orang menjabat jabatan yg sama & induk yg
@@ -472,19 +476,16 @@ function render(){
     </div>`;
   });
   chartEl.innerHTML=html;
-
   // judul + statistik per departemen
   document.getElementById('title').textContent='Struktur Organisasi Departemen '+dept.label;
   const vac=all.filter(isVac).length;
   stTotal.textContent=all.length; stFilled.textContent=all.length-vac; stVacant.textContent=vac;
   zoomReset();
 }
-
 /* ================== zoom ================== */
 let scale=1;
 function zoom(d){ scale=Math.min(2,Math.max(.25,scale+d)); chart.style.transform=`scale(${scale})`; }
 function zoomReset(){ scale=1; chart.style.transform=''; }
-
 /* ================== mode hand: geser dengan drag ================== */
 const vp=document.querySelector('.viewport');
 let panning=false, px=0, py=0, sx=0, sy=0;
@@ -502,7 +503,124 @@ vp.addEventListener('pointermove', e=>{
   panning=false; vp.classList.remove('panning');
 }));
 
-loadData();
+/* =====================================================================
+   LOGIN GATE - kredensial SAMA dengan HRGA Hub (https://hrga.btliglbja.site/main/),
+   dicek terhadap sheet "user" (Nama, username, password, role) di spreadsheet
+   terpisah (USER_SHEET_ID). Status login (termasuk password, supaya bisa
+   divalidasi ulang) disimpan di localStorage (bukan sessionStorage) supaya
+   kalau sudah login di HRGA Hub (atau di halaman ini sendiri), halaman ini
+   DAN mpp.html otomatis ikut ter-login tanpa perlu login ulang - selama
+   origin-nya sama (hrga.btliglbja.site) dan belum logout. Setiap kali
+   halaman dimuat/di-refresh, kredensial yang ter-cache DICEK ULANG live ke
+   sheet "user": kalau masih cocok, sesi diteruskan; kalau sudah tidak cocok
+   (password diganti / user dihapus dari sheet), sesi otomatis dihapus dan
+   user diminta login ulang. CATATAN: sheet "user" harus bisa diakses publik
+   supaya bisa di-fetch sbg CSV dari browser, jadi ini bukan proteksi
+   keamanan sungguhan, cuma gerbang login sederhana.
+   ===================================================================== */
+const USER_SHEET_ID = '1_B1SUrE4eIYJ-fcLBPyQmntKIXAX3YKFP6RsfHPKU9s';
+function userCsvUrl(){
+  return `https://docs.google.com/spreadsheets/d/${USER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('user')}&t=${Date.now()}`;
+}
+const LOGIN_KEY = 'hrgaLoggedInUser';
+
+function renderLoginInfo(user){
+  const el=document.getElementById('loginInfo');
+  if(!el) return;
+  const nama=(user.nama||user.username||'?').trim();
+  el.innerHTML = `Masuk sebagai <b>${nama}</b>${user.role?' &middot; '+user.role:''} &middot; <a id="logoutLink">Keluar</a>`;
+  const logoutLink=document.getElementById('logoutLink');
+  if(logoutLink) logoutLink.addEventListener('click', ()=>{
+    localStorage.removeItem(LOGIN_KEY);
+    location.reload();
+  });
+}
+
+function showAppAfterLogin(user){
+  renderLoginInfo(user);
+  document.body.classList.remove('pre-auth');
+  loadData();
+}
+
+/* Sesi ter-cache di localStorage divalidasi ULANG live ke sheet "user"
+   setiap kali fungsi ini dipanggil (dipanggil sekali di awal, lihat paling
+   bawah) - bukan langsung dipercaya begitu saja. */
+function tryRestoreLogin(){
+  let cached;
+  try{
+    const raw = localStorage.getItem(LOGIN_KEY);
+    if(!raw) return;
+    cached = JSON.parse(raw);
+  }catch(e){ localStorage.removeItem(LOGIN_KEY); return; }
+  if(!cached || !cached.username || !cached.password){ localStorage.removeItem(LOGIN_KEY); return; }
+
+  fetch(userCsvUrl()).then(r=>{
+    if(!r.ok) throw new Error('fetch gagal');
+    return r.text();
+  }).then(text=>{
+    const rows=parseCSV(text);
+    const head=rows[0].map(h=>(h||'').trim().toLowerCase());
+    const iNama=head.indexOf('nama'), iUser=head.indexOf('username'), iPass=head.indexOf('password'), iRole=head.indexOf('role');
+    const match=rows.slice(1).find(r=>
+      (r[iUser]||'').trim().toLowerCase()===cached.username.toLowerCase() &&
+      (r[iPass]||'').trim()===cached.password
+    );
+    if(match){
+      const user={ nama:(iNama>=0?(match[iNama]||'').trim():''), username:(match[iUser]||'').trim(), role:(iRole>=0?(match[iRole]||'').trim():''), password: cached.password };
+      try{ localStorage.setItem(LOGIN_KEY, JSON.stringify(user)); }catch(e){ /* localStorage diblokir */ }
+      showAppAfterLogin(user);
+    } else {
+      // username/password sudah beda dari sheet (diganti/dihapus) - paksa logout,
+      // layar login (default tampil lewat body.pre-auth) yang jadi terlihat.
+      localStorage.removeItem(LOGIN_KEY);
+    }
+  }).catch(()=>{
+    // gagal fetch (mis. koneksi terputus sesaat) - jangan paksa logout hanya
+    // krn ini, tetap izinkan lanjut pakai sesi ter-cache.
+    showAppAfterLogin(cached);
+  });
+}
+
+function handleLoginSubmit(e){
+  e.preventDefault();
+  const uEl=document.getElementById('loginUsername'), pEl=document.getElementById('loginPassword');
+  const errEl=document.getElementById('loginError'), btn=document.getElementById('loginSubmitBtn');
+  const username=(uEl.value||'').trim(), password=(pEl.value||'').trim();
+  errEl.textContent='';
+  if(!username || !password){ errEl.textContent='Username dan password wajib diisi.'; return; }
+  btn.disabled=true; btn.textContent='Memeriksa...';
+  fetch(userCsvUrl()).then(r=>{
+    if(!r.ok) throw new Error('fetch gagal');
+    return r.text();
+  }).then(text=>{
+    const rows=parseCSV(text);
+    const head=rows[0].map(h=>(h||'').trim().toLowerCase());
+    const iNama=head.indexOf('nama'), iUser=head.indexOf('username'), iPass=head.indexOf('password'), iRole=head.indexOf('role');
+    const match=rows.slice(1).find(r=>
+      (r[iUser]||'').trim().toLowerCase()===username.toLowerCase() &&
+      (r[iPass]||'').trim()===password
+    );
+    btn.disabled=false; btn.textContent='Masuk';
+    if(match){
+      const user={ nama:(iNama>=0?(match[iNama]||'').trim():''), username:(match[iUser]||'').trim(), role:(iRole>=0?(match[iRole]||'').trim():''), password: password };
+      try{ localStorage.setItem(LOGIN_KEY, JSON.stringify(user)); }catch(e){ /* localStorage diblokir - tetap lanjut tanpa persist */ }
+      showAppAfterLogin(user);
+    } else {
+      errEl.textContent='Username atau password salah.';
+    }
+  }).catch(()=>{
+    btn.disabled=false; btn.textContent='Masuk';
+    errEl.textContent='Gagal memuat data akun. Periksa koneksi lalu coba lagi.';
+  });
+}
+
+document.getElementById('loginForm').addEventListener('submit', handleLoginSubmit);
+
+/* Halaman awal: kalau sudah pernah login (di sini atau di HRGA Hub), kredensial
+   ter-cache dicek ulang dulu ke sheet sebelum dipercaya (lihat tryRestoreLogin).
+   Kalau belum ada sesi, layar login (default tampil lewat body.pre-auth) yang
+   jadi satu-satunya hal yang terlihat. */
+tryRestoreLogin();
 </script>
 </body>
 </html>
