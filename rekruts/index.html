@@ -396,8 +396,9 @@
       <p>Sistem Rekrutmen — Masuk untuk melanjutkan</p>
     </div>
     <div class="login-field">
-      <label>Email</label>
-      <input type="email" id="login-email" placeholder="nama@perusahaan.com" autocomplete="email"/>
+      <label>Username</label>
+      <input type="text" id="login-username" placeholder="username" autocomplete="username"
+        onkeydown="if(event.key==='Enter') doLogin()"/>
     </div>
     <div class="login-field">
       <label>Password</label>
@@ -406,7 +407,7 @@
     </div>
     <button class="login-btn" onclick="doLogin()">Masuk</button>
     <div class="login-loading" id="login-loading">⏳ Memverifikasi...</div>
-    <div class="login-error" id="login-error">Email atau password salah.</div>
+    <div class="login-error" id="login-error">Username atau password salah.</div>
   </div>
 </div>
 
@@ -688,19 +689,86 @@
 
 <script>
   // ── LOGIN ──────────────────────────────────────────────────
+  const USERS_SHEET_ID = "1_B1SUrE4eIYJ-fcLBPyQmntKIXAX3YKFP6RsfHPKU9s";
+  const USERS_GVIZ = () =>
+    `https://docs.google.com/spreadsheets/d/${USERS_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=user&t=${Date.now()}`;
+
   let currentUser = null;
 
+  async function fetchUsers() {
+    try {
+      const res = await fetch(USERS_GVIZ());
+      return parseCSV(await res.text());
+    } catch(e) { return []; }
+  }
+
   async function doLogin() {
-    // LOGIN DINONAKTIFKAN SEMENTARA — langsung masuk
+    const uname  = (document.getElementById("login-username").value || "").trim();
+    const pwd    = (document.getElementById("login-password").value || "").trim();
+    const errEl  = document.getElementById("login-error");
+    const loadEl = document.getElementById("login-loading");
+    errEl.classList.remove("show");
+    loadEl.classList.add("show");
+
+    const users = await fetchUsers();
+    loadEl.classList.remove("show");
+
+    if (!users.length) {
+      errEl.textContent = "Gagal terhubung ke server. Coba lagi.";
+      errEl.classList.add("show");
+      return;
+    }
+    const user = users.find(u => u.username === uname && u.password === pwd);
+    if (!user) {
+      errEl.textContent = "Username atau password salah.";
+      errEl.classList.add("show");
+      return;
+    }
+    const session = { nama: user['Nama'] || user.nama || uname, username: user.username, password: user.password, role: user.role || "" };
+    sessionStorage.setItem("rh_session", JSON.stringify(session));
+    applySession(session);
+  }
+
+  function applySession(user) {
+    currentUser = user;
+    const initials = (user.nama || "?").split(" ").filter(Boolean).map(w => w[0]).join("").substring(0,2).toUpperCase();
+    document.getElementById("user-avatar").textContent = initials;
+    document.getElementById("user-name").textContent   = user.nama;
     document.getElementById("login-page").classList.add("hidden");
-    document.getElementById("user-avatar").textContent = "DW";
-    document.getElementById("user-name").textContent   = "Dedi Wahyudi";
     loadFromSheets();
   }
 
+  async function checkSession() {
+    const stored = sessionStorage.getItem("rh_session");
+    if (!stored) { document.getElementById("login-page").classList.remove("hidden"); return; }
+    const saved = JSON.parse(stored);
+    // Re-verify credentials from GSheet
+    const users = await fetchUsers();
+    if (users.length) {
+      const match = users.find(u => u.username === saved.username && u.password === saved.password);
+      if (!match) {
+        sessionStorage.removeItem("rh_session");
+        document.getElementById("login-page").classList.remove("hidden");
+        const errEl = document.getElementById("login-error");
+        errEl.textContent = "Sesi berakhir — kredensial telah diubah. Silakan login ulang.";
+        errEl.classList.add("show");
+        return;
+      }
+      const refreshed = { nama: match['Nama'] || match.nama || saved.nama, username: match.username, password: match.password, role: match.role || "" };
+      sessionStorage.setItem("rh_session", JSON.stringify(refreshed));
+      applySession(refreshed);
+    } else {
+      applySession(saved); // fallback jika GSheet tidak bisa diakses
+    }
+  }
+
   function doLogout() {
-    // LOGOUT DINONAKTIFKAN SEMENTARA — reload halaman
-    location.reload();
+    sessionStorage.removeItem("rh_session");
+    currentUser = null;
+    document.getElementById("login-page").classList.remove("hidden");
+    document.getElementById("login-username").value = "";
+    document.getElementById("login-password").value = "";
+    document.getElementById("login-error").classList.remove("show");
   }
 
   // ── KONFIGURASI GOOGLE SHEETS ──────────────────────────────
@@ -1291,11 +1359,8 @@
   }
 
   // ── INISIALISASI ───────────────────────────────────────────
-  // LOGIN DINONAKTIFKAN SEMENTARA — langsung masuk tanpa form
-  document.getElementById("login-page").classList.add("hidden");
-  document.getElementById("user-avatar").textContent = "DW";
-  document.getElementById("user-name").textContent   = "Dedi Wahyudi";
-  loadFromSheets();
+  // ── INIT: cek sesi atau tampilkan login ───────────────────
+  checkSession();
 
   // Tab interaktif
   document.querySelectorAll(".tab").forEach(t => {
