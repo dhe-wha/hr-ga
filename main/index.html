@@ -3764,7 +3764,15 @@
     });
 
     let rowsArr = Array.from(groups.values());
-    rowsArr.sort((a,b)=> a.jabatan.localeCompare(b.jabatan));
+    // Urut ascending berdasarkan Kode (bukan Nama Jabatan). Kode tanpa nilai
+    // ditaruh paling akhir, lalu fallback ke nama jabatan kalau kode sama/kosong.
+    rowsArr.sort((a,b)=>{
+      if(!a.kode && !b.kode) return a.jabatan.localeCompare(b.jabatan);
+      if(!a.kode) return 1;
+      if(!b.kode) return -1;
+      if(a.kode === b.kode) return a.jabatan.localeCompare(b.jabatan);
+      return a.kode < b.kode ? -1 : 1;
+    });
 
     if(note) note.textContent = `${rowsArr.length} jabatan unik dari ${filteredRows.length} posisi.`;
 
