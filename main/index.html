@@ -671,7 +671,6 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
             Refresh
           </button>
-          <p class="kry-note" id="recNote">Hanya menampilkan posisi yang kolom "posting" di sheet recap_jobs dicentang (TRUE).</p>
         </div>
       </div>
 
@@ -2362,7 +2361,7 @@
     const sum = (field) => snapshotRows.reduce((s,r)=>s+r[field],0);
 
     document.getElementById('dashNote').innerHTML = snapshotBulan
-      ? `Tren tahun <b>${dashTahunValue}</b>. Snapshot pie/doughnut per <b>${snapshotBulan}</b>.`
+      ? ``
       : `Tidak ada data karyawan untuk bulan yang dipilih.`;
 
     /* ---------- Pie: Lokal/Non-Lokal by Kabupaten ---------- */
@@ -2775,7 +2774,6 @@
       recLoaded = true;
       renderRekrutmen();
       if(fullLoaded) renderFulfillment();
-      document.getElementById('recNote').innerHTML = `Hanya menampilkan posisi yang kolom "posting" di sheet recap_jobs dicentang (TRUE). Total data kandidat dimuat: <b>${candidates.length}</b>.`;
     }catch(e){
       body.innerHTML = `<tr><td colspan="8" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="recRetryBtn">Coba Lagi</button></td></tr>`;
       const retry = document.getElementById('recRetryBtn');
