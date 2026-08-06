@@ -388,7 +388,7 @@
     <div class="submenu" id="hrSubmenu">
       <div class="sub-item" data-page="karyawan">Karyawan</div>
       <div class="sub-item" data-page="orgchart">Struktur Organisasi</div>
-      <div class="sub-item">Job Description</div>
+      <div class="sub-item" data-page="jobdesc">Job Description</div>
       <div class="sub-item">KPI</div>
       <div class="sub-item" data-page="rekrutmen">Rekrutmen</div>
       <div class="sub-item">Perubahan Status</div>
@@ -946,6 +946,49 @@
       </header>
       <div class="orgchart-frame-wrap">
         <iframe src="https://hrga.btliglbja.site/orgchart/" title="Struktur Organisasi" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Job Description ===== -->
+  <div class="asset-view" id="page-jobdesc" style="display:none;">
+    <div class="grid-texture"></div>
+    <div class="wrap">
+      <div class="sticky-bar">
+        <header class="asset-header">
+          <div>
+            <p class="eyebrow">Human Resources &middot; Job Description</p>
+            <h1 class="asset-title">Job Description</h1>
+          </div>
+        </header>
+
+        <div class="controls">
+          <div class="group-select">
+            <select id="jobdescDeptFilter">
+              <option value="semua">Semua Departemen</option>
+            </select>
+          </div>
+          <button class="refresh-btn" id="jobdescRefreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            Refresh
+          </button>
+          <p class="kry-note" id="jobdescNote"></p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="asset-table">
+          <thead>
+            <tr>
+              <th style="width:240px;">Kode</th>
+              <th>Nama Jabatan</th>
+              <th>Nama Incumbent</th>
+            </tr>
+          </thead>
+          <tbody id="jobdescTableBody">
+            <tr><td colspan="3" class="state-msg" id="jobdescLoadingMsg">Memuat data dari Google Sheet...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -3519,6 +3562,115 @@
     });
   });
 
+  /* =====================================================================
+     JOB DESCRIPTION (HR > Job Description)
+     Sumber data: Google Sheet "Struktur Organisasi" (JOBDESC_SHEET_ID) -
+     sheet "Struktur", spreadsheet yang SAMA dipakai halaman Struktur
+     Organisasi & MPP (https://hrga.btliglbja.site/orgchart/). Kolom
+     terpakai: Kode, Nama Jabatan, Nama, Departemen - semuanya kolom biasa
+     (tidak di-merge seperti kolom Bulan di TK_Out/TK_In), jadi cukup 1x
+     fetch penuh tanpa perlu chunking.
+     Baris dengan Nama Jabatan yang sama (dalam scope Departemen yang
+     difilter) digabung jadi 1 baris tabel: semua variasi Kode-nya
+     ditampilkan, dan semua Nama incumbent-nya digabung jadi 1 baris
+     (baris "Vacant"/nama kosong tidak dihitung sebagai incumbent).
+     ===================================================================== */
+  const JOBDESC_SHEET_ID = '1mHMrWu6yQ7p6gL_fQz_G6fa8ew2V2LcJ3WHZXwYZo7c';
+  let JOBDESC_ROWS = [];
+  let jobdescLoaded = false;
+  let jobdescDeptValue = 'semua';
+
+  function jobdescCsvUrl(){
+    return `https://docs.google.com/spreadsheets/d/${JOBDESC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('Struktur')}&t=${Date.now()}`;
+  }
+
+  function loadJobdescData(){
+    const body = document.getElementById('jobdescTableBody');
+    body.innerHTML = `<tr><td colspan="3" class="state-msg" id="jobdescLoadingMsg">Memuat data dari Google Sheet...</td></tr>`;
+    const btn = document.getElementById('jobdescRefreshBtn');
+    btn.classList.add('spinning');
+    Papa.parse(jobdescCsvUrl(), {
+      download:true,
+      header:true,
+      skipEmptyLines:true,
+      complete: function(results){
+        btn.classList.remove('spinning');
+        JOBDESC_ROWS = (results.data||[]).map(r=>({
+          kode: (r['Kode']||'').trim(),
+          jabatan: (r['Nama Jabatan']||'').trim(),
+          nama: (r['Nama']||'').trim(),
+          departemen: (r['Departemen']||'').trim(),
+        })).filter(x=>x.jabatan);
+        jobdescLoaded = true;
+        jobdescPopulateDeptFilter();
+        renderJobdesc();
+      },
+      error: function(){
+        btn.classList.remove('spinning');
+        body.innerHTML = `<tr><td colspan="3" class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="jobdescRetryBtn">Coba Lagi</button></td></tr>`;
+        const retry = document.getElementById('jobdescRetryBtn');
+        if(retry) retry.addEventListener('click', loadJobdescData);
+      }
+    });
+  }
+
+  function jobdescPopulateDeptFilter(){
+    const sel = document.getElementById('jobdescDeptFilter');
+    if(!sel) return;
+    const depts = Array.from(new Set(JOBDESC_ROWS.map(r=>r.departemen).filter(Boolean))).sort();
+    const cur = jobdescDeptValue || 'semua';
+    sel.innerHTML = `<option value="semua">Semua Departemen</option>` + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+    sel.value = (cur==='semua' || depts.includes(cur)) ? cur : 'semua';
+    jobdescDeptValue = sel.value;
+  }
+
+  const jobdescIsVac = nama => { const s=(nama||'').trim().toLowerCase(); return s==='' || s.startsWith('vacant'); };
+
+  function renderJobdesc(){
+    const body = document.getElementById('jobdescTableBody');
+    const note = document.getElementById('jobdescNote');
+    const filteredRows = JOBDESC_ROWS.filter(r => jobdescDeptValue==='semua' || r.departemen===jobdescDeptValue);
+
+    // Group per Nama Jabatan (case-insensitive) - 1 baris jabatan bisa menaungi
+    // banyak baris asal (beda Kode/beda orang), makanya kodes & namas dikumpulkan
+    // sebagai kumpulan, bukan diambil satu saja.
+    const groups = new Map();
+    filteredRows.forEach(r=>{
+      const key = r.jabatan.toLowerCase();
+      if(!groups.has(key)) groups.set(key, { jabatan:r.jabatan, kodes:new Set(), namas:[] });
+      const g = groups.get(key);
+      if(r.kode) g.kodes.add(r.kode);
+      if(!jobdescIsVac(r.nama)) g.namas.push(r.nama);
+    });
+
+    let rowsArr = Array.from(groups.values());
+    rowsArr.sort((a,b)=> a.jabatan.localeCompare(b.jabatan));
+
+    if(note) note.textContent = `${rowsArr.length} jabatan unik dari ${filteredRows.length} posisi.`;
+
+    if(rowsArr.length===0){
+      body.innerHTML = `<tr><td colspan="3" class="state-msg">Tidak ada data untuk filter ini.</td></tr>`;
+      return;
+    }
+
+    body.innerHTML = rowsArr.map(g=>{
+      const kodeTxt = Array.from(g.kodes).join(', ');
+      const namaTxt = g.namas.length ? fmtVal(g.namas.join(', ')) : '<span style="color:var(--text-dim);">&mdash;</span>';
+      return `
+        <tr>
+          <td style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-dim);">${kodeTxt}</td>
+          <td class="name">${fmtVal(g.jabatan)}</td>
+          <td>${namaTxt}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  document.getElementById('jobdescDeptFilter').addEventListener('change', e=>{
+    jobdescDeptValue = e.target.value;
+    renderJobdesc();
+  });
+  document.getElementById('jobdescRefreshBtn').addEventListener('click', loadJobdescData);
+
   /* ===================== SIDEBAR NAVIGATION ===================== */
   function toggleSubmenu(key){
     const toggle = document.getElementById(key+'Toggle');
@@ -3530,7 +3682,7 @@
   document.getElementById('hrToggle').addEventListener('click', ()=>toggleSubmenu('hr'));
   document.getElementById('gaToggle').addEventListener('click', ()=>toggleSubmenu('ga'));
 
-  const KNOWN_PAGES = ['dashboard','kendaraan','bangunan','karyawan','rekrutmen','orgchart'];
+  const KNOWN_PAGES = ['dashboard','kendaraan','bangunan','karyawan','rekrutmen','orgchart','jobdesc'];
   function showPage(page, label){
     document.getElementById('page-dashboard').style.display = (page==='dashboard') ? '' : 'none';
     document.getElementById('page-kendaraan').style.display = (page==='kendaraan') ? '' : 'none';
@@ -3538,6 +3690,7 @@
     document.getElementById('page-karyawan').style.display = (page==='karyawan') ? '' : 'none';
     document.getElementById('page-rekrutmen').style.display = (page==='rekrutmen') ? '' : 'none';
     document.getElementById('page-orgchart').style.display = (page==='orgchart') ? '' : 'none';
+    document.getElementById('page-jobdesc').style.display = (page==='jobdesc') ? '' : 'none';
     document.getElementById('page-placeholder').style.display = KNOWN_PAGES.includes(page) ? 'none' : '';
     if(page==='dashboard'){
       if(!kryLoaded){
@@ -3582,6 +3735,9 @@
     }
     if(page==='rekrutmen' && !tkinLoaded){
       loadTkinData();
+    }
+    if(page==='jobdesc' && !jobdescLoaded){
+      loadJobdescData();
     }
     if(!KNOWN_PAGES.includes(page)){
       document.getElementById('placeholderTitle').textContent = label;
