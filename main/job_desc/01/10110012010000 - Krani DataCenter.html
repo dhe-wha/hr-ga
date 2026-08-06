@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krani Data Center &mdash; Uraian Jabatan</title>
+<style>
+  :root{
+    --navy:#1a2e4a; --gold:#b08d3f; --text:#1f1f1f; --muted:#6b6b6b;
+    --line:#e0e0e0; --bg-soft:#f6f7f9;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif; color:var(--text); margin:0; padding:22px 26px 40px; background:#fff; line-height:1.5;}
+  .kop{text-align:center; margin-bottom:14px;}
+  .kop .company{font-weight:800; font-size:16px; letter-spacing:.3px; color:var(--navy);}
+  .kop .dept{font-size:12px; color:var(--muted); margin-top:1px;}
+  .kop .title{font-weight:700; font-size:13px; letter-spacing:1.5px; color:var(--gold); text-transform:uppercase; margin-top:8px;}
+  .job-name{text-align:center; font-size:26px; font-weight:800; color:var(--navy); margin:4px 0 10px;}
+  .doc-meta{text-align:center; font-size:11px; color:var(--muted); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:6px 0; margin-bottom:20px;}
+  .doc-meta b{color:var(--text);}
+
+  .sec{margin-bottom:22px;}
+  .sec h2{
+    display:flex; align-items:center; gap:8px;
+    font-size:14px; letter-spacing:.6px; text-transform:uppercase; color:var(--navy);
+    border-bottom:2px solid var(--gold); padding-bottom:6px; margin:0 0 12px;
+  }
+  .sec-no{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:20px; height:20px; border-radius:4px; background:var(--navy); color:#fff;
+    font-size:10px; font-weight:700;
+  }
+
+  .deflist{border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .defrow{display:flex; border-bottom:1px solid var(--line);}
+  .defrow:last-child{border-bottom:none;}
+  .deflabel{flex:0 0 220px; background:var(--bg-soft); font-weight:700; font-size:12.5px; padding:8px 12px; color:var(--navy);}
+  .defval{flex:1; padding:8px 12px; font-size:12.5px;}
+
+  .tujuan-box{
+    background:var(--bg-soft); border-left:4px solid var(--gold); border-radius:0 6px 6px 0;
+    padding:14px 16px; font-size:13px; text-align:justify;
+  }
+
+  .tj-item{margin-bottom:16px; padding:12px 14px; border:1px solid var(--line); border-radius:6px;}
+  .tj-item:last-child{margin-bottom:0;}
+  .tj-title{font-weight:700; font-size:13px; color:var(--navy); margin-bottom:6px;}
+  .tj-bullets, .plain-bullets{margin:0; padding-left:20px; font-size:12.5px;}
+  .tj-bullets li, .plain-bullets li{margin-bottom:4px;}
+  .tj-kpi{margin-top:8px; font-size:11.5px; font-style:italic; color:var(--muted); border-top:1px dashed var(--line); padding-top:6px;}
+  .tj-kpi-tag{display:inline-block; font-style:normal; font-weight:700; font-size:10px; text-transform:uppercase;
+    background:var(--gold); color:#fff; border-radius:3px; padding:1px 6px; margin-right:6px;}
+
+  .kv-table, .data-table{width:100%; border-collapse:collapse; font-size:12px;}
+  .kv-table th, .data-table th{background:var(--navy); color:#fff; text-align:left; padding:7px 10px; font-size:11.5px;}
+  .kv-table td, .data-table td{border-bottom:1px solid var(--line); padding:7px 10px; vertical-align:top;}
+  .kv-table tr:nth-child(even) td, .data-table tr:nth-child(even) td{background:var(--bg-soft);}
+  .kv-k{font-weight:700; width:220px; color:var(--navy);}
+  .g-intro{font-size:11.5px; font-style:italic; color:var(--muted); margin:0 0 8px;}
+
+  .sign-sec .signblock{display:flex; gap:14px; flex-wrap:wrap;}
+  .sigcol{flex:1 1 0; min-width:130px; text-align:center; font-size:11.5px;}
+  .sig-role{font-weight:700; color:var(--navy); margin-bottom:34px;}
+  .sig-line{border-bottom:1px solid #999; margin:0 6px;}
+  .sig-name{margin-top:5px; font-weight:600;}
+  .sig-sub{margin-top:2px; font-size:10.5px; color:var(--muted);}
+
+  @media print{ body{padding:0 12px;} }
+</style>
+</head>
+<body>
+  <div class="kop">
+    <div class="company">PT BIOMASA JAYA ABADI</div>
+    <div class="dept">Departemen Human Resources &amp; General Affairs</div>
+    <div class="title">URAIAN JABATAN / JOB DESCRIPTION</div>
+  </div>
+  <div class="job-name">Krani Data Center</div>
+  <div class="doc-meta"><span><b>No. Dokumen</b> HRGA-JD-06</span> &middot; <span><b>Tgl. Terbit</b> Agustus 2025</span> &middot; <span><b>Revisi</b> 00</span> &middot; <span><b>Halaman</b> 1 / 4</span></div>
+  
+    <section class="sec">
+      <h2><span class="sec-no">01</span>IDENTITAS JABATAN</h2>
+      <div class="deflist"><div class="defrow"><div class="deflabel">Nama Jabatan</div><div class="defval">Krani Data Center</div></div><div class="defrow"><div class="deflabel">Nama Pemegang Jabatan</div><div class="defval">Delis Paduengo | Rahyul Koromo | Susan Biasa | Angel Masengge | Hernangsih</div></div><div class="defrow"><div class="deflabel">Nama Departemen</div><div class="defval">Human Resources &amp; General Affairs (HRGA) – Data Center</div></div><div class="defrow"><div class="deflabel">Atasan Langsung</div><div class="defval">Krani 1 Data Center</div></div><div class="defrow"><div class="deflabel">Bawahan Langsung</div><div class="defval">-</div></div><div class="defrow"><div class="deflabel">Golongan / Grade</div><div class="defval">Disesuaikan dengan Sistem Grading PT BJA</div></div><div class="defrow"><div class="deflabel">Lokasi Kerja</div><div class="defval">Site PT Biomasa Jaya Abadi</div></div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">02</span>TUJUAN JABATAN</h2>
+      <div class="tujuan-box">Melakukan penginputan data Laporan Harian Mandor (LHM) dan buku kendaraan ke dalam sistem LHM secara akurat, lengkap, dan tepat waktu; memastikan setiap data yang diinput sesuai dengan dokumen fisik yang diterima dari lapangan; serta mendukung kelancaran proses closing bulanan Data Center.</div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">03</span>TANGGUNG JAWAB UTAMA</h2>
+      <div class="tj-item"><div class="tj-title">Penerimaan LHM &amp; Buku Kendaraan dari Lapangan</div><ul class="tj-bullets"><li>Menerima dokumen LHM dan buku kendaraan dari mandor/supervisi lapangan sesuai jadwal yang ditetapkan.</li><li>Memastikan setiap dokumen yang diterima disertai dengan bukti serah terima yang tercatat.</li><li>Menyortir dan mengelompokkan LHM berdasarkan divisi dan periode untuk memudahkan proses penginputan.</li><li>Melaporkan kepada Krani 1 Data Center apabila ada LHM yang tidak diterima sesuai jadwal.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Kelengkapan &amp; Ketepatan Waktu Penerimaan LHM (Target: ≥ 98% LHM diterima sesuai jadwal dengan bukti serah terima)</div></div><div class="tj-item"><div class="tj-title">Pengecekan Kelengkapan LHM &amp; Buku Kendaraan</div><ul class="tj-bullets"><li>Memeriksa kelengkapan setiap LHM yang diterima: nama mandor, tanggal, jumlah tenaga kerja, catatan pekerjaan, dan tanda tangan.</li><li>Memeriksa kelengkapan buku kendaraan: nopol, tanggal, jarak tempuh, rute, dan tanda tangan pengemudi.</li><li>Memisahkan dokumen yang tidak lengkap dan mengembalikannya kepada sumber untuk dilengkapi sebelum diinput.</li><li>Mencatat daftar LHM/buku kendaraan yang dikembalikan kepada Krani 1 Data Center.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Persentase LHM &amp; Buku Kendaraan yang Diinput Lengkap (Target: 100% dokumen yang masuk ke sistem sudah lengkap)</div></div><div class="tj-item"><div class="tj-title">Verifikasi Dokumen Pendukung LHM</div><ul class="tj-bullets"><li>Memastikan dokumen pendukung yang dipersyaratkan untuk setiap LHM tersedia dan sesuai (surat tugas, nota, dll.).</li><li>Mencocokkan data LHM dengan dokumen pendukung untuk mengkonfirmasi keabsahan data sebelum diinput.</li><li>Melaporkan kepada Krani 1 Data Center apabila ditemukan ketidaksesuaian antara LHM dan dokumen pendukung.</li><li>Menyimpan dokumen pendukung secara terorganisir sesuai periode untuk keperluan audit.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Ketersediaan Dokumen Pendukung LHM (Target: 100% dokumen pendukung tersedia sebelum data diinput ke sistem)</div></div><div class="tj-item"><div class="tj-title">Penginputan LHM &amp; Buku Kendaraan ke Sistem LHM</div><ul class="tj-bullets"><li>Menginput seluruh data LHM ke dalam sistem LHM sesuai format standar dan SOP yang berlaku.</li><li>Menginput data buku kendaraan (rute, jarak, tanggal, nopol) ke dalam sistem secara akurat.</li><li>Memastikan tidak ada data yang terlewat atau terduplikasi dalam proses penginputan.</li><li>Melakukan pengecekan ulang mandiri (self-check) terhadap data yang telah diinput sebelum diserahkan kepada Krani 1 Data Center untuk validasi akhir.</li><li>Menyelesaikan seluruh penginputan sesuai target harian yang ditetapkan oleh Krani 1 Data Center.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Akurasi Penginputan Data LHM (Target: Error rate ≤ 0,5%)  |  Ketepatan Waktu Penginputan (Target: 100% selesai sesuai target harian)</div></div><div class="tj-item"><div class="tj-title">Pelaporan Status Penginputan kepada Krani 1 Data Center</div><ul class="tj-bullets"><li>Melaporkan progress penginputan harian kepada Krani 1 Data Center termasuk jumlah LHM yang sudah/belum diinput.</li><li>Segera melaporkan kendala teknis atau hambatan penginputan kepada Krani 1 Data Center untuk ditindaklanjuti.</li><li>Menyampaikan laporan penyelesaian penginputan menjelang closing agar proses validasi dapat segera dilakukan.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Ketepatan Waktu Pelaporan Progress Penginputan kepada Krani 1 Data Center (Target: Laporan harian setiap akhir jam kerja)</div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">04</span>WEWENANG</h2>
+      <ul class="plain-bullets"><li>Mengembalikan LHM atau buku kendaraan yang tidak lengkap kepada sumber (mandor/lapangan) untuk dilengkapi sebelum diinput.</li><li>Menolak menginput data yang tidak sesuai standar atau tidak memiliki dokumen pendukung yang dipersyaratkan.</li><li>Melaporkan dan mengeskalasi permasalahan penginputan kepada Krani 1 Data Center.</li><li>Mengusulkan perbaikan proses penerimaan dan penginputan LHM kepada Krani 1 Data Center.</li></ul>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">05</span>PERSYARATAN JABATAN</h2>
+      <div class="deflist"><div class="defrow"><div class="deflabel">Pendidikan Minimum</div><div class="defval">SMA/SMK sederajat (diutamakan D3 Sistem Informasi, Komputer, atau Akuntansi)</div></div><div class="defrow"><div class="deflabel">Pengalaman</div><div class="defval">Diutamakan memiliki pengalaman penginputan data atau administrasi; fresh graduate dapat dipertimbangkan</div></div><div class="defrow"><div class="deflabel">Kompetensi Teknis</div><div class="defval">MS Excel (dasar-menengah), pengetahuan dasar sistem komputer, kecepatan dan ketelitian mengetik</div></div><div class="defrow"><div class="deflabel">Kompetensi Perilaku</div><div class="defval">Teliti, disiplin, patuh SOP, mampu bekerja dengan deadline, jujur dalam pelaporan data</div></div><div class="defrow"><div class="deflabel">Sertifikasi</div><div class="defval">Tidak dipersyaratkan (pelatihan in-house disediakan)</div></div><div class="defrow"><div class="deflabel">Fisik &amp; Kesehatan</div><div class="defval">Sehat jasmani dan rohani, mampu bekerja di depan komputer dalam waktu lama</div></div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">06</span>KOMPETENSI YANG DIBUTUHKAN</h2>
+      <table class="kv-table"><thead><tr><th>Kompetensi</th><th>Indikator Perilaku</th></tr></thead><tbody><tr><td class="kv-k">Penginputan Data Akurat</td><td>Mampu menginput data LHM dan buku kendaraan ke sistem secara cepat, lengkap, dan bebas kesalahan</td></tr><tr><td class="kv-k">Pengecekan Kelengkapan Dokumen</td><td>Mampu mengidentifikasi kelengkapan dan keabsahan dokumen LHM sebelum proses input</td></tr><tr><td class="kv-k">Ketelitian &amp; Self-Check</td><td>Melakukan verifikasi mandiri terhadap data yang diinput sebelum diserahkan untuk validasi</td></tr><tr><td class="kv-k">Kepatuhan SOP</td><td>Mengikuti standar prosedur penginputan yang ditetapkan tanpa pengecualian</td></tr><tr><td class="kv-k">Pelaporan Progress</td><td>Mampu melaporkan status penginputan harian secara jelas dan tepat waktu kepada atasan</td></tr><tr><td class="kv-k">Pengelolaan Dokumen Fisik</td><td>Mampu menyimpan dan mengarsipkan dokumen LHM secara tertib dan mudah ditelusuri</td></tr></tbody></table>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">07</span>KORELASI TANGGUNG JAWAB  ↔  KPI</h2>
+      <p class="g-intro">Tabel berikut menunjukkan keterkaitan langsung setiap bidang tanggung jawab dengan KPI yang digunakan untuk mengukur keberhasilan pelaksanaannya.</p><table class="data-table"><thead><tr><th>Bidang Tanggung Jawab</th><th>KPI / Indikator Ukuran</th><th>Target</th><th>Bobot</th></tr></thead><tbody><tr><td>Penerimaan LHM &amp; Buku Kendaraan</td><td>Kelengkapan &amp; Ketepatan Waktu Penerimaan LHM</td><td>≥ 98% sesuai jadwal (Bulanan)</td><td>15%</td></tr><tr><td>Pengecekan Kelengkapan Dokumen</td><td>Dokumen yang Masuk ke Sistem 100% Lengkap</td><td>100% (Bulanan)</td><td>20%</td></tr><tr><td>Verifikasi Dokumen Pendukung</td><td>Ketersediaan Dokumen Pendukung Sebelum Input</td><td>100% tersedia (Bulanan)</td><td>15%</td></tr><tr><td>Penginputan LHM ke Sistem</td><td>Akurasi Data yang Diinput (Error Rate)</td><td>≤ 0,5% (Bulanan)</td><td>35%</td></tr><tr><td>Pelaporan Progress ke Krani 1 DC</td><td>Ketepatan Waktu Laporan Harian</td><td>100% on-time setiap hari kerja (Bulanan)</td><td>15%</td></tr></tbody></table>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">08</span>HUBUNGAN KERJA</h2>
+      <table class="data-table"><thead><tr><th>Pihak</th><th>Jenis Hubungan</th><th>Tujuan / Keperluan</th></tr></thead><tbody><tr><td>Krani 1 Data Center (Indah Rahma Putri)</td><td>Atasan Langsung</td><td>Menerima arahan penginputan, menyerahkan hasil kerja untuk validasi, melaporkan kendala</td></tr><tr><td>Sesama Krani Data Center</td><td>Rekan Kerja</td><td>Koordinasi pembagian tugas penginputan LHM per divisi agar merata dan efisien</td></tr><tr><td>Mandor / Supervisi Lapangan</td><td>Penerima Dokumen</td><td>Menerima LHM dan buku kendaraan sebagai bahan penginputan</td></tr><tr><td>Krani 1 HRGA</td><td>Koordinasi Internal</td><td>Klarifikasi data absensi dan karyawan apabila ditemukan ketidaksesuaian dengan LHM</td></tr></tbody></table>
+    </section>
+  
+    <section class="sec sign-sec">
+      <h2><span class="sec-no">09</span>PENGESAHAN DOKUMEN</h2>
+      <div class="signblock"><div class="sigcol">
+      <div class="sig-role">Dibuat Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Krani Data Center )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Diperiksa Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Indah Rahma Putri )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Diketahui Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Dedi Wahyudi )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Disahkan Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( M Nurjantoro )</div>
+      
+    </div></div>
+    </section>
+</body>
+</html>

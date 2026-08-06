@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krani Asset &mdash; Uraian Jabatan</title>
+<style>
+  :root{
+    --navy:#1a2e4a; --gold:#b08d3f; --text:#1f1f1f; --muted:#6b6b6b;
+    --line:#e0e0e0; --bg-soft:#f6f7f9;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif; color:var(--text); margin:0; padding:22px 26px 40px; background:#fff; line-height:1.5;}
+  .kop{text-align:center; margin-bottom:14px;}
+  .kop .company{font-weight:800; font-size:16px; letter-spacing:.3px; color:var(--navy);}
+  .kop .dept{font-size:12px; color:var(--muted); margin-top:1px;}
+  .kop .title{font-weight:700; font-size:13px; letter-spacing:1.5px; color:var(--gold); text-transform:uppercase; margin-top:8px;}
+  .job-name{text-align:center; font-size:26px; font-weight:800; color:var(--navy); margin:4px 0 10px;}
+  .doc-meta{text-align:center; font-size:11px; color:var(--muted); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:6px 0; margin-bottom:20px;}
+  .doc-meta b{color:var(--text);}
+
+  .sec{margin-bottom:22px;}
+  .sec h2{
+    display:flex; align-items:center; gap:8px;
+    font-size:14px; letter-spacing:.6px; text-transform:uppercase; color:var(--navy);
+    border-bottom:2px solid var(--gold); padding-bottom:6px; margin:0 0 12px;
+  }
+  .sec-no{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:20px; height:20px; border-radius:4px; background:var(--navy); color:#fff;
+    font-size:10px; font-weight:700;
+  }
+
+  .deflist{border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .defrow{display:flex; border-bottom:1px solid var(--line);}
+  .defrow:last-child{border-bottom:none;}
+  .deflabel{flex:0 0 220px; background:var(--bg-soft); font-weight:700; font-size:12.5px; padding:8px 12px; color:var(--navy);}
+  .defval{flex:1; padding:8px 12px; font-size:12.5px;}
+
+  .tujuan-box{
+    background:var(--bg-soft); border-left:4px solid var(--gold); border-radius:0 6px 6px 0;
+    padding:14px 16px; font-size:13px; text-align:justify;
+  }
+
+  .tj-item{margin-bottom:16px; padding:12px 14px; border:1px solid var(--line); border-radius:6px;}
+  .tj-item:last-child{margin-bottom:0;}
+  .tj-title{font-weight:700; font-size:13px; color:var(--navy); margin-bottom:6px;}
+  .tj-bullets, .plain-bullets{margin:0; padding-left:20px; font-size:12.5px;}
+  .tj-bullets li, .plain-bullets li{margin-bottom:4px;}
+  .tj-kpi{margin-top:8px; font-size:11.5px; font-style:italic; color:var(--muted); border-top:1px dashed var(--line); padding-top:6px;}
+  .tj-kpi-tag{display:inline-block; font-style:normal; font-weight:700; font-size:10px; text-transform:uppercase;
+    background:var(--gold); color:#fff; border-radius:3px; padding:1px 6px; margin-right:6px;}
+
+  .kv-table, .data-table{width:100%; border-collapse:collapse; font-size:12px;}
+  .kv-table th, .data-table th{background:var(--navy); color:#fff; text-align:left; padding:7px 10px; font-size:11.5px;}
+  .kv-table td, .data-table td{border-bottom:1px solid var(--line); padding:7px 10px; vertical-align:top;}
+  .kv-table tr:nth-child(even) td, .data-table tr:nth-child(even) td{background:var(--bg-soft);}
+  .kv-k{font-weight:700; width:220px; color:var(--navy);}
+  .g-intro{font-size:11.5px; font-style:italic; color:var(--muted); margin:0 0 8px;}
+
+  .sign-sec .signblock{display:flex; gap:14px; flex-wrap:wrap;}
+  .sigcol{flex:1 1 0; min-width:130px; text-align:center; font-size:11.5px;}
+  .sig-role{font-weight:700; color:var(--navy); margin-bottom:34px;}
+  .sig-line{border-bottom:1px solid #999; margin:0 6px;}
+  .sig-name{margin-top:5px; font-weight:600;}
+  .sig-sub{margin-top:2px; font-size:10.5px; color:var(--muted);}
+
+  @media print{ body{padding:0 12px;} }
+</style>
+</head>
+<body>
+  <div class="kop">
+    <div class="company">PT BIOMASA JAYA ABADI</div>
+    <div class="dept">Departemen Human Resources &amp; General Affairs</div>
+    <div class="title">URAIAN JABATAN / JOB DESCRIPTION</div>
+  </div>
+  <div class="job-name">Krani Asset</div>
+  <div class="doc-meta"><span><b>No. Dokumen</b> HRGA-JD-06</span> &middot; <span><b>Tgl. Terbit</b> Agustus 2025</span> &middot; <span><b>Revisi</b> 00</span> &middot; <span><b>Halaman</b> 1 / 4</span></div>
+  
+    <section class="sec">
+      <h2><span class="sec-no">01</span>IDENTITAS JABATAN</h2>
+      <div class="deflist"><div class="defrow"><div class="deflabel">Nama Jabatan</div><div class="defval">Krani Asset</div></div><div class="defrow"><div class="deflabel">Nama Pemegang Jabatan</div><div class="defval">Ilham Ishak</div></div><div class="defrow"><div class="deflabel">Nama Departemen</div><div class="defval">Human Resources &amp; General Affairs (HRGA)</div></div><div class="defrow"><div class="deflabel">Atasan Langsung</div><div class="defval">Krani I HRGA</div></div><div class="defrow"><div class="deflabel">Bawahan Langsung</div><div class="defval">Driver</div></div><div class="defrow"><div class="deflabel">Golongan / Grade</div><div class="defval">Disesuaikan dengan Sistem Grading PT BJA</div></div><div class="defrow"><div class="deflabel">Lokasi Kerja</div><div class="defval">Site PT Biomasa Jaya Abadi</div></div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">02</span>TUJUAN JABATAN</h2>
+      <div class="tujuan-box">Memastikan ketersediaan, pemeliharaan, dan legalitas seluruh kendaraan operasional perusahaan; mengelola pencatatan, penomoran, labeling, dan stock opname seluruh aset dan inventaris site; serta mengawasi pemakaian BBM dan penjadwalan kendaraan agar operasional berjalan efisien dan terkendali.</div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">03</span>TANGGUNG JAWAB UTAMA</h2>
+      <div class="tj-item"><div class="tj-title">Pencatatan &amp; Pembuatan Register Aset</div><ul class="tj-bullets"><li>Membuat dan memperbarui register aset untuk seluruh aset milik perusahaan di site (kendaraan, mesin, peralatan, inventaris kantor/mess).</li><li>Memastikan setiap aset baru dicatat dalam register dengan informasi lengkap: nomor aset, nama, spesifikasi, nilai, lokasi, tanggal perolehan, dan kondisi.</li><li>Melakukan pembaruan register aset ketika ada perubahan status, perpindahan, atau penghapusan aset.</li><li>Memastikan data register aset konsisten dengan data akuntansi di departemen Finance.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Akurasi Register Aset (Target: 100% aset teregister dengan data lengkap)</div></div><div class="tj-item"><div class="tj-title">Labeling &amp; Penomoran Aset</div><ul class="tj-bullets"><li>Melaksanakan pelabelan nomor aset pada setiap unit aset baru yang diterima sesuai standar penomoran perusahaan.</li><li>Memastikan seluruh aset aktif memiliki label yang terbaca jelas dan tidak rusak.</li><li>Melakukan pembaruan label pada aset yang berpindah atau mengalami perubahan status.</li><li>Mendokumentasikan pelaksanaan labeling dan melaporkan hasilnya kepada Krani I HRGA.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Kelengkapan Labeling Aset (Target: 100% aset aktif memiliki label nomor aset yang valid)</div></div><div class="tj-item"><div class="tj-title">Stock Opname Aset Berkala</div><ul class="tj-bullets"><li>Melaksanakan stock opname fisik aset secara berkala sesuai jadwal yang ditetapkan (minimal 2 kali per tahun atau sesuai kebijakan perusahaan).</li><li>Mencocokkan hasil hitungan fisik dengan data register aset dan mengidentifikasi selisih/discrepancy.</li><li>Menyiapkan berita acara stock opname dan laporan hasil opname dengan selisih yang teridentifikasi.</li><li>Berkoordinasi dengan departemen Finance untuk rekonsiliasi temuan stock opname.</li><li>Menindaklanjuti temuan selisih aset dengan investigasi dan pelaporan kepada Krani I HRGA.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Ketepatan Pelaksanaan Stock Opname (Target: 100% sesuai jadwal)  |  Deviasi Stock Opname (Target: ≤1%)</div></div><div class="tj-item"><div class="tj-title">Pengurusan Berita Acara Serah Terima (BAST) Aset</div><ul class="tj-bullets"><li>Memastikan setiap serah terima aset kepada pengguna disertai BAST yang ditandatangani kedua belah pihak.</li><li>Membuat BAST Kerusakan atau BAST Penghapusan Aset ketika ada aset yang rusak atau dihapuskan.</li><li>Menyimpan arsip seluruh BAST dalam sistem kearsipan yang tertib dan mudah diakses.</li><li>Menjadikan BAST sebagai dokumen pendukung wajib dalam setiap proses serah terima aset.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Kelengkapan BAST Aset (Target: 100% serah terima aset disertai BAST yang ditandatangani)</div></div><div class="tj-item"><div class="tj-title">Pengelolaan Legalitas Kendaraan Operasional</div><ul class="tj-bullets"><li>Memantau masa berlaku STNK, KIR, dan pajak kendaraan seluruh kendaraan operasional site.</li><li>Mengurus perpanjangan STNK, KIR, dan pajak kendaraan sebelum tanggal kedaluwarsa (minimal 30 hari sebelum jatuh tempo).</li><li>Menyimpan dan mengelola dokumen kendaraan (STNK, BPKB, KIR) dengan tertib dan aman.</li><li>Melaporkan status legalitas kendaraan kepada Krani I HRGA setiap bulan.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Legalitas Kendaraan Tidak Expired (Target: 100% kendaraan memiliki STNK/KIR/Pajak yang valid, 0 expired)</div></div><div class="tj-item"><div class="tj-title">Pengontrolan &amp; Monitoring Konsumsi BBM</div><ul class="tj-bullets"><li>Mencatat dan memverifikasi pemakaian BBM seluruh kendaraan operasional setiap hari.</li><li>Membandingkan realisasi konsumsi BBM dengan standar konsumsi per unit kendaraan.</li><li>Mengidentifikasi anomali konsumsi BBM dan melaporkannya kepada Krani I HRGA untuk investigasi.</li><li>Menyusun laporan realisasi pemakaian BBM per kendaraan setiap bulan.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Kontrol Konsumsi BBM (Target: Realisasi ≤110% standar per unit per bulan)</div></div><div class="tj-item"><div class="tj-title">Penjadwalan Kendaraan &amp; Supervisi Driver</div><ul class="tj-bullets"><li>Mengelola jadwal pemakaian kendaraan operasional untuk seluruh kebutuhan site dan departemen.</li><li>Memastikan setiap perjalanan dinas menggunakan Surat Jalan/Surat Perintah Perjalanan Dinas (SPPD) yang telah disetujui.</li><li>Melakukan supervisi terhadap Driver dalam hal disiplin, keselamatan berkendara, dan perawatan kendaraan.</li><li>Memastikan Driver melakukan pemeriksaan kendaraan (cek harian) sebelum digunakan.</li><li>Berkoordinasi dengan GA untuk pemenuhan kebutuhan kendaraan tamu dan keperluan perusahaan.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Ketersediaan &amp; Kedisiplinan Driver (Target: ≥95%)  |  Penggunaan Kendaraan dengan Surat Jalan (Target: 100%)</div></div><div class="tj-item"><div class="tj-title">Pelaporan Asset Management</div><ul class="tj-bullets"><li>Menyusun laporan bulanan manajemen aset: kondisi aset, legalitas kendaraan, realisasi BBM, dan hasil stock opname.</li><li>Menyiapkan data aset untuk keperluan audit internal maupun eksternal.</li><li>Melaporkan kerusakan aset, usulan perbaikan, dan usulan penghapusan aset kepada Krani I HRGA.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Ketepatan Waktu Laporan Bulanan Aset ke Krani I HRGA (Target: 100% on-time)</div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">04</span>WEWENANG</h2>
+      <ul class="plain-bullets"><li>Mengatur alokasi dan jadwal pemakaian kendaraan operasional site.</li><li>Memberikan arahan tugas harian kepada Driver.</li><li>Melakukan pencatatan, labeling, dan pembaruan register aset secara mandiri.</li><li>Merekomendasikan penghapusan, perbaikan, atau pengadaan aset kepada Krani I HRGA.</li><li>Menolak permintaan pemakaian kendaraan tanpa Surat Jalan yang sah.</li><li>Melaporkan anomali konsumsi BBM dan kondisi kendaraan kepada Krani I HRGA untuk tindak lanjut.</li></ul>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">05</span>PERSYARATAN JABATAN</h2>
+      <div class="deflist"><div class="defrow"><div class="deflabel">Pendidikan Minimum</div><div class="defval">SMA/D3/S1 Manajemen, Teknik, Administrasi, atau bidang relevan</div></div><div class="defrow"><div class="deflabel">Pengalaman</div><div class="defval">Minimal 1 tahun di bidang pengelolaan aset, logistik, atau administrasi kendaraan</div></div><div class="defrow"><div class="deflabel">Kompetensi Teknis</div><div class="defval">MS Excel (mahir), pencatatan aset, administrasi kendaraan, manajemen logistik dasar</div></div><div class="defrow"><div class="deflabel">Kompetensi Manajerial</div><div class="defval">Ketelitian tinggi, tertib administrasi, koordinasi, supervisory skill dasar</div></div><div class="defrow"><div class="deflabel">Sertifikasi</div><div class="defval">Pelatihan manajemen aset atau logistik (diutamakan)</div></div><div class="defrow"><div class="deflabel">Fisik &amp; Kesehatan</div><div class="defval">Sehat jasmani dan rohani, memiliki SIM A (aktif), siap mobilitas tinggi</div></div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">06</span>KOMPETENSI YANG DIBUTUHKAN</h2>
+      <table class="kv-table"><thead><tr><th>Kompetensi</th><th>Indikator Perilaku</th></tr></thead><tbody><tr><td class="kv-k">Pencatatan &amp; Register Aset</td><td>Mampu membuat dan memperbarui register aset dengan akurat dan lengkap</td></tr><tr><td class="kv-k">Stock Opname</td><td>Mampu melaksanakan stock opname aset fisik dan merekonsiliasi dengan data register</td></tr><tr><td class="kv-k">Administrasi Kendaraan</td><td>Memahami pengurusan STNK, KIR, pajak kendaraan, dan BAST</td></tr><tr><td class="kv-k">Kontrol BBM</td><td>Mampu memonitor pemakaian BBM dan mengidentifikasi anomali</td></tr><tr><td class="kv-k">Supervisi Driver</td><td>Mampu mengawasi disiplin, keselamatan, dan kinerja Driver secara efektif</td></tr><tr><td class="kv-k">Ketelitian Administrasi</td><td>Bekerja dengan teliti dan tertib dalam pencatatan dan pelaporan aset</td></tr><tr><td class="kv-k">Koordinasi &amp; Pelaporan</td><td>Mampu berkoordinasi dengan Finance dan departemen lain untuk rekonsiliasi aset</td></tr></tbody></table>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">07</span>KORELASI TANGGUNG JAWAB  ↔  KPI</h2>
+      <p class="g-intro">Tabel berikut menunjukkan keterkaitan langsung setiap bidang tanggung jawab dengan KPI yang digunakan untuk mengukur keberhasilan pelaksanaannya.</p><table class="data-table"><thead><tr><th>Bidang Tanggung Jawab</th><th>KPI / Indikator Ukuran</th><th>Target</th><th>Bobot</th></tr></thead><tbody><tr><td>Register Aset</td><td>Akurasi &amp; Kelengkapan Register Aset</td><td>100% teregister</td><td>20%</td></tr><tr><td>Labeling Aset</td><td>Kelengkapan Label Nomor Aset</td><td>100% aset berlabel</td><td>10%</td></tr><tr><td>Stock Opname</td><td>Ketepatan Jadwal &amp; Deviasi Stock Opname</td><td>100% jadwal / ≤1% deviasi</td><td>20%</td></tr><tr><td>BAST Aset</td><td>Kelengkapan BAST Serah Terima</td><td>100% ada BAST</td><td>15%</td></tr><tr><td>Legalitas Kendaraan</td><td>Kendaraan Tidak Expired Dokumen</td><td>0 expired</td><td>15%</td></tr><tr><td>Kontrol BBM</td><td>Realisasi BBM vs Standar</td><td>≤110% standar per unit</td><td>10%</td></tr><tr><td>Penjadwalan &amp; Driver</td><td>Ketersediaan Driver &amp; Surat Jalan</td><td>≥95% / 100% pakai SJ</td><td>5%</td></tr><tr><td>Pelaporan</td><td>Ketepatan Laporan Bulanan Aset</td><td>100% on-time</td><td>5%</td></tr></tbody></table>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">08</span>HUBUNGAN KERJA</h2>
+      <table class="data-table"><thead><tr><th>Pihak</th><th>Jenis Hubungan</th><th>Tujuan / Keperluan</th></tr></thead><tbody><tr><td>Krani I HRGA (Rinaldy Husain)</td><td>Atasan Langsung</td><td>Melaporkan pekerjaan, menerima arahan, eskalasi masalah aset</td></tr><tr><td>Driver</td><td>Bawahan Langsung</td><td>Supervisi disiplin, keselamatan berkendara, dan perawatan kendaraan</td></tr><tr><td>Staff GA (Rahmatia)</td><td>Koordinasi Setara</td><td>Koordinasi kebutuhan kendaraan untuk tamu dan kegiatan site</td></tr><tr><td>Seluruh Departemen</td><td>Koordinasi</td><td>Pemenuhan kebutuhan kendaraan dan pengelolaan aset departemen</td></tr><tr><td>Bagian Keuangan</td><td>Koordinasi</td><td>Rekonsiliasi data aset dan nilai penyusutan aset</td></tr><tr><td>Vendor/Bengkel</td><td>Eksternal</td><td>Koordinasi perbaikan dan pemeliharaan kendaraan/aset</td></tr><tr><td>Samsat / BPKB / KIR</td><td>Eksternal</td><td>Pengurusan legalitas kendaraan (STNK, pajak, KIR)</td></tr></tbody></table>
+    </section>
+  
+    <section class="sec sign-sec">
+      <h2><span class="sec-no">09</span>PENGESAHAN DOKUMEN</h2>
+      <div class="signblock"><div class="sigcol">
+      <div class="sig-role">Dibuat Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Ilham Ishak )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Diperiksa Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Rinaldy Husain )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Diketahui Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Dedi Wahyudi )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Disahkan Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( M Nurjantoro )</div>
+      
+    </div></div>
+    </section>
+</body>
+</html>

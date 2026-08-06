@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krani I HRGA &mdash; Uraian Jabatan</title>
+<style>
+  :root{
+    --navy:#1a2e4a; --gold:#b08d3f; --text:#1f1f1f; --muted:#6b6b6b;
+    --line:#e0e0e0; --bg-soft:#f6f7f9;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif; color:var(--text); margin:0; padding:22px 26px 40px; background:#fff; line-height:1.5;}
+  .kop{text-align:center; margin-bottom:14px;}
+  .kop .company{font-weight:800; font-size:16px; letter-spacing:.3px; color:var(--navy);}
+  .kop .dept{font-size:12px; color:var(--muted); margin-top:1px;}
+  .kop .title{font-weight:700; font-size:13px; letter-spacing:1.5px; color:var(--gold); text-transform:uppercase; margin-top:8px;}
+  .job-name{text-align:center; font-size:26px; font-weight:800; color:var(--navy); margin:4px 0 10px;}
+  .doc-meta{text-align:center; font-size:11px; color:var(--muted); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:6px 0; margin-bottom:20px;}
+  .doc-meta b{color:var(--text);}
+
+  .sec{margin-bottom:22px;}
+  .sec h2{
+    display:flex; align-items:center; gap:8px;
+    font-size:14px; letter-spacing:.6px; text-transform:uppercase; color:var(--navy);
+    border-bottom:2px solid var(--gold); padding-bottom:6px; margin:0 0 12px;
+  }
+  .sec-no{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:20px; height:20px; border-radius:4px; background:var(--navy); color:#fff;
+    font-size:10px; font-weight:700;
+  }
+
+  .deflist{border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .defrow{display:flex; border-bottom:1px solid var(--line);}
+  .defrow:last-child{border-bottom:none;}
+  .deflabel{flex:0 0 220px; background:var(--bg-soft); font-weight:700; font-size:12.5px; padding:8px 12px; color:var(--navy);}
+  .defval{flex:1; padding:8px 12px; font-size:12.5px;}
+
+  .tujuan-box{
+    background:var(--bg-soft); border-left:4px solid var(--gold); border-radius:0 6px 6px 0;
+    padding:14px 16px; font-size:13px; text-align:justify;
+  }
+
+  .tj-item{margin-bottom:16px; padding:12px 14px; border:1px solid var(--line); border-radius:6px;}
+  .tj-item:last-child{margin-bottom:0;}
+  .tj-title{font-weight:700; font-size:13px; color:var(--navy); margin-bottom:6px;}
+  .tj-bullets, .plain-bullets{margin:0; padding-left:20px; font-size:12.5px;}
+  .tj-bullets li, .plain-bullets li{margin-bottom:4px;}
+  .tj-kpi{margin-top:8px; font-size:11.5px; font-style:italic; color:var(--muted); border-top:1px dashed var(--line); padding-top:6px;}
+  .tj-kpi-tag{display:inline-block; font-style:normal; font-weight:700; font-size:10px; text-transform:uppercase;
+    background:var(--gold); color:#fff; border-radius:3px; padding:1px 6px; margin-right:6px;}
+
+  .kv-table, .data-table{width:100%; border-collapse:collapse; font-size:12px;}
+  .kv-table th, .data-table th{background:var(--navy); color:#fff; text-align:left; padding:7px 10px; font-size:11.5px;}
+  .kv-table td, .data-table td{border-bottom:1px solid var(--line); padding:7px 10px; vertical-align:top;}
+  .kv-table tr:nth-child(even) td, .data-table tr:nth-child(even) td{background:var(--bg-soft);}
+  .kv-k{font-weight:700; width:220px; color:var(--navy);}
+  .g-intro{font-size:11.5px; font-style:italic; color:var(--muted); margin:0 0 8px;}
+
+  .sign-sec .signblock{display:flex; gap:14px; flex-wrap:wrap;}
+  .sigcol{flex:1 1 0; min-width:130px; text-align:center; font-size:11.5px;}
+  .sig-role{font-weight:700; color:var(--navy); margin-bottom:34px;}
+  .sig-line{border-bottom:1px solid #999; margin:0 6px;}
+  .sig-name{margin-top:5px; font-weight:600;}
+  .sig-sub{margin-top:2px; font-size:10.5px; color:var(--muted);}
+
+  @media print{ body{padding:0 12px;} }
+</style>
+</head>
+<body>
+  <div class="kop">
+    <div class="company">PT BIOMASA JAYA ABADI</div>
+    <div class="dept">Departemen Human Resources &amp; General Affairs</div>
+    <div class="title">URAIAN JABATAN / JOB DESCRIPTION</div>
+  </div>
+  <div class="job-name">Krani I HRGA</div>
+  <div class="doc-meta"><span><b>No. Dokumen</b> HRGA-JD-02</span> &middot; <span><b>Tgl. Terbit</b> Agustus 2025</span> &middot; <span><b>Revisi</b> 00</span> &middot; <span><b>Halaman</b> 1 / 4</span></div>
+  
+    <section class="sec">
+      <h2><span class="sec-no">01</span>IDENTITAS JABATAN</h2>
+      <div class="deflist"><div class="defrow"><div class="deflabel">Nama Jabatan</div><div class="defval">Krani I HRGA</div></div><div class="defrow"><div class="deflabel">Nama Pemegang Jabatan</div><div class="defval">Rinaldy Husain</div></div><div class="defrow"><div class="deflabel">Nama Departemen</div><div class="defval">Human Resources &amp; General Affairs (HRGA)</div></div><div class="defrow"><div class="deflabel">Atasan Langsung</div><div class="defval">Asisten Kepala HRGA (Askep HRGA)</div></div><div class="defrow"><div class="deflabel">Bawahan Langsung</div><div class="defval">Personalia  |  Recruitment  |  General Affair  |  Asset</div></div><div class="defrow"><div class="deflabel">Golongan / Grade</div><div class="defval">Disesuaikan dengan Sistem Grading PT BJA</div></div><div class="defrow"><div class="deflabel">Lokasi Kerja</div><div class="defval">Site PT Biomasa Jaya Abadi</div></div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">02</span>TUJUAN JABATAN</h2>
+      <div class="tujuan-box">Mengelola seluruh fungsi operasional HRGA di tingkat pelaksana; memastikan siklus administrasi ketenagakerjaan (BHL, PKWT, SKU, Bulanan) berjalan tertib dan tepat waktu; mengkoordinasikan Tim HRGA (Personalia, Recruitment, General Affair, dan Asset) dalam pemenuhan layanan SDM dan fasilitas kerja site.</div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">03</span>TANGGUNG JAWAB UTAMA</h2>
+      <div class="tj-item"><div class="tj-title">Rekapitulasi LHM &amp; Absensi</div><ul class="tj-bullets"><li>Mengawasi proses rekapitulasi Laporan Harian Mandor (LHM) dari seluruh mandor produksi dan non-produksi.</li><li>Memastikan data absensi harian seluruh karyawan (BHL, PKWT, SKU, Bulanan) diinput dan divalidasi secara akurat dan tepat waktu.</li><li>Melakukan rekonsiliasi data absensi dengan data finger/biometrik sebelum proses penggajian.</li><li>Menyiapkan rekapitulasi LHM bulanan sebagai dasar penghitungan premi/bonus produksi.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Ketepatan Waktu Rekap LHM &amp; Absensi (Target: Selesai H+1)  |  Akurasi Data (Target: ≥99%)</div></div><div class="tj-item"><div class="tj-title">Pengelolaan Penggajian (Gaji, Premi &amp; Overtime)</div><ul class="tj-bullets"><li>Menghitung gaji pokok, tunjangan, lembur (overtime), dan premi produksi untuk seluruh karyawan (BHL, PKWT, SKU, Bulanan) sesuai ketentuan perusahaan dan perundang-undangan.</li><li>Memastikan akurasi komponen penggajian: potongan BPJS, PPh 21, kasbon, denda, dan penyesuaian lainnya.</li><li>Menyusun rekapitulasi daftar gaji dan slip gaji sebelum diajukan ke Finance untuk pembayaran.</li><li>Menjaga kerahasiaan data penggajian seluruh karyawan.</li><li>Mengidentifikasi dan mengoreksi potensi kesalahan hitung sebelum finalisasi.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Akurasi Penghitungan Gaji &amp; Premi (Target: 100% zero error)  |  Ketepatan Waktu Gaji (Target: Tepat tanggal)</div></div><div class="tj-item"><div class="tj-title">Penanganan &amp; Pelaporan Kecelakaan Kerja</div><ul class="tj-bullets"><li>Melakukan penanganan awal administrasi kecelakaan kerja sesuai prosedur K3 dan ketentuan BPJS Ketenagakerjaan.</li><li>Menyiapkan dan melengkapi seluruh berkas pelaporan kecelakaan kerja kepada BPJS TK dan instansi terkait dalam batas waktu yang ditetapkan.</li><li>Berkoordinasi dengan Finance dan manajemen untuk proses klaim kompensasi karyawan yang mengalami kecelakaan kerja.</li><li>Mendokumentasikan setiap kasus kecelakaan kerja secara tertib dan lengkap.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Kelengkapan &amp; Ketepatan Waktu Pelaporan Kecelakaan Kerja ke BPJS TK (Target: Selesai ≤3 hari sejak kejadian)</div></div><div class="tj-item"><div class="tj-title">Administrasi BPJS Kesehatan &amp; Ketenagakerjaan</div><ul class="tj-bullets"><li>Memastikan seluruh karyawan aktif terdaftar dalam BPJS Kesehatan dan BPJS Ketenagakerjaan sesuai ketentuan.</li><li>Memproses penambahan dan pengurangan peserta BPJS setiap bulan akibat mutasi, PHK, atau karyawan baru.</li><li>Memastikan iuran BPJS dibayarkan tepat waktu (paling lambat tanggal 15 setiap bulan).</li><li>Menyimpan dan mengelola arsip kartu dan dokumen kepesertaan BPJS karyawan.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Ketepatan Pembayaran &amp; Pelaporan BPJS (Target: 100% on-time tgl 15)  |  Akurasi Data Peserta (Target: 0 discrepancy)</div></div><div class="tj-item"><div class="tj-title">Penanganan Indisipliner &amp; Surat Peringatan (SP)</div><ul class="tj-bullets"><li>Menyiapkan dokumen Surat Peringatan (SP 1, SP 2, SP 3) atas rekomendasi atasan atau hasil investigasi pelanggaran disiplin.</li><li>Memastikan prosedur penerbitan SP sesuai Peraturan Perusahaan dan UU Ketenagakerjaan.</li><li>Mendokumentasikan seluruh kasus pelanggaran disiplin dan SP yang diterbitkan dalam arsip kepegawaian.</li><li>Melaporkan rekapitulasi kasus indisipliner kepada Askep HRGA setiap bulan.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Kelengkapan Dokumen Administrasi Indisipliner (Target: 100% terdokumentasi sesuai prosedur)</div></div><div class="tj-item"><div class="tj-title">Pengurusan Legalitas Kendaraan (STNK/KIR/Pajak)</div><ul class="tj-bullets"><li>Memantau status legalitas seluruh kendaraan operasional perusahaan (STNK, KIR, Pajak Kendaraan).</li><li>Menjadwalkan dan mengurus perpanjangan STNK, KIR, dan Pajak sebelum tanggal kedaluwarsa.</li><li>Menyimpan dokumen legalitas kendaraan (STNK, BPKB, KIR) dengan tertib dan mudah diakses.</li><li>Melaporkan status legalitas kendaraan kepada Askep HRGA setiap bulan.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Legalitas Kendaraan (Target: 0 kendaraan expired STNK/KIR/Pajak)</div></div><div class="tj-item"><div class="tj-title">Supervisi &amp; Koordinasi Tim HRGA</div><ul class="tj-bullets"><li>Memberikan arahan harian kepada Personalia, Recruitment, General Affair, dan Asset mengenai prioritas pekerjaan.</li><li>Memantau progress pekerjaan anggota tim dan memastikan target penyelesaian terpenuhi sesuai SLA.</li><li>Menyelesaikan hambatan dan permasalahan operasional yang dihadapi anggota tim.</li><li>Melaporkan kinerja dan hambatan tim kepada Askep HRGA secara berkala.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Kualitas Koordinasi Tim HRGA (Target: ≥95% pekerjaan tim selesai on-time sesuai SLA)</div></div><div class="tj-item"><div class="tj-title">Pelaporan Operasional HRGA</div><ul class="tj-bullets"><li>Menyusun dan menyampaikan laporan rekapitulasi penggajian, absensi, dan status administrasi HRGA kepada Askep HRGA setiap bulan.</li><li>Menyiapkan data dan dokumen yang dibutuhkan untuk audit internal maupun eksternal.</li><li>Melaporkan kendala, risiko, dan rekomendasi perbaikan proses kepada Askep HRGA.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Ketepatan Waktu Laporan ke Askep HRGA (Target: 100% on-time setiap bulan)</div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">04</span>WEWENANG</h2>
+      <ul class="plain-bullets"><li>Memberikan arahan dan penugasan kepada anggota tim HRGA (Personalia, Recruitment, GA, Asset).</li><li>Memverifikasi dan memvalidasi dokumen penggajian, LHM, dan absensi sebelum diproses lebih lanjut.</li><li>Mengusulkan rekomendasi penerbitan SP kepada Askep HRGA.</li><li>Menyetujui permintaan administrasi karyawan dalam batas kewenangan yang didelegasikan oleh Askep HRGA.</li><li>Merekomendasikan perbaikan proses dan SOP administrasi HRGA kepada Askep HRGA.</li></ul>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">05</span>PERSYARATAN JABATAN</h2>
+      <div class="deflist"><div class="defrow"><div class="deflabel">Pendidikan Minimum</div><div class="defval">D3/S1 Manajemen, Ekonomi, Administrasi, atau bidang relevan</div></div><div class="defrow"><div class="deflabel">Pengalaman</div><div class="defval">Minimal 2 tahun di bidang administrasi HR, payroll, atau pengelolaan karyawan perkebunan</div></div><div class="defrow"><div class="deflabel">Kompetensi Teknis</div><div class="defval">MS Excel (mahir), perhitungan upah/lembur/premi, administrasi BPJS, SOP payroll</div></div><div class="defrow"><div class="deflabel">Kompetensi Manajerial</div><div class="defval">Koordinasi tim, komunikasi efektif, analitis, disiplin, ketelitian tinggi</div></div><div class="defrow"><div class="deflabel">Sertifikasi</div><div class="defval">Sertifikasi bidang HR atau payroll (diutamakan)</div></div><div class="defrow"><div class="deflabel">Fisik &amp; Kesehatan</div><div class="defval">Sehat jasmani dan rohani, mampu bekerja dengan deadline ketat</div></div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">06</span>KOMPETENSI YANG DIBUTUHKAN</h2>
+      <table class="kv-table"><thead><tr><th>Kompetensi</th><th>Indikator Perilaku</th></tr></thead><tbody><tr><td class="kv-k">Administrasi Penggajian</td><td>Mampu menghitung gaji, premi, lembur, dan potongan dengan akurat dan tepat waktu</td></tr><tr><td class="kv-k">Pengelolaan LHM &amp; Absensi</td><td>Mampu merekapitulasi dan memvalidasi data LHM &amp; absensi harian karyawan</td></tr><tr><td class="kv-k">Administrasi BPJS</td><td>Memahami prosedur pendaftaran, mutasi peserta, dan pembayaran iuran BPJS TK/Kes</td></tr><tr><td class="kv-k">Koordinasi Tim</td><td>Mampu mengkoordinasikan dan mengawasi pekerjaan anggota tim HRGA</td></tr><tr><td class="kv-k">Ketelitian &amp; Zero-Error</td><td>Bekerja dengan tingkat ketelitian tinggi untuk menghindari kesalahan hitung</td></tr><tr><td class="kv-k">Penanganan Indisipliner</td><td>Memahami prosedur SP dan penanganan pelanggaran disiplin sesuai PP dan UU Naker</td></tr><tr><td class="kv-k">Komunikasi &amp; Pelaporan</td><td>Mampu menyusun laporan yang jelas, akurat, dan tepat waktu</td></tr></tbody></table>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">07</span>KORELASI TANGGUNG JAWAB  ↔  KPI</h2>
+      <p class="g-intro">Tabel berikut menunjukkan keterkaitan langsung setiap bidang tanggung jawab dengan KPI yang digunakan untuk mengukur keberhasilan pelaksanaannya.</p><table class="data-table"><thead><tr><th>Bidang Tanggung Jawab</th><th>KPI / Indikator Ukuran</th><th>Target</th><th>Bobot</th></tr></thead><tbody><tr><td>LHM &amp; Rekapitulasi Absensi</td><td>Akurasi &amp; Ketepatan Waktu Rekap LHM</td><td>H+1, ≥99% akurat</td><td>15%</td></tr><tr><td>Pengelolaan Penggajian</td><td>Akurasi Penghitungan Gaji/Premi + Ketepatan Waktu Gaji</td><td>100% zero error / Tepat tanggal</td><td>25%</td></tr><tr><td>Penanganan Kecelakaan Kerja</td><td>Kelengkapan Berkas Klaim BPJS TK</td><td>Selesai ≤3 hari</td><td>10%</td></tr><tr><td>Administrasi BPJS</td><td>Ketepatan Pembayaran &amp; Pelaporan BPJS</td><td>100% on-time tgl 15</td><td>15%</td></tr><tr><td>Administrasi Indisipliner</td><td>Kelengkapan Dokumen SP</td><td>100% terdokumentasi</td><td>10%</td></tr><tr><td>Legalitas Kendaraan</td><td>Kendaraan Tidak Expired Legalitas</td><td>0 kendaraan expired</td><td>10%</td></tr><tr><td>Supervisi Tim HRGA</td><td>Penyelesaian Pekerjaan Tim sesuai SLA</td><td>≥95% on-time</td><td>10%</td></tr><tr><td>Pelaporan</td><td>Ketepatan Waktu Laporan ke Askep HRGA</td><td>100% on-time</td><td>5%</td></tr></tbody></table>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">08</span>HUBUNGAN KERJA</h2>
+      <table class="data-table"><thead><tr><th>Pihak</th><th>Jenis Hubungan</th><th>Tujuan / Keperluan</th></tr></thead><tbody><tr><td>Askep HRGA (Dedi Wahyudi)</td><td>Atasan Langsung</td><td>Melaporkan hasil kerja, menerima arahan, dan eskalasi masalah</td></tr><tr><td>Personalia (Hamza Olii)</td><td>Bawahan Langsung</td><td>Memberikan arahan administrasi mutasi, cuti, SK, dan data karyawan</td></tr><tr><td>Recruitment (Mujahidah)</td><td>Bawahan Langsung</td><td>Mengkoordinasikan pemenuhan kebutuhan TK dan administrasi kontrak</td></tr><tr><td>General Affair (Rahmatia)</td><td>Bawahan Langsung</td><td>Mengkoordinasikan layanan mess, GA, dan fasilitas karyawan</td></tr><tr><td>Asset (Ilham Ishak)</td><td>Bawahan Langsung</td><td>Mengkoordinasikan pengelolaan aset, kendaraan, dan BBM</td></tr><tr><td>Bagian Keuangan</td><td>Koordinasi</td><td>Penyerahan daftar gaji dan dokumen pembayaran</td></tr><tr><td>BPJS Kesehatan &amp; TK</td><td>Eksternal</td><td>Pendaftaran, mutasi peserta, dan pelaporan iuran BPJS</td></tr><tr><td>Instansi Ketenagakerjaan</td><td>Eksternal</td><td>Pelaporan wajib ketenagakerjaan dan dokumen kecelakaan kerja</td></tr></tbody></table>
+    </section>
+  
+    <section class="sec sign-sec">
+      <h2><span class="sec-no">09</span>PENGESAHAN DOKUMEN</h2>
+      <div class="signblock"><div class="sigcol">
+      <div class="sig-role">Dibuat Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Rinaldy Husain )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Diperiksa Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Dedi Wahyudi )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Diketahui Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Manager HRGA )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Disahkan Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( M Nurjantoro )</div>
+      
+    </div></div>
+    </section>
+</body>
+</html>

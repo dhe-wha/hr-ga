@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asisten HRGA &mdash; Uraian Jabatan</title>
+<style>
+  :root{
+    --navy:#1a2e4a; --gold:#b08d3f; --text:#1f1f1f; --muted:#6b6b6b;
+    --line:#e0e0e0; --bg-soft:#f6f7f9;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif; color:var(--text); margin:0; padding:22px 26px 40px; background:#fff; line-height:1.5;}
+  .kop{text-align:center; margin-bottom:14px;}
+  .kop .company{font-weight:800; font-size:16px; letter-spacing:.3px; color:var(--navy);}
+  .kop .dept{font-size:12px; color:var(--muted); margin-top:1px;}
+  .kop .title{font-weight:700; font-size:13px; letter-spacing:1.5px; color:var(--gold); text-transform:uppercase; margin-top:8px;}
+  .job-name{text-align:center; font-size:26px; font-weight:800; color:var(--navy); margin:4px 0 10px;}
+  .doc-meta{text-align:center; font-size:11px; color:var(--muted); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:6px 0; margin-bottom:20px;}
+  .doc-meta b{color:var(--text);}
+
+  .sec{margin-bottom:22px;}
+  .sec h2{
+    display:flex; align-items:center; gap:8px;
+    font-size:14px; letter-spacing:.6px; text-transform:uppercase; color:var(--navy);
+    border-bottom:2px solid var(--gold); padding-bottom:6px; margin:0 0 12px;
+  }
+  .sec-no{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:20px; height:20px; border-radius:4px; background:var(--navy); color:#fff;
+    font-size:10px; font-weight:700;
+  }
+
+  .deflist{border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .defrow{display:flex; border-bottom:1px solid var(--line);}
+  .defrow:last-child{border-bottom:none;}
+  .deflabel{flex:0 0 220px; background:var(--bg-soft); font-weight:700; font-size:12.5px; padding:8px 12px; color:var(--navy);}
+  .defval{flex:1; padding:8px 12px; font-size:12.5px;}
+
+  .tujuan-box{
+    background:var(--bg-soft); border-left:4px solid var(--gold); border-radius:0 6px 6px 0;
+    padding:14px 16px; font-size:13px; text-align:justify;
+  }
+
+  .tj-item{margin-bottom:16px; padding:12px 14px; border:1px solid var(--line); border-radius:6px;}
+  .tj-item:last-child{margin-bottom:0;}
+  .tj-title{font-weight:700; font-size:13px; color:var(--navy); margin-bottom:6px;}
+  .tj-bullets, .plain-bullets{margin:0; padding-left:20px; font-size:12.5px;}
+  .tj-bullets li, .plain-bullets li{margin-bottom:4px;}
+  .tj-kpi{margin-top:8px; font-size:11.5px; font-style:italic; color:var(--muted); border-top:1px dashed var(--line); padding-top:6px;}
+  .tj-kpi-tag{display:inline-block; font-style:normal; font-weight:700; font-size:10px; text-transform:uppercase;
+    background:var(--gold); color:#fff; border-radius:3px; padding:1px 6px; margin-right:6px;}
+
+  .kv-table, .data-table{width:100%; border-collapse:collapse; font-size:12px;}
+  .kv-table th, .data-table th{background:var(--navy); color:#fff; text-align:left; padding:7px 10px; font-size:11.5px;}
+  .kv-table td, .data-table td{border-bottom:1px solid var(--line); padding:7px 10px; vertical-align:top;}
+  .kv-table tr:nth-child(even) td, .data-table tr:nth-child(even) td{background:var(--bg-soft);}
+  .kv-k{font-weight:700; width:220px; color:var(--navy);}
+  .g-intro{font-size:11.5px; font-style:italic; color:var(--muted); margin:0 0 8px;}
+
+  .sign-sec .signblock{display:flex; gap:14px; flex-wrap:wrap;}
+  .sigcol{flex:1 1 0; min-width:130px; text-align:center; font-size:11.5px;}
+  .sig-role{font-weight:700; color:var(--navy); margin-bottom:34px;}
+  .sig-line{border-bottom:1px solid #999; margin:0 6px;}
+  .sig-name{margin-top:5px; font-weight:600;}
+  .sig-sub{margin-top:2px; font-size:10.5px; color:var(--muted);}
+
+  @media print{ body{padding:0 12px;} }
+</style>
+</head>
+<body>
+  <div class="kop">
+    <div class="company">PT BIOMASA JAYA ABADI</div>
+    <div class="dept">Departemen Human Resources &amp; General Affairs</div>
+    <div class="title">URAIAN JABATAN / JOB DESCRIPTION</div>
+  </div>
+  <div class="job-name">Asisten HRGA</div>
+  <div class="doc-meta"><span><b>No. Dokumen</b> HRGA-JD-02a</span> &middot; <span><b>Tgl. Terbit</b> Agustus 2025</span> &middot; <span><b>Revisi</b> 00</span> &middot; <span><b>Halaman</b> 1 / 4</span></div>
+  
+    <section class="sec">
+      <h2><span class="sec-no">01</span>IDENTITAS JABATAN</h2>
+      <div class="deflist"><div class="defrow"><div class="deflabel">Nama Jabatan</div><div class="defval">Asisten HRGA</div></div><div class="defrow"><div class="deflabel">Nama Pemegang Jabatan</div><div class="defval">(Vacant — Akan Ditentukan)</div></div><div class="defrow"><div class="deflabel">Nama Departemen</div><div class="defval">Human Resources &amp; General Affairs (HRGA)</div></div><div class="defrow"><div class="deflabel">Atasan Langsung</div><div class="defval">Asisten Kepala HRGA (Askep HRGA)</div></div><div class="defrow"><div class="deflabel">Bawahan Langsung</div><div class="defval">Krani 1 HRGA  |  Krani 1 Data Center</div></div><div class="defrow"><div class="deflabel">Golongan / Grade</div><div class="defval">Disesuaikan dengan Sistem Grading PT BJA</div></div><div class="defrow"><div class="deflabel">Lokasi Kerja</div><div class="defval">Site PT Biomasa Jaya Abadi</div></div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">02</span>TUJUAN JABATAN</h2>
+      <div class="tujuan-box">Membantu Askep HRGA dalam mengkoordinasikan dan mengendalikan seluruh fungsi operasional HR/SDM dan General Affairs (GA) di tingkat site; memastikan Krani 1 HRGA dan Krani 1 Data Center bekerja secara terkoordinasi, tertib, dan sesuai SLA yang ditetapkan; serta menjadi jembatan komunikasi antara Askep HRGA dengan tim pelaksana lapangan HRGA.</div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">03</span>TANGGUNG JAWAB UTAMA</h2>
+      <div class="tj-item"><div class="tj-title">Koordinasi &amp; Pengendalian Operasional HRGA (HR/SDM &amp; GA)</div><ul class="tj-bullets"><li>Mengkoordinasikan seluruh kegiatan operasional harian Tim HRGA (Krani 1 HRGA dan seluruh sub-ordinat) agar berjalan sesuai rencana dan SLA.</li><li>Memastikan fungsi HR/SDM (administrasi kepegawaian, rekrutmen, penggajian) dan GA (mess, fasilitas, aset, kendaraan) berjalan secara terintegrasi dan tidak terjadi tumpang tindih.</li><li>Menyelesaikan hambatan operasional lapangan yang tidak dapat diselesaikan di level Krani dan mengeskalasikannya ke Askep HRGA jika diperlukan.</li><li>Memastikan target penyelesaian pekerjaan seluruh tim HRGA terpenuhi sesuai jadwal dan standar kualitas yang ditetapkan.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Koordinasi Operasional HRGA On-Time (Target: ≥ 95% pekerjaan tim selesai sesuai SLA)</div></div><div class="tj-item"><div class="tj-title">Pengelolaan Administrasi SDM &amp; Kepatuhan Ketenagakerjaan</div><ul class="tj-bullets"><li>Memastikan seluruh administrasi kepegawaian (data karyawan, SK, kontrak PKWT/BHL, cuti, mutasi) diproses akurat dan tepat waktu oleh Krani Personalia.</li><li>Mengawasi kepatuhan atas peraturan ketenagakerjaan yang berlaku (UU Ketenagakerjaan, PP Perusahaan, BPJS, pelaporan Disnaker).</li><li>Memverifikasi dan memvalidasi dokumen SDM penting (daftar gaji, SK, laporan BPJS) sebelum diajukan ke Askep HRGA atau pihak eksternal.</li><li>Memastikan tidak ada karyawan yang tidak terdaftar BPJS, kontrak terlewat, atau pelanggaran administrasi kepegawaian lainnya.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Kepatuhan Regulasi Ketenagakerjaan (Target: 0 temuan mayor Disnaker/audit)  |  Kelengkapan Administrasi SDM (Target: ≥ 98%)</div></div><div class="tj-item"><div class="tj-title">Koordinasi Rekrutmen &amp; Pemenuhan Kebutuhan Tenaga Kerja</div><ul class="tj-bullets"><li>Mengkoordinasikan proses rekrutmen BHL dan PKWT bersama Krani Rekrutmen untuk memastikan kebutuhan tenaga kerja terpenuhi tepat waktu dan kualitas.</li><li>Memverifikasi kesesuaian permintaan rekrutmen dari departemen lain dengan MPP yang telah disetujui manajemen.</li><li>Memastikan kelengkapan administrasi kontrak dan onboarding karyawan baru sebelum mereka memulai pekerjaan.</li><li>Memantau status open position dan melaporkan perkembangannya kepada Askep HRGA secara berkala.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Pemenuhan Kebutuhan TK sesuai MPP (Target: ≥ 95%)  |  Kelengkapan Kontrak Karyawan Baru (Target: 100%)</div></div><div class="tj-item"><div class="tj-title">Koordinasi General Affairs (GA) &amp; Fasilitas Site</div><ul class="tj-bullets"><li>Mengkoordinasikan operasional GA: mess/perumahan karyawan, kualitas makan dapur, kebersihan, pemenuhan ATK, dan penanganan tamu perusahaan.</li><li>Mengkoordinasikan pengelolaan aset dan kendaraan operasional (via Krani GA Lapangan): register aset, legalitas kendaraan (STNK/KIR/Pajak), kontrol BBM, dan BAST.</li><li>Memastikan seluruh kebutuhan fasilitas operasional site terpenuhi sesuai standar kualitas perusahaan.</li><li>Mengkoordinasikan permintaan perbaikan/pemeliharaan fasilitas dan memantau progress penyelesaiannya.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Koordinasi Layanan GA &amp; Fasilitas Site (Target: Tidak ada eskalasi keluhan fasilitas ke Askep HRGA)  |  Legalitas Kendaraan (Target: 0 kendaraan expired)</div></div><div class="tj-item"><div class="tj-title">Koordinasi Krani 1 Data Center</div><ul class="tj-bullets"><li>Mengkoordinasikan kegiatan operasional Krani 1 Data Center dalam mendukung sistem informasi dan data kepegawaian HRGA.</li><li>Memastikan data yang dikelola oleh tim Data Center akurat, terkini, dan dapat diakses oleh pihak yang berwenang.</li><li>Menjadi jembatan koordinasi antara Tim Data Center dengan Tim HRGA Lapangan (Krani 1 HRGA) dalam hal kebutuhan data dan laporan.</li><li>Memastikan kerahasiaan data karyawan dan data HRGA dijaga sesuai kebijakan perusahaan.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Koordinasi Data Center — Akurasi &amp; Ketersediaan Data HRGA (Target: ≥ 99% akurasi data)</div></div><div class="tj-item"><div class="tj-title">Supervisi, Pembinaan &amp; Pengembangan Tim HRGA</div><ul class="tj-bullets"><li>Memberikan briefing berkala kepada Krani 1 HRGA dan Krani 1 Data Center mengenai prioritas, instruksi Askep, dan update kebijakan.</li><li>Melakukan coaching, mentoring, dan evaluasi kinerja bawahan langsung (Krani 1 HRGA dan Krani 1 Data Center) secara terdokumentasi.</li><li>Mengidentifikasi kebutuhan pelatihan tim dan mengusulkannya kepada Askep HRGA untuk ditindaklanjuti.</li><li>Mengelola disiplin kerja tim dan memproses eskalasi masalah perilaku kepada Askep HRGA sesuai prosedur.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Pembinaan &amp; Supervisi Tim (Target: ≥ 4 sesi coaching terdokumentasi per bulan)  |  Pencapaian KPI Tim (Target: Rata-rata ≥ 85/100)</div></div><div class="tj-item"><div class="tj-title">Pelaporan kepada Askep HRGA</div><ul class="tj-bullets"><li>Menyusun dan menyampaikan laporan operasional HRGA mingguan dan bulanan (HR, GA, Data Center) kepada Askep HRGA secara tepat waktu.</li><li>Menyiapkan data, analisis, dan rekomendasi atas permasalahan operasional HRGA untuk bahan pengambilan keputusan Askep HRGA.</li><li>Melaporkan risiko, hambatan, dan deviasi kinerja tim kepada Askep HRGA beserta rencana tindak lanjutnya.</li><li>Menyiapkan data HRGA yang dibutuhkan untuk rapat manajemen, audit, atau keperluan pelaporan lainnya.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Ketepatan Waktu Laporan ke Askep HRGA (Target: 100% on-time setiap minggu dan bulan)</div></div><div class="tj-item"><div class="tj-title">Continuous Improvement Proses HRGA</div><ul class="tj-bullets"><li>Mengidentifikasi inefisiensi, hambatan, dan peluang perbaikan dalam proses operasional HRGA di lapangan.</li><li>Mengusulkan perbaikan SOP, tools, atau cara kerja yang dapat meningkatkan efisiensi dan kualitas layanan HRGA.</li><li>Mengimplementasikan dan memantau hasil perbaikan proses yang telah disetujui oleh Askep HRGA.</li><li>Aktif berkontribusi dalam program cost efficiency dan peningkatan produktivitas departemen HRGA.</li></ul><div class="tj-kpi"><span class="tj-kpi-tag">KPI Terkait</span>Inisiatif Perbaikan Proses HRGA (Target: ≥ 1 improvement terusulkan dan/atau terimplementasi per semester)</div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">04</span>WEWENANG</h2>
+      <ul class="plain-bullets"><li>Memberikan arahan dan instruksi kepada Krani 1 HRGA dan Krani 1 Data Center dalam batas lingkup tugasnya.</li><li>Memverifikasi dan menyetujui dokumen administrasi SDM dan GA sebelum diajukan ke Askep HRGA.</li><li>Mengusulkan tindakan disiplin terhadap bawahan kepada Askep HRGA sesuai prosedur yang berlaku.</li><li>Mewakili Askep HRGA dalam koordinasi operasional dengan departemen lain atau pihak eksternal sesuai batas delegasi.</li><li>Merekomendasikan kebutuhan rekrutmen, pelatihan, atau tindakan manajerial kepada Askep HRGA.</li><li>Menghentikan sementara proses yang berpotensi melanggar regulasi atau merugikan perusahaan dan segera melaporkannya ke Askep HRGA.</li></ul>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">05</span>PERSYARATAN JABATAN</h2>
+      <div class="deflist"><div class="defrow"><div class="deflabel">Pendidikan Minimum</div><div class="defval">S1 Manajemen SDM / Psikologi / Hukum / Administrasi atau bidang relevan</div></div><div class="defrow"><div class="deflabel">Pengalaman</div><div class="defval">Minimal 3–5 tahun di bidang HR/GA, minimal 2 tahun sebagai supervisor / Krani senior</div></div><div class="defrow"><div class="deflabel">Kompetensi Teknis</div><div class="defval">Administrasi kepegawaian, UU Ketenagakerjaan, payroll dasar, manajemen fasilitas, HRIS/sistem absensi</div></div><div class="defrow"><div class="deflabel">Kompetensi Manajerial</div><div class="defval">Koordinasi multi-fungsi, kepemimpinan tim, komunikasi efektif, pelaporan, problem solving</div></div><div class="defrow"><div class="deflabel">Sertifikasi</div><div class="defval">Sertifikasi BNSP bidang SDM atau HR (diutamakan)</div></div><div class="defrow"><div class="deflabel">Fisik &amp; Kesehatan</div><div class="defval">Sehat jasmani dan rohani, mampu bekerja multitasking dan di bawah tekanan</div></div></div>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">06</span>KOMPETENSI YANG DIBUTUHKAN</h2>
+      <table class="kv-table"><thead><tr><th>Kompetensi</th><th>Indikator Perilaku</th></tr></thead><tbody><tr><td class="kv-k">Koordinasi Multi-Fungsi</td><td>Mampu mengkoordinasikan fungsi HR/SDM dan GA secara bersamaan dengan efektif</td></tr><tr><td class="kv-k">Kepemimpinan Lini Menengah</td><td>Mampu memimpin, membina, dan mengevaluasi Krani 1 HRGA dan Krani 1 Data Center</td></tr><tr><td class="kv-k">Penguasaan Administrasi HR</td><td>Memahami administrasi kepegawaian, kontrak, BPJS, dan regulasi ketenagakerjaan</td></tr><tr><td class="kv-k">Manajemen Fasilitas &amp; GA</td><td>Memahami pengelolaan mess, aset, kendaraan, dan layanan umum site</td></tr><tr><td class="kv-k">Komunikasi &amp; Koordinasi</td><td>Mampu berkomunikasi efektif dengan tim internal, manajemen, dan departemen lain</td></tr><tr><td class="kv-k">Analisis &amp; Pelaporan</td><td>Mampu menyusun laporan komprehensif dan mengidentifikasi akar masalah operasional</td></tr><tr><td class="kv-k">Integritas &amp; Kerahasiaan</td><td>Menjaga kerahasiaan data karyawan dan informasi perusahaan dengan penuh integritas</td></tr></tbody></table>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">07</span>KORELASI TANGGUNG JAWAB  ↔  KPI</h2>
+      <p class="g-intro">Tabel berikut menunjukkan keterkaitan langsung setiap bidang tanggung jawab dengan KPI yang digunakan untuk mengukur keberhasilan pelaksanaannya.</p><table class="data-table"><thead><tr><th>Bidang Tanggung Jawab</th><th>KPI / Indikator Ukuran</th><th>Target</th><th>Bobot</th></tr></thead><tbody><tr><td>Koordinasi Operasional HRGA</td><td>Pekerjaan Tim Selesai Sesuai SLA</td><td>≥ 95% on-time</td><td>20%</td></tr><tr><td>Administrasi SDM &amp; Kepatuhan</td><td>Kepatuhan Regulasi / Kelengkapan Admin SDM</td><td>0 temuan mayor / ≥ 98%</td><td>15%</td></tr><tr><td>Rekrutmen &amp; Pemenuhan TK</td><td>Pemenuhan MPP / Kelengkapan Kontrak</td><td>≥ 95% / 100%</td><td>15%</td></tr><tr><td>Koordinasi GA &amp; Fasilitas</td><td>Zero Eskalasi GA / Legalitas Kendaraan</td><td>0 keluhan / 0 expired</td><td>10%</td></tr><tr><td>Koordinasi Data Center</td><td>Akurasi &amp; Ketersediaan Data HRGA</td><td>≥ 99% akurasi</td><td>10%</td></tr><tr><td>Supervisi &amp; Pembinaan Tim</td><td>Sesi Coaching / Rata-rata KPI Tim</td><td>≥ 4/bulan / ≥ 85</td><td>15%</td></tr><tr><td>Pelaporan ke Askep HRGA</td><td>Ketepatan Waktu Laporan</td><td>100% on-time</td><td>10%</td></tr><tr><td>Continuous Improvement</td><td>Improvement Terusulkan/Terimplementasi</td><td>≥ 1/semester</td><td>5%</td></tr></tbody></table>
+    </section>
+    <section class="sec">
+      <h2><span class="sec-no">08</span>HUBUNGAN KERJA</h2>
+      <table class="data-table"><thead><tr><th>Pihak</th><th>Jenis Hubungan</th><th>Tujuan / Keperluan</th></tr></thead><tbody><tr><td>Askep HRGA (Dedi Wahyudi)</td><td>Atasan Langsung</td><td>Melaporkan seluruh kegiatan operasional HRGA, menerima arahan dan delegasi</td></tr><tr><td>Krani 1 HRGA (Rinaldy Husain)</td><td>Bawahan Langsung</td><td>Mengkoordinasikan dan mengawasi seluruh operasional HR/SDM dan GA lapangan</td></tr><tr><td>Krani 1 Data Center (Indah)</td><td>Bawahan Langsung</td><td>Mengkoordinasikan operasional data center dan sistem kepegawaian</td></tr><tr><td>Manager HRGA</td><td>Atasan Tidak Langsung</td><td>Koordinasi kebijakan dan arahan strategis HRGA (melalui Askep HRGA)</td></tr><tr><td>Seluruh Ka. Departemen</td><td>Pelanggan Internal</td><td>Koordinasi kebutuhan HR dan GA, menerima dan menindaklanjuti permintaan layanan</td></tr><tr><td>Departemen Finance</td><td>Koordinasi</td><td>Koordinasi penggajian, deklarasi, reimbursement, dan anggaran HRGA</td></tr><tr><td>BPJS TK &amp; Kesehatan</td><td>Eksternal</td><td>Koordinasi kepesertaan, klaim, dan pelaporan BPJS melalui tim HRGA</td></tr><tr><td>Disnaker / Instansi TK</td><td>Eksternal</td><td>Koordinasi pelaporan wajib dan kepatuhan ketenagakerjaan</td></tr></tbody></table>
+    </section>
+  
+    <section class="sec sign-sec">
+      <h2><span class="sec-no">09</span>PENGESAHAN DOKUMEN</h2>
+      <div class="signblock"><div class="sigcol">
+      <div class="sig-role">Dibuat Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Asisten HRGA )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Diperiksa Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Dedi Wahyudi )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Diketahui Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( M Nurjantoro )</div>
+      
+    </div><div class="sigcol">
+      <div class="sig-role">Disahkan Oleh</div>
+      <div class="sig-line"></div>
+      <div class="sig-name">( Direktur )</div>
+      
+    </div></div>
+    </section>
+</body>
+</html>
