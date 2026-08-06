@@ -195,6 +195,13 @@
   #jobdescTableWrap table.asset-table td:nth-child(2){width:300px;}
   #jobdescTableWrap table.asset-table td:nth-child(3){white-space:normal;}
 
+  .jobdesc-link{color:var(--amber); cursor:pointer; text-decoration:underline; text-underline-offset:2px; text-decoration-color:transparent; transition:.15s text-decoration-color;}
+  .jobdesc-link:hover{text-decoration-color:var(--amber);}
+  .jobdesc-detail-bar{display:flex; align-items:center; gap:14px; margin-bottom:14px; flex-wrap:wrap;}
+  .jobdesc-detail-title{font-family:var(--font-mono); font-size:12px; color:var(--text-dim);}
+  .jobdesc-frame-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:40px;}
+  .jobdesc-frame-wrap iframe{width:100%; height:78vh; min-height:520px; border:0; display:block; background:#fff;}
+
   .orgchart-frame-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:40px;}
   .orgchart-frame-wrap iframe{width:100%; height:78vh; min-height:520px; border:0; display:block; background:#fff;}
 
@@ -967,41 +974,56 @@
   <div class="asset-view" id="page-jobdesc" style="display:none;">
     <div class="grid-texture"></div>
     <div class="wrap">
-      <div class="sticky-bar">
-        <header class="asset-header">
-          <div>
-            <p class="eyebrow">Human Resources &middot; Job Description</p>
-            <h1 class="asset-title">Job Description</h1>
-          </div>
-        </header>
+      <div id="jobdescListView">
+        <div class="sticky-bar">
+          <header class="asset-header">
+            <div>
+              <p class="eyebrow">Human Resources &middot; Job Description</p>
+              <h1 class="asset-title">Job Description</h1>
+            </div>
+          </header>
 
-        <div class="controls">
-          <div class="group-select">
-            <select id="jobdescDeptFilter">
-              <option value="semua">Semua Departemen</option>
-            </select>
+          <div class="controls">
+            <div class="group-select">
+              <select id="jobdescDeptFilter">
+                <option value="semua">Semua Departemen</option>
+              </select>
+            </div>
+            <button class="refresh-btn" id="jobdescRefreshBtn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+              Refresh
+            </button>
+            <p class="kry-note" id="jobdescNote"></p>
           </div>
-          <button class="refresh-btn" id="jobdescRefreshBtn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
-            Refresh
-          </button>
-          <p class="kry-note" id="jobdescNote"></p>
+        </div>
+
+        <div class="table-wrap" id="jobdescTableWrap">
+          <table class="asset-table">
+            <thead>
+              <tr>
+                <th>Kode</th>
+                <th>Nama Jabatan</th>
+                <th>Nama Incumbent</th>
+              </tr>
+            </thead>
+            <tbody id="jobdescTableBody">
+              <tr><td colspan="3" class="state-msg" id="jobdescLoadingMsg">Memuat data dari Google Sheet...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <div class="table-wrap" id="jobdescTableWrap">
-        <table class="asset-table">
-          <thead>
-            <tr>
-              <th>Kode</th>
-              <th>Nama Jabatan</th>
-              <th>Nama Incumbent</th>
-            </tr>
-          </thead>
-          <tbody id="jobdescTableBody">
-            <tr><td colspan="3" class="state-msg" id="jobdescLoadingMsg">Memuat data dari Google Sheet...</td></tr>
-          </tbody>
-        </table>
+      <div id="jobdescDetailView" style="display:none;">
+        <div class="jobdesc-detail-bar">
+          <button class="refresh-btn" id="jobdescBackBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            Kembali ke Daftar
+          </button>
+          <span class="jobdesc-detail-title" id="jobdescDetailTitle"></span>
+        </div>
+        <div class="jobdesc-frame-wrap">
+          <iframe id="jobdescFrame" title="Job Description" loading="lazy"></iframe>
+        </div>
       </div>
     </div>
   </div>
@@ -3593,6 +3615,90 @@
   let jobdescLoaded = false;
   let jobdescDeptValue = 'semua';
 
+  /* File jobdesc per-jabatan disimpan di GitHub repo di
+     main/job_desc/{folder}/{Kode} - {Nama Jabatan}.html - foldernya (01, 02, dst)
+     tidak bisa ditebak dari Kode, jadi daftar file diambil live dari GitHub
+     Contents API (rekursif per sub-folder), lalu dipetakan Kode -> path file.
+     Hasilnya di-cache di localStorage 30 menit supaya tidak nembak API tiap
+     kali halaman dibuka (API publik GitHub dibatasi ~60 request/jam per IP). */
+  const JOBDESC_REPO_API = 'https://api.github.com/repos/dhe-wha/hr-ga/contents/main/job_desc';
+  const JOBDESC_FILEMAP_CACHE_KEY = 'jobdescFilemapCache';
+  const JOBDESC_FILEMAP_TTL_MS = 30 * 60 * 1000;
+  let JOBDESC_FILEMAP = null; // Map: kode -> { path, label }
+  let jobdescFilemapLoading = false;
+
+  function jobdescBuildFilemap(fileEntries){
+    const map = new Map();
+    (fileEntries||[]).forEach(f=>{
+      const name = f.name || '';
+      const idx = name.indexOf(' - ');
+      if(idx===-1) return;
+      const kode = name.slice(0, idx).trim();
+      if(!kode) return;
+      const label = name.slice(idx+3).replace(/\.html?$/i,'').trim();
+      const relPath = (f.path||'').replace(/^main\//, '');
+      if(relPath) map.set(kode, { path: relPath, label: label || kode });
+    });
+    return map;
+  }
+
+  function jobdescLoadFileMap(){
+    if(jobdescFilemapLoading || JOBDESC_FILEMAP) return;
+    try{
+      const cached = JSON.parse(localStorage.getItem(JOBDESC_FILEMAP_CACHE_KEY) || 'null');
+      if(cached && cached.t && (Date.now() - cached.t) < JOBDESC_FILEMAP_TTL_MS && Array.isArray(cached.entries)){
+        JOBDESC_FILEMAP = jobdescBuildFilemap(cached.entries);
+        renderJobdesc();
+        return;
+      }
+    }catch(e){ /* cache rusak, abaikan */ }
+
+    jobdescFilemapLoading = true;
+    fetch(JOBDESC_REPO_API)
+      .then(r=> r.ok ? r.json() : Promise.reject(new Error('HTTP '+r.status)))
+      .then(rootEntries=>{
+        const dirs = (rootEntries||[]).filter(e=>e.type==='dir');
+        return Promise.all(dirs.map(d=>
+          fetch(JOBDESC_REPO_API + '/' + encodeURIComponent(d.name))
+            .then(r=> r.ok ? r.json() : [])
+            .catch(()=>[])
+        ));
+      })
+      .then(listsPerDir=>{
+        const allFiles = [].concat(...listsPerDir).filter(e=>e.type==='file');
+        JOBDESC_FILEMAP = jobdescBuildFilemap(allFiles);
+        jobdescFilemapLoading = false;
+        try{
+          localStorage.setItem(JOBDESC_FILEMAP_CACHE_KEY, JSON.stringify({
+            t: Date.now(),
+            entries: allFiles.map(f=>({ name:f.name, path:f.path }))
+          }));
+        }catch(e){ /* localStorage penuh/diblokir, jalan tanpa cache */ }
+        renderJobdesc();
+      })
+      .catch(()=>{
+        // Gagal ambil daftar file (mis. rate limit GitHub API) - Nama Jabatan
+        // tetap tampil sebagai teks biasa (tidak bisa diklik), tabel tidak terganggu.
+        jobdescFilemapLoading = false;
+      });
+  }
+
+  function openJobdescDetail(kode){
+    const entry = JOBDESC_FILEMAP && JOBDESC_FILEMAP.get(kode);
+    if(!entry) return;
+    const href = entry.path.split('/').map(encodeURIComponent).join('/');
+    document.getElementById('jobdescFrame').src = href;
+    document.getElementById('jobdescDetailTitle').textContent = `${kode} — ${entry.label}`;
+    document.getElementById('jobdescListView').style.display = 'none';
+    document.getElementById('jobdescDetailView').style.display = '';
+  }
+
+  function closeJobdescDetail(){
+    document.getElementById('jobdescDetailView').style.display = 'none';
+    document.getElementById('jobdescListView').style.display = '';
+    document.getElementById('jobdescFrame').src = 'about:blank';
+  }
+
   function jobdescCsvUrl(){
     return `https://docs.google.com/spreadsheets/d/${JOBDESC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('Struktur')}&t=${Date.now()}`;
   }
@@ -3670,10 +3776,14 @@
     body.innerHTML = rowsArr.map(g=>{
       const kodeTxt = g.kode ? fmtVal(g.kode) : '';
       const namaTxt = g.namas.length ? fmtVal(g.namas.join(', ')) : '<span style="color:var(--text-dim);">&mdash;</span>';
+      const fileEntry = (JOBDESC_FILEMAP && g.kode) ? JOBDESC_FILEMAP.get(g.kode) : null;
+      const jabatanTxt = fileEntry
+        ? `<span class="jobdesc-link" data-kode="${g.kode}">${fmtVal(g.jabatan)}</span>`
+        : fmtVal(g.jabatan);
       return `
         <tr>
           <td>${kodeTxt}</td>
-          <td class="name">${fmtVal(g.jabatan)}</td>
+          <td class="name">${jabatanTxt}</td>
           <td>${namaTxt}</td>
         </tr>`;
     }).join('');
@@ -3684,6 +3794,12 @@
     renderJobdesc();
   });
   document.getElementById('jobdescRefreshBtn').addEventListener('click', loadJobdescData);
+  document.getElementById('jobdescTableBody').addEventListener('click', e=>{
+    const link = e.target.closest('.jobdesc-link');
+    if(!link) return;
+    openJobdescDetail(link.getAttribute('data-kode'));
+  });
+  document.getElementById('jobdescBackBtn').addEventListener('click', closeJobdescDetail);
 
   /* ===================== SIDEBAR NAVIGATION ===================== */
   function toggleSubmenu(key){
@@ -3752,6 +3868,9 @@
     }
     if(page==='jobdesc' && !jobdescLoaded){
       loadJobdescData();
+    }
+    if(page==='jobdesc'){
+      jobdescLoadFileMap();
     }
     if(!KNOWN_PAGES.includes(page)){
       document.getElementById('placeholderTitle').textContent = label;
