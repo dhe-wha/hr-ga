@@ -31,6 +31,15 @@
     font-size:10px; font-weight:700;
   }
 
+  .identity-wrap{display:flex; align-items:stretch; gap:14px;}
+  .identity-wrap .deflist{flex:1; min-width:0;}
+  .photo-box{
+    flex:0 0 170px; border:1px solid var(--line); border-radius:6px; background:var(--bg-soft);
+    display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;
+  }
+  .photo-box img{width:100%; height:100%; object-fit:cover; display:block;}
+  .photo-box .photo-placeholder{font-size:10.5px; color:var(--muted); text-align:center; padding:8px;}
+
   .deflist{border:1px solid var(--line); border-radius:6px; overflow:hidden;}
   .defrow{display:flex; border-bottom:1px solid var(--line);}
   .defrow:last-child{border-bottom:none;}
@@ -79,7 +88,7 @@
   
     <section class="sec">
       <h2><span class="sec-no">01</span>IDENTITAS JABATAN</h2>
-      <div class="deflist"><div class="defrow"><div class="deflabel">Nama Jabatan</div><div class="defval">Krani I HRGA</div></div><div class="defrow"><div class="deflabel">Nama Pemegang Jabatan</div><div class="defval">Rinaldy Husain</div></div><div class="defrow"><div class="deflabel">Nama Departemen</div><div class="defval">Human Resources &amp; General Affairs (HRGA)</div></div><div class="defrow"><div class="deflabel">Atasan Langsung</div><div class="defval">Asisten Kepala HRGA (Askep HRGA)</div></div><div class="defrow"><div class="deflabel">Bawahan Langsung</div><div class="defval">Personalia  |  Recruitment  |  General Affair  |  Asset</div></div><div class="defrow"><div class="deflabel">Golongan / Grade</div><div class="defval">Disesuaikan dengan Sistem Grading PT BJA</div></div><div class="defrow"><div class="deflabel">Lokasi Kerja</div><div class="defval">Site PT Biomasa Jaya Abadi</div></div></div>
+      <div class="identity-wrap"><div class="deflist"><div class="defrow"><div class="deflabel">Nama Jabatan</div><div class="defval">Krani I HRGA</div></div><div class="defrow"><div class="deflabel">Nama Pemegang Jabatan</div><div class="defval">Rinaldy Husain</div></div><div class="defrow"><div class="deflabel">Nama Departemen</div><div class="defval">Human Resources &amp; General Affairs (HRGA)</div></div><div class="defrow"><div class="deflabel">Atasan Langsung</div><div class="defval">Asisten Kepala HRGA (Askep HRGA)</div></div><div class="defrow"><div class="deflabel">Bawahan Langsung</div><div class="defval">Personalia  |  Recruitment  |  General Affair  |  Asset</div></div><div class="defrow"><div class="deflabel">Golongan / Grade</div><div class="defval">Disesuaikan dengan Sistem Grading PT BJA</div></div><div class="defrow"><div class="deflabel">Lokasi Kerja</div><div class="defval">Site PT Biomasa Jaya Abadi</div></div></div><div class="photo-box" id="photoBox"><span class="photo-placeholder">Foto belum tersedia</span></div></div>
     </section>
     <section class="sec">
       <h2><span class="sec-no">02</span>TUJUAN JABATAN</h2>
@@ -134,5 +143,45 @@
       
     </div></div>
     </section>
+  
+<script>
+(function(){
+  var KODE = "10110011000000";
+  var SHEET_ID = '1mHMrWu6yQ7p6gL_fQz_G6fa8ew2V2LcJ3WHZXwYZo7c';
+  var url = 'https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent('Struktur')+'&t='+Date.now();
+  function parseCSV(text){
+    var rows=[], row=[], cur='', q=false;
+    for(var i=0;i<text.length;i++){
+      var c=text[i];
+      if(q){ if(c==='"'){ if(text[i+1]==='"'){cur+='"'; i++;} else q=false; } else cur+=c; }
+      else{
+        if(c==='"') q=true;
+        else if(c===','){ row.push(cur); cur=''; }
+        else if(c==='\n'){ row.push(cur); rows.push(row); row=[]; cur=''; }
+        else if(c!=='\r') cur+=c;
+      }
+    }
+    if(cur!=='' || row.length){ row.push(cur); rows.push(row); }
+    return rows;
+  }
+  fetch(url).then(function(r){ return r.text(); }).then(function(text){
+    var rows = parseCSV(text);
+    if(!rows.length) return;
+    var head = rows[0].map(function(h){ return (h||'').trim().toLowerCase(); });
+    var iKode = head.indexOf('kode'), iFoto = head.indexOf('foto');
+    if(iKode<0 || iFoto<0) return;
+    for(var i=1;i<rows.length;i++){
+      var r = rows[i];
+      if((r[iKode]||'').trim() === KODE){
+        var foto = (r[iFoto]||'').trim();
+        var box = document.getElementById('photoBox');
+        if(foto && box){ box.innerHTML = '<img src="'+foto+'" alt="Foto">'; }
+        break;
+      }
+    }
+  }).catch(function(){ /* diamkan, biarkan placeholder tampil */ });
+})();
+</script>
+
 </body>
 </html>
