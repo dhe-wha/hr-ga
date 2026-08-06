@@ -2071,12 +2071,14 @@
     `;
 
     renderBarListPct('kryByPT', withSharePct(Object.entries(byPT).map(([k,v])=>({label:k,value:v}))));
+    // Urutan PT SENGAJA disamakan dengan card "Karyawan per PT" di atas (ikut
+    // urutan resignPtKeys, bukan diurutkan ulang berdasarkan jumlah resign).
     const resignPtKeys = Array.from(new Set([...Object.keys(byPT), ...Object.keys(resignByPT)]));
     renderBarListPct('kryResignPT', resignPtKeys.map(k => {
       const resign = resignByPT[k] || 0;
       const headcount = byPT[k] || 0;
       return {label:k, value:resign, pct: headcount ? (resign/headcount*100) : 0};
-    }).sort((a,b)=>b.value-a.value), 'red');
+    }), 'red');
     renderBarListPct('kryByDept', withSharePct(Object.entries(byDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value)));
     renderBarListPct('kryKab', withSharePct([{label:'Lokal',value:kabLokal},{label:'Non Lokal',value:kabNonLokal}]));
     renderBarListPct('kryProv', withSharePct([{label:'Lokal',value:provLokal},{label:'Non Lokal',value:provNonLokal}]));
