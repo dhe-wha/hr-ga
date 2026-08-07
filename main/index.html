@@ -107,6 +107,28 @@
   .placeholder p{color:var(--text-dim-sb); font-size:14px; margin:0;}
   .crumb{font-family:monospace; font-size:12px; color:var(--text-faint-sb); margin-top:14px; background:var(--bg-sidebar); border:1px solid var(--border-sb); display:inline-block; padding:6px 12px; border-radius:8px;}
 
+  /* ---------- Tema "Light Blue" khusus halaman Sepeda Motor ----------
+     Semua komponen aset (card, badge, tabel, filter, dsb) dibangun murni
+     dari CSS variable var(--bg/--panel/--border/--text/--amber/dst), jadi
+     cukup override variable-variable itu di dalam scope .theme-light-blue
+     (dipasang di #page-sepedamotor) - otomatis ke-cascade ke semua
+     komponen di bawahnya tanpa perlu duplikasi rule CSS. Pengecualian:
+     .card-icon pakai warna wash rgba HARDCODE (bukan var), jadi di-override
+     terpisah supaya ikon di kartu ikut biru, bukan tetap amber. */
+  .theme-light-blue{
+    --bg:#EAF3FC;
+    --panel:#FFFFFF;
+    --panel-alt:#E3EFFC;
+    --border:#C6DEF5;
+    --text:#0F2A43;
+    --text-dim:#5B7A9D;
+    --amber:#2F80ED;
+    --green:#2E9E5B;
+    --red:#D64545;
+  }
+  .theme-light-blue .card-icon{background:rgba(47,128,237,0.12);}
+  .theme-light-blue .grid-texture{background-image:linear-gradient(rgba(15,42,67,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(15,42,67,0.04) 1px, transparent 1px);}
+
   /* ---------- Asset dashboard (Kendaraan) ---------- */
   .grid-texture{position:absolute; inset:0; pointer-events:none; z-index:0; background-image:linear-gradient(rgba(236,234,228,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(236,234,228,0.025) 1px, transparent 1px); background-size:32px 32px;}
   .asset-view{position:relative; min-height:100vh;}
@@ -426,7 +448,7 @@
     </div>
     <div class="submenu" id="gaSubmenu">
       <div class="sub-item" data-page="kendaraan">Kendaraan</div>
-      <div class="sub-item" data-page="placeholder">Motor</div>
+      <div class="sub-item" data-page="sepedamotor">Sepeda Motor</div>
       <div class="sub-item" data-page="alatberat">Alat Berat</div>
       <div class="sub-item" data-page="bangunan">Bangunan</div>
       <div class="sub-item" data-page="placeholder">Fasilitas Umum</div>
@@ -535,6 +557,73 @@
             </tr>
           </thead>
           <tbody id="assetTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Halaman Aset Sepeda Motor (General Affair > Sepeda Motor) =====
+       Bukan sheet terpisah - ini VIEW terfilter dari data Kendaraan
+       (ASSETS) yang sama, cuma baris dengan Jenis = "Sepeda Motor" saja.
+       Tema "Light Blue" khusus halaman ini (lihat .theme-light-blue di CSS). -->
+  <div class="asset-view theme-light-blue" id="page-sepedamotor" style="display:none;">
+    <div class="grid-texture"></div>
+    <div class="wrap">
+      <div class="sticky-bar">
+        <header class="asset-header">
+          <div>
+            <p class="eyebrow">General Affair &middot; Sistem Registrasi Aset</p>
+            <h1 class="asset-title">Aset Sepeda Motor</h1>
+          </div>
+          <div class="stat-strip">
+            <div class="stat"><div class="n" id="smStatDriver">0</div><div class="l">Ada User/Driver</div></div>
+            <div class="stat"><div class="n" id="smStatTotal">0</div><div class="l">Total Unit</div></div>
+            <div class="stat"><div class="n" id="smStatAktif">0</div><div class="l">Aktif</div></div>
+            <div class="stat"><div class="n" id="smStatTidak">0</div><div class="l">Tidak Aktif</div></div>
+          </div>
+        </header>
+
+        <div class="controls">
+          <div class="group-select">
+            <select id="smGroupFilter">
+              <option value="semua">Semua Kategori</option>
+            </select>
+          </div>
+          <div class="search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="smSearchInput" placeholder="Cari kode aset, nama, atau driver/user...">
+          </div>
+          <div class="view-toggle" id="smViewToggle">
+            <button type="button" data-view="card" class="active" title="Tampilan Kartu">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+            </button>
+            <button type="button" data-view="table" title="Tampilan Tabel">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9h18M3 14h18M9 9v11"/></svg>
+            </button>
+          </div>
+          <button class="refresh-btn" id="smRefreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <div class="asset-grid" id="smGrid">
+        <div class="state-msg" id="smLoadingMsg">Memuat data dari Google Sheet...</div>
+      </div>
+      <div class="table-wrap" id="smTableWrap" style="display:none;">
+        <table class="asset-table">
+          <thead>
+            <tr>
+              <th>Kode Aset</th>
+              <th>Nama Display</th>
+              <th>No Polisi</th>
+              <th>Kategori</th>
+              <th>User / Driver</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody id="smTableBody"></tbody>
         </table>
       </div>
     </div>
@@ -1226,6 +1315,7 @@
         renderGrid();
         if(typeof renderDashVehicleChart === 'function') renderDashVehicleChart();
         if(typeof renderDashVehicleJenisChart === 'function') renderDashVehicleJenisChart();
+        if(typeof renderSmGrid === 'function'){ populateSmGroupFilter(); renderSmGrid(); }
       },
       error: function(err){
         btn.classList.remove('spinning');
@@ -1594,6 +1684,149 @@
       localStorage.setItem('assetViewMode', viewMode);
       viewToggle.querySelectorAll('button[data-view]').forEach(b=>b.classList.toggle('active', b===btn));
       renderGrid();
+    });
+  });
+
+  /* =====================================================================
+     ASET SEPEDA MOTOR (General Affair > Sepeda Motor)
+     BUKAN sheet terpisah - ini cuma VIEW terfilter dari ASSETS (sheet
+     "Kendaraan" yang sama dipakai halaman Kendaraan di atas), khusus baris
+     dengan kolom Jenis = "Sepeda Motor". Field/kolom, dossier (openDossier),
+     dan lightbox semuanya REUSE punya Kendaraan - cuma render kartu/tabel &
+     filter Kategori-nya yang duplikat (target elemen DOM beda), sesuai pola
+     yang sama dipakai Bangunan/Alat Berat. Saat data Kendaraan di-refresh
+     (loadData), view ini otomatis ikut diperbarui (lihat pemanggilan
+     renderSmGrid di dalam loadData()).
+     ===================================================================== */
+  let smGroupFilterValue = 'semua';
+  let smSearchTerm = '';
+  let smViewMode = localStorage.getItem('sepedaMotorViewMode') || 'card';
+
+  function smScoped(){
+    return ASSETS.filter(a => (a['Jenis']||'').trim().toLowerCase()==='sepeda motor');
+  }
+
+  function populateSmGroupFilter(){
+    const sel = document.getElementById('smGroupFilter');
+    if(!sel) return;
+    const groups = Array.from(new Set(smScoped().map(a => (a['Kategori']||'').trim()).filter(Boolean))).sort();
+    const current = sel.value || 'semua';
+    sel.innerHTML = `<option value="semua">Semua Kategori</option>` + groups.map(g => `<option value="${g}">${g}</option>`).join('');
+    sel.value = groups.includes(current) ? current : 'semua';
+    smGroupFilterValue = sel.value;
+  }
+
+  function renderSmGrid(){
+    const grid = document.getElementById('smGrid');
+    const tableWrap = document.getElementById('smTableWrap');
+    if(!grid || !tableWrap) return;
+    const term = smSearchTerm.trim().toLowerCase();
+
+    const base = smScoped();
+    const filtered = base.filter(a=>{
+      if(smGroupFilterValue!=='semua' && (a['Kategori']||'').trim()!==smGroupFilterValue) return false;
+      if(!term) return true;
+      const hay = [a['Kode Aset'], a['Nama Display'], a['User_Driver'], a['Company'], a['Jenis'], a['No Polisi']].join(' ').toLowerCase();
+      return hay.includes(term);
+    });
+
+    filtered.sort((a,b)=> (a['Nama Display']||'').localeCompare(b['Nama Display']||'', undefined, {numeric:true, sensitivity:'base'}));
+
+    const groupScoped = smGroupFilterValue==='semua' ? base : base.filter(a => (a['Kategori']||'').trim()===smGroupFilterValue);
+    document.getElementById('smStatTotal').textContent = groupScoped.length;
+    document.getElementById('smStatAktif').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='ya').length;
+    document.getElementById('smStatTidak').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='tidak').length;
+    document.getElementById('smStatDriver').textContent = groupScoped.filter(a => {
+      const d = (a['User_Driver']||'').trim().toLowerCase();
+      return d!=='' && d!=='kosong' && d!=='#n/a';
+    }).length;
+
+    grid.style.display = (smViewMode==='card') ? '' : 'none';
+    tableWrap.style.display = (smViewMode==='table') ? '' : 'none';
+
+    if(filtered.length===0){
+      grid.innerHTML = `<div class="empty">Tidak ada sepeda motor yang cocok dengan pencarian / filter.</div>`;
+      document.getElementById('smTableBody').innerHTML = `<tr><td colspan="6" class="empty">Tidak ada sepeda motor yang cocok dengan pencarian / filter.</td></tr>`;
+      return;
+    }
+
+    if(smViewMode==='card'){
+      renderSmCards(filtered);
+    }else{
+      renderSmTable(filtered);
+    }
+  }
+
+  function renderSmCards(filtered){
+    const grid = document.getElementById('smGrid');
+    grid.innerHTML = filtered.map(a=>{
+      const st = statusInfo(a['Status Aset (Acc)']);
+      const kode = a['Kode Aset'];
+      const nama = a['Nama Display'];
+      const driver = a['User_Driver'];
+      const thumb = photoUrl(a['Foto Utama']);
+      const iconHtml = thumb
+        ? `<img src="${thumb}" alt="${fmtVal(nama)}" loading="lazy" onerror="cardThumbError(this)">`
+        : iconVehicle;
+      return `
+        <div class="card" tabindex="0" data-no="${a['No']}">
+          <div class="strip"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <div class="card-icon${thumb ? ' thumb' : ''}">${iconHtml}</div>
+              <div class="card-id">${kode}</div>
+            </div>
+            <p class="card-name">${fmtVal(nama)}</p>
+            <p class="card-meta">${fmtVal(a['No Polisi'])} &middot; <span class="driver">${fmtVal(driver)}</span></p>
+            <span class="badge ${st.cls}">${st.label}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    grid.querySelectorAll('.card').forEach(card=>{
+      card.addEventListener('click', ()=>openDossier(card.dataset.no));
+      card.addEventListener('keydown', e=>{ if(e.key==='Enter') openDossier(card.dataset.no); });
+    });
+  }
+
+  function renderSmTable(filtered){
+    const body = document.getElementById('smTableBody');
+    body.innerHTML = filtered.map(a=>{
+      return `
+        <tr tabindex="0" data-no="${a['No']}">
+          <td>${fmtVal(a['Kode Aset'])}</td>
+          <td class="name">${fmtVal(a['Nama Display'])}</td>
+          <td>${fmtVal(a['No Polisi'])}</td>
+          <td>${fmtVal(a['Kategori'])}</td>
+          <td>${fmtVal(a['User_Driver'])}</td>
+          <td>${fmtVal(a['Keterangan'])}</td>
+        </tr>`;
+    }).join('');
+
+    body.querySelectorAll('tr').forEach(row=>{
+      row.addEventListener('click', ()=>openDossier(row.dataset.no));
+      row.addEventListener('keydown', e=>{ if(e.key==='Enter') openDossier(row.dataset.no); });
+    });
+  }
+
+  document.getElementById('smGroupFilter').addEventListener('change', e=>{
+    smGroupFilterValue = e.target.value;
+    renderSmGrid();
+  });
+  document.getElementById('smSearchInput').addEventListener('input', e=>{
+    smSearchTerm = e.target.value;
+    renderSmGrid();
+  });
+  document.getElementById('smRefreshBtn').addEventListener('click', loadData);
+
+  const smViewToggle = document.getElementById('smViewToggle');
+  smViewToggle.querySelectorAll('button[data-view]').forEach(btn=>{
+    if(btn.dataset.view === smViewMode) btn.classList.add('active'); else btn.classList.remove('active');
+    btn.addEventListener('click', ()=>{
+      smViewMode = btn.dataset.view;
+      localStorage.setItem('sepedaMotorViewMode', smViewMode);
+      smViewToggle.querySelectorAll('button[data-view]').forEach(b=>b.classList.toggle('active', b===btn));
+      renderSmGrid();
     });
   });
 
@@ -4127,10 +4360,11 @@
   document.getElementById('hrToggle').addEventListener('click', ()=>toggleSubmenu('hr'));
   document.getElementById('gaToggle').addEventListener('click', ()=>toggleSubmenu('ga'));
 
-  const KNOWN_PAGES = ['dashboard','kendaraan','bangunan','alatberat','karyawan','rekrutmen','orgchart','jobdesc'];
+  const KNOWN_PAGES = ['dashboard','kendaraan','sepedamotor','bangunan','alatberat','karyawan','rekrutmen','orgchart','jobdesc'];
   function showPage(page, label){
     document.getElementById('page-dashboard').style.display = (page==='dashboard') ? '' : 'none';
     document.getElementById('page-kendaraan').style.display = (page==='kendaraan') ? '' : 'none';
+    document.getElementById('page-sepedamotor').style.display = (page==='sepedamotor') ? '' : 'none';
     document.getElementById('page-bangunan').style.display = (page==='bangunan') ? '' : 'none';
     document.getElementById('page-alatberat').style.display = (page==='alatberat') ? '' : 'none';
     document.getElementById('page-karyawan').style.display = (page==='karyawan') ? '' : 'none';
@@ -4162,6 +4396,15 @@
     if(page==='kendaraan' && !kendaraanLoaded){
       kendaraanLoaded = true;
       loadData();
+    }
+    if(page==='sepedamotor'){
+      if(!kendaraanLoaded){
+        kendaraanLoaded = true;
+        loadData();
+      } else {
+        populateSmGroupFilter();
+        renderSmGrid();
+      }
     }
     if(page==='bangunan' && !bldLoaded){
       bldLoaded = true;
