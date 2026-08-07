@@ -2157,8 +2157,8 @@
       <div class="kry-card"><h3>Karyawan per Status</h3><div class="bar-list" id="kryStatus"></div></div>
       <div class="kry-card"><h3>Karyawan per Tingkat Pendidikan</h3><div class="bar-list" id="kryPendidikan"></div></div>
       <div class="kry-card"><h3>Karyawan per Klasifikasi</h3><div class="bar-list" id="kryKlasifikasi"></div></div>
-      <div class="kry-card wide"><h3>Gaji Bruto per Departemen</h3><table class="kry-table" id="kryGajiBruto"></table></div>
-      <div class="kry-card wide"><h3>Gaji Netto per Departemen</h3><table class="kry-table" id="kryGajiNetto"></table></div>
+      <div class="kry-card"><h3>Gaji Bruto per Departemen</h3><table class="kry-table" id="kryGajiBruto"></table></div>
+      <div class="kry-card"><h3>Gaji Netto per Departemen</h3><table class="kry-table" id="kryGajiNetto"></table></div>
     `;
 
     renderBarListPct('kryByPT', withSharePct(Object.entries(byPT).map(([k,v])=>({label:k,value:v}))));
