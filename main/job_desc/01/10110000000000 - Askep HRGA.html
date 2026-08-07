@@ -159,6 +159,20 @@
     if(cur!=='' || row.length){ row.push(cur); rows.push(row); }
     return rows;
   }
+  // Link share OneDrive/SharePoint (":i:/g/personal/...") membuka halaman preview,
+  // bukan file gambar mentah, jadi <img> gagal load. Tambahkan download=1 supaya
+  // server mengirim file aslinya - ini hanya berhasil kalau sharing-nya "Anyone with
+  // the link". Link Google Drive juga diubah ke bentuk yang bisa langsung ditampilkan.
+  function toDirectImageUrl(u){
+    if(!u) return u;
+    if(/1drv\.ms|onedrive\.live\.com|sharepoint\.com/i.test(u)){
+      if(!/[?&]download=1/i.test(u)) u += (u.indexOf('?')>=0 ? '&' : '?') + 'download=1';
+      return u;
+    }
+    var gd = u.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if(gd) return 'https://drive.google.com/uc?export=view&id=' + gd[1];
+    return u;
+  }
   fetch(url).then(function(r){ return r.text(); }).then(function(text){
     var rows = parseCSV(text);
     if(!rows.length) return;
@@ -168,9 +182,15 @@
     for(var i=1;i<rows.length;i++){
       var r = rows[i];
       if((r[iKode]||'').trim() === KODE){
-        var foto = (r[iFoto]||'').trim();
+        var foto = toDirectImageUrl((r[iFoto]||'').trim());
         var box = document.getElementById('photoBox');
-        if(foto && box){ box.innerHTML = '<img src="'+foto+'" alt="Foto">'; }
+        if(foto && box){
+          box.innerHTML = '<img src="'+foto+'" alt="Foto">';
+          var imgEl = box.querySelector('img');
+          imgEl.onerror = function(){
+            box.innerHTML = '<span class="photo-placeholder">Foto tidak bisa dimuat (cek izin sharing link)</span>';
+          };
+        }
         break;
       }
     }
