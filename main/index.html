@@ -427,7 +427,7 @@
     <div class="submenu" id="gaSubmenu">
       <div class="sub-item" data-page="kendaraan">Kendaraan</div>
       <div class="sub-item" data-page="placeholder">Motor</div>
-      <div class="sub-item" data-page="placeholder">Alat Berat</div>
+      <div class="sub-item" data-page="alatberat">Alat Berat</div>
       <div class="sub-item" data-page="bangunan">Bangunan</div>
       <div class="sub-item" data-page="placeholder">Fasilitas Umum</div>
     </div>
@@ -610,6 +610,70 @@
             </tr>
           </thead>
           <tbody id="bldTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Halaman Aset Alat Berat (General Affair > Alat Berat) ===== -->
+  <div class="asset-view" id="page-alatberat" style="display:none;">
+    <div class="grid-texture"></div>
+    <div class="wrap">
+      <div class="sticky-bar">
+        <header class="asset-header">
+          <div>
+            <p class="eyebrow">General Affair &middot; Sistem Registrasi Aset</p>
+            <h1 class="asset-title">Aset Alat Berat</h1>
+          </div>
+          <div class="stat-strip">
+            <div class="stat"><div class="n" id="hvyStatTotal">0</div><div class="l">Total Unit</div></div>
+            <div class="stat"><div class="n" id="hvyStatCompany">0</div><div class="l">Company</div></div>
+            <div class="stat"><div class="n" id="hvyStatKategori">0</div><div class="l">Kategori</div></div>
+            <div class="stat"><div class="n" id="hvyStatJenis">0</div><div class="l">Jenis</div></div>
+          </div>
+        </header>
+
+        <div class="controls">
+          <div class="group-select">
+            <select id="hvyGroupFilter">
+              <option value="semua">Semua Kategori</option>
+            </select>
+          </div>
+          <div class="search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="hvySearchInput" placeholder="Cari kode aset, nama, company, atau jenis...">
+          </div>
+          <div class="view-toggle" id="hvyViewToggle">
+            <button type="button" data-view="card" class="active" title="Tampilan Kartu">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+            </button>
+            <button type="button" data-view="table" title="Tampilan Tabel">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9h18M3 14h18M9 9v11"/></svg>
+            </button>
+          </div>
+          <button class="refresh-btn" id="hvyRefreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <div class="asset-grid" id="hvyGrid">
+        <div class="state-msg" id="hvyLoadingMsg">Memuat data dari Google Sheet...</div>
+      </div>
+      <div class="table-wrap" id="hvyTableWrap" style="display:none;">
+        <table class="asset-table">
+          <thead>
+            <tr>
+              <th>Kode Aset</th>
+              <th>Nama Display</th>
+              <th>Company</th>
+              <th>Jenis</th>
+              <th>Kategori</th>
+              <th>Tanggal Perolehan</th>
+            </tr>
+          </thead>
+          <tbody id="hvyTableBody"></tbody>
         </table>
       </div>
     </div>
@@ -1806,6 +1870,229 @@
       localStorage.setItem('bangunanViewMode', bldViewMode);
       bldViewToggle.querySelectorAll('button[data-view]').forEach(b=>b.classList.toggle('active', b===btn));
       renderBldGrid();
+    });
+  });
+
+  /* =====================================================================
+     ASET ALAT BERAT (General Affair > Alat Berat)
+     Sumber data: sheet "Alat Berat" di spreadsheet Asset_GA yang sama dengan
+     sheet Kendaraan & Bangunan. Struktur halaman ini sengaja dibuat sama
+     persis dengan Aset Kendaraan/Bangunan (card/tabel, filter Kategori,
+     pencarian, modal detail dengan foto) - field disesuaikan kolom sheet
+     "Alat Berat": No, Kode Aset, Company, Nama Display, Tanggal Perolehan,
+     Jenis, Kategori, Nomor Rangka, Nomor Mesin, Foto Utama, Foto Kiri,
+     Foto Kanan, Foto Belakang. Tidak ada kolom status/driver/keterangan
+     seperti Kendaraan, jadi stat-strip & dossier disesuaikan. "Kode Aset"
+     dipakai sebagai id unik baris (dianggap unik per baris, seperti Bangunan). */
+  const HVY_SHEET_NAME = 'Alat Berat';
+  const HVY_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(HVY_SHEET_NAME)}`;
+
+  const iconHeavy = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17h1"/><path d="M7 17h9"/><path d="M3 17V9a1 1 0 0 1 1-1h3l4 4h5a2 2 0 0 1 2 2v3"/><path d="M16 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0z"/><path d="M6 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0z"/><path d="M13 12V7h3"/></svg>`;
+
+  /* Sama seperti cardThumbError/bldCardThumbError, tapi untuk kartu Aset Alat
+     Berat (ikon alat berat, bukan ikon kendaraan/gedung). */
+  function hvyCardThumbError(imgEl){
+    const parent = imgEl.parentElement;
+    if(!parent) return;
+    parent.classList.remove('thumb');
+    parent.innerHTML = iconHeavy;
+  }
+
+  let HEAVY_ASSETS = [];
+  let hvyGroupFilterValue = 'semua';
+  let hvySearchTerm = '';
+  let hvyViewMode = localStorage.getItem('alatBeratViewMode') || 'card';
+  let hvyLoaded = false;
+
+  function loadHvyData(){
+    const grid = document.getElementById('hvyGrid');
+    grid.innerHTML = `<div class="state-msg" id="hvyLoadingMsg">Memuat data dari Google Sheet...</div>`;
+    const btn = document.getElementById('hvyRefreshBtn');
+    btn.classList.add('spinning');
+
+    Papa.parse(HVY_CSV_URL, {
+      download:true,
+      header:true,
+      skipEmptyLines:true,
+      complete: function(results){
+        btn.classList.remove('spinning');
+        HEAVY_ASSETS = (results.data||[]).filter(r => r['Kode Aset'] && r['Kode Aset'].trim()!=='');
+        hvyLoaded = true;
+        populateHvyGroupFilter();
+        renderHvyGrid();
+      },
+      error: function(){
+        btn.classList.remove('spinning');
+        grid.innerHTML = `<div class="state-msg error">Gagal memuat data dari Google Sheet.<br>Pastikan sheet dibagikan sebagai "Anyone with the link can view".<br><button id="hvyRetryBtn">Coba Lagi</button></div>`;
+        const retry = document.getElementById('hvyRetryBtn');
+        if(retry) retry.addEventListener('click', loadHvyData);
+      }
+    });
+  }
+
+  function populateHvyGroupFilter(){
+    const sel = document.getElementById('hvyGroupFilter');
+    const groups = Array.from(new Set(HEAVY_ASSETS.map(a => (a['Kategori']||'').trim()).filter(Boolean))).sort();
+    const current = sel.value || 'semua';
+    sel.innerHTML = `<option value="semua">Semua Kategori</option>` + groups.map(g => `<option value="${g}">${g}</option>`).join('');
+    sel.value = groups.includes(current) ? current : 'semua';
+    hvyGroupFilterValue = sel.value;
+  }
+
+  function renderHvyGrid(){
+    const grid = document.getElementById('hvyGrid');
+    const tableWrap = document.getElementById('hvyTableWrap');
+    const term = hvySearchTerm.trim().toLowerCase();
+
+    const filtered = HEAVY_ASSETS.filter(a=>{
+      if(hvyGroupFilterValue!=='semua' && (a['Kategori']||'').trim()!==hvyGroupFilterValue) return false;
+      if(!term) return true;
+      const hay = [a['Kode Aset'], a['Nama Display'], a['Company'], a['Jenis']].join(' ').toLowerCase();
+      return hay.includes(term);
+    });
+
+    filtered.sort((a,b)=> (a['Nama Display']||'').localeCompare(b['Nama Display']||'', undefined, {numeric:true, sensitivity:'base'}));
+
+    const groupScoped = hvyGroupFilterValue==='semua' ? HEAVY_ASSETS : HEAVY_ASSETS.filter(a => (a['Kategori']||'').trim()===hvyGroupFilterValue);
+    document.getElementById('hvyStatTotal').textContent = groupScoped.length;
+    document.getElementById('hvyStatCompany').textContent = new Set(groupScoped.map(a => (a['Company']||'').trim()).filter(Boolean)).size;
+    document.getElementById('hvyStatKategori').textContent = new Set(groupScoped.map(a => (a['Kategori']||'').trim()).filter(Boolean)).size;
+    document.getElementById('hvyStatJenis').textContent = new Set(groupScoped.map(a => (a['Jenis']||'').trim()).filter(Boolean)).size;
+
+    grid.style.display = (hvyViewMode==='card') ? '' : 'none';
+    tableWrap.style.display = (hvyViewMode==='table') ? '' : 'none';
+
+    if(filtered.length===0){
+      const emptyHtml = `<div class="empty">Tidak ada alat berat yang cocok dengan pencarian / filter.</div>`;
+      grid.innerHTML = emptyHtml;
+      document.getElementById('hvyTableBody').innerHTML = `<tr><td colspan="6" class="empty">Tidak ada alat berat yang cocok dengan pencarian / filter.</td></tr>`;
+      return;
+    }
+
+    if(hvyViewMode==='card'){
+      renderHvyCards(filtered);
+    }else{
+      renderHvyTable(filtered);
+    }
+  }
+
+  function renderHvyCards(filtered){
+    const grid = document.getElementById('hvyGrid');
+    grid.innerHTML = filtered.map(a=>{
+      const kode = a['Kode Aset'];
+      const nama = a['Nama Display'];
+      const thumb = photoUrl(a['Foto Utama']);
+      const iconHtml = thumb
+        ? `<img src="${thumb}" alt="${fmtVal(nama)}" loading="lazy" onerror="hvyCardThumbError(this)">`
+        : iconHeavy;
+      return `
+        <div class="card" tabindex="0" data-kode="${kode}">
+          <div class="strip"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <div class="card-icon${thumb ? ' thumb' : ''}">${iconHtml}</div>
+              <div class="card-id">${fmtVal(kode)}</div>
+            </div>
+            <p class="card-name">${fmtVal(nama)}</p>
+            <p class="card-meta">${fmtVal(a['Company'])} &middot; <span class="driver">${fmtVal(a['Jenis'])}</span></p>
+            <span class="badge">${fmtVal(a['Kategori'])}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    grid.querySelectorAll('.card').forEach(card=>{
+      card.addEventListener('click', ()=>openHvyDossier(card.dataset.kode));
+      card.addEventListener('keydown', e=>{ if(e.key==='Enter') openHvyDossier(card.dataset.kode); });
+    });
+  }
+
+  function renderHvyTable(filtered){
+    const body = document.getElementById('hvyTableBody');
+    body.innerHTML = filtered.map(a=>{
+      return `
+        <tr tabindex="0" data-kode="${a['Kode Aset']}">
+          <td>${fmtVal(a['Kode Aset'])}</td>
+          <td class="name">${fmtVal(a['Nama Display'])}</td>
+          <td>${fmtVal(a['Company'])}</td>
+          <td>${fmtVal(a['Jenis'])}</td>
+          <td>${fmtVal(a['Kategori'])}</td>
+          <td>${fmtVal(a['Tanggal Perolehan'])}</td>
+        </tr>`;
+    }).join('');
+
+    body.querySelectorAll('tr').forEach(row=>{
+      row.addEventListener('click', ()=>openHvyDossier(row.dataset.kode));
+      row.addEventListener('keydown', e=>{ if(e.key==='Enter') openHvyDossier(row.dataset.kode); });
+    });
+  }
+
+  function openHvyDossier(kode){
+    const a = HEAVY_ASSETS.find(x=>String(x['Kode Aset'])===String(kode));
+    if(!a) return;
+
+    const rows = [
+      ['Company', a['Company']],
+      ['Jenis', a['Jenis']],
+      ['Kategori', a['Kategori']],
+      ['Tanggal Perolehan', a['Tanggal Perolehan']],
+      ['Nomor Rangka', a['Nomor Rangka']],
+      ['Nomor Mesin', a['Nomor Mesin']],
+    ];
+
+    const rowsBelowPhoto = [
+      ['Kode Aset', a['Kode Aset']],
+    ];
+
+    const specRows = rows.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
+    const belowPhotoRows = rowsBelowPhoto.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
+
+    const dossier = document.getElementById('dossier');
+    dossier.innerHTML = `
+      <div class="dossier-header">
+        <div>
+          <p class="dossier-tag">${fmtVal(a['Kode Aset'])} &middot; ${fmtVal(a['Kategori'])}</p>
+          <h2 class="dossier-title">${fmtVal(a['Nama Display'])}</h2>
+        </div>
+        <button class="close-btn" id="closeBtn" aria-label="Tutup">&#10005;</button>
+      </div>
+      <div class="dossier-body">
+        <div class="main-section">
+          <div class="photo-col">
+            ${photoFrame(photoUrl(a['Foto Utama']), 'Foto Utama')}
+            <div class="spec-table">${belowPhotoRows}</div>
+          </div>
+          <div class="spec-table">${specRows}</div>
+        </div>
+        <p class="views-heading">Tampak Sekeliling</p>
+        <div class="views-grid">
+          ${viewFrame(photoUrl(a['Foto Kiri']), 'Tampak Kiri')}
+          ${viewFrame(photoUrl(a['Foto Belakang']), 'Tampak Belakang')}
+          ${viewFrame(photoUrl(a['Foto Kanan']), 'Tampak Kanan')}
+        </div>
+      </div>
+    `;
+    document.getElementById('closeBtn').addEventListener('click', closeDossier);
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  document.getElementById('hvyGroupFilter').addEventListener('change', e=>{
+    hvyGroupFilterValue = e.target.value;
+    renderHvyGrid();
+  });
+  document.getElementById('hvySearchInput').addEventListener('input', e=>{
+    hvySearchTerm = e.target.value;
+    renderHvyGrid();
+  });
+  document.getElementById('hvyRefreshBtn').addEventListener('click', loadHvyData);
+
+  const hvyViewToggle = document.getElementById('hvyViewToggle');
+  hvyViewToggle.querySelectorAll('button[data-view]').forEach(btn=>{
+    if(btn.dataset.view === hvyViewMode) btn.classList.add('active'); else btn.classList.remove('active');
+    btn.addEventListener('click', ()=>{
+      hvyViewMode = btn.dataset.view;
+      localStorage.setItem('alatBeratViewMode', hvyViewMode);
+      hvyViewToggle.querySelectorAll('button[data-view]').forEach(b=>b.classList.toggle('active', b===btn));
+      renderHvyGrid();
     });
   });
 
@@ -3840,11 +4127,12 @@
   document.getElementById('hrToggle').addEventListener('click', ()=>toggleSubmenu('hr'));
   document.getElementById('gaToggle').addEventListener('click', ()=>toggleSubmenu('ga'));
 
-  const KNOWN_PAGES = ['dashboard','kendaraan','bangunan','karyawan','rekrutmen','orgchart','jobdesc'];
+  const KNOWN_PAGES = ['dashboard','kendaraan','bangunan','alatberat','karyawan','rekrutmen','orgchart','jobdesc'];
   function showPage(page, label){
     document.getElementById('page-dashboard').style.display = (page==='dashboard') ? '' : 'none';
     document.getElementById('page-kendaraan').style.display = (page==='kendaraan') ? '' : 'none';
     document.getElementById('page-bangunan').style.display = (page==='bangunan') ? '' : 'none';
+    document.getElementById('page-alatberat').style.display = (page==='alatberat') ? '' : 'none';
     document.getElementById('page-karyawan').style.display = (page==='karyawan') ? '' : 'none';
     document.getElementById('page-rekrutmen').style.display = (page==='rekrutmen') ? '' : 'none';
     document.getElementById('page-orgchart').style.display = (page==='orgchart') ? '' : 'none';
@@ -3878,6 +4166,10 @@
     if(page==='bangunan' && !bldLoaded){
       bldLoaded = true;
       loadBangunanData();
+    }
+    if(page==='alatberat' && !hvyLoaded){
+      hvyLoaded = true;
+      loadHvyData();
     }
     if(page==='karyawan' && !kryLoaded){
       loadKaryawanData();
