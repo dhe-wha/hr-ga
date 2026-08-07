@@ -107,28 +107,6 @@
   .placeholder p{color:var(--text-dim-sb); font-size:14px; margin:0;}
   .crumb{font-family:monospace; font-size:12px; color:var(--text-faint-sb); margin-top:14px; background:var(--bg-sidebar); border:1px solid var(--border-sb); display:inline-block; padding:6px 12px; border-radius:8px;}
 
-  /* ---------- Tema "Light Blue" khusus halaman Sepeda Motor ----------
-     Semua komponen aset (card, badge, tabel, filter, dsb) dibangun murni
-     dari CSS variable var(--bg/--panel/--border/--text/--amber/dst), jadi
-     cukup override variable-variable itu di dalam scope .theme-light-blue
-     (dipasang di #page-sepedamotor) - otomatis ke-cascade ke semua
-     komponen di bawahnya tanpa perlu duplikasi rule CSS. Pengecualian:
-     .card-icon pakai warna wash rgba HARDCODE (bukan var), jadi di-override
-     terpisah supaya ikon di kartu ikut biru, bukan tetap amber. */
-  .theme-light-blue{
-    --bg:#EAF3FC;
-    --panel:#FFFFFF;
-    --panel-alt:#E3EFFC;
-    --border:#C6DEF5;
-    --text:#0F2A43;
-    --text-dim:#5B7A9D;
-    --amber:#2F80ED;
-    --green:#2E9E5B;
-    --red:#D64545;
-  }
-  .theme-light-blue .card-icon{background:rgba(47,128,237,0.12);}
-  .theme-light-blue .grid-texture{background-image:linear-gradient(rgba(15,42,67,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(15,42,67,0.04) 1px, transparent 1px);}
-
   /* ---------- Asset dashboard (Kendaraan) ---------- */
   .grid-texture{position:absolute; inset:0; pointer-events:none; z-index:0; background-image:linear-gradient(rgba(236,234,228,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(236,234,228,0.025) 1px, transparent 1px); background-size:32px 32px;}
   .asset-view{position:relative; min-height:100vh;}
@@ -565,8 +543,8 @@
   <!-- ===== Halaman Aset Sepeda Motor (General Affair > Sepeda Motor) =====
        Bukan sheet terpisah - ini VIEW terfilter dari data Kendaraan
        (ASSETS) yang sama, cuma baris dengan Jenis = "Sepeda Motor" saja.
-       Tema "Light Blue" khusus halaman ini (lihat .theme-light-blue di CSS). -->
-  <div class="asset-view theme-light-blue" id="page-sepedamotor" style="display:none;">
+       Tema disamakan dengan halaman Kendaraan (dark, default). -->
+  <div class="asset-view" id="page-sepedamotor" style="display:none;">
     <div class="grid-texture"></div>
     <div class="wrap">
       <div class="sticky-bar">
