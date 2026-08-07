@@ -2112,6 +2112,17 @@
 
     const resignByPT = groupSum(flowRows, 'pt', 'keluarResign');
 
+    /* Turn Over Karyawan: resign PT bulan berjalan dibagi rata-rata headcount PT
+       (bulan berjalan + bulan sebelumnya). Bulan sebelumnya dicari dari KRY_ROWS
+       GLOBAL (lintas tahun, bukan cuma rowsInYear) supaya kasus Jan -> Des tahun
+       lalu tetap kena, dengan filter PT/Departemen yang sama seperti scope halaman. */
+    const scopedAllYears = KRY_ROWS.filter(r => (kryPtValue==='semua' || r.pt===kryPtValue) && (kryDeptValue==='semua' || r.dept===kryDeptValue));
+    const curSortKey = snapshotRows[0] ? snapshotRows[0].sortKey : null;
+    const prevMonthCandidates = curSortKey!=null ? scopedAllYears.filter(r => r.sortKey < curSortKey) : [];
+    const prevSortKey = prevMonthCandidates.length ? Math.max(...prevMonthCandidates.map(r=>r.sortKey)) : null;
+    const prevMonthRows = prevSortKey!=null ? scopedAllYears.filter(r => r.sortKey === prevSortKey) : [];
+    const byPTPrev = groupSum(prevMonthRows, 'pt', 'total');
+
     const genderL = sum(snapshotRows,'genderL'), genderP = sum(snapshotRows,'genderP');
     const statusBulanan = sum(snapshotRows,'statusBulanan'), statusSKU = sum(snapshotRows,'statusSKU'), statusPKWT = sum(snapshotRows,'statusPKWT'), statusBHL = sum(snapshotRows,'statusBHL');
     const pangkatStaff = sum(snapshotRows,'pangkatStaff'), pangkatMandor1 = sum(snapshotRows,'pangkatMandor1'), pangkatMandorKerani = sum(snapshotRows,'pangkatMandorKerani'), pangkatWorker = sum(snapshotRows,'pangkatWorker');
@@ -2141,10 +2152,11 @@
       <div class="kry-card"><h3>Karyawan Masuk per Kategori (YTD)</h3><div class="bar-list" id="kryMasukList"></div></div>
       <div class="kry-card"><h3>Karyawan Keluar per Kategori (YTD)</h3><div class="bar-list" id="kryKeluarList"></div></div>
       <div class="kry-card"><h3>Karyawan per Gender</h3><div class="bar-list" id="kryGender"></div></div>
-      <div class="kry-card"><h3>Karyawan per Status</h3><div class="bar-list" id="kryStatus"></div></div>
+      <div class="kry-card"><h3>Turn Over Karyawan</h3><div class="bar-list" id="kryTurnover"></div></div>
       <div class="kry-card"><h3>Karyawan per Pangkat</h3><div class="bar-list" id="kryPangkat"></div></div>
-      <div class="kry-card"><h3>Karyawan per Klasifikasi</h3><div class="bar-list" id="kryKlasifikasi"></div></div>
+      <div class="kry-card"><h3>Karyawan per Status</h3><div class="bar-list" id="kryStatus"></div></div>
       <div class="kry-card"><h3>Karyawan per Tingkat Pendidikan</h3><div class="bar-list" id="kryPendidikan"></div></div>
+      <div class="kry-card"><h3>Karyawan per Klasifikasi</h3><div class="bar-list" id="kryKlasifikasi"></div></div>
       <div class="kry-card wide"><h3>Gaji Bruto per Departemen</h3><table class="kry-table" id="kryGajiBruto"></table></div>
       <div class="kry-card wide"><h3>Gaji Netto per Departemen</h3><table class="kry-table" id="kryGajiNetto"></table></div>
     `;
@@ -2157,6 +2169,14 @@
       const resign = resignByPT[k] || 0;
       const headcount = byPT[k] || 0;
       return {label:k, value:resign, pct: headcount ? (resign/headcount*100) : 0};
+    }), 'red');
+    // Turn Over = resign PT bulan berjalan / rata-rata(headcount PT bulan berjalan, bulan sebelumnya)
+    renderBarListPct('kryTurnover', resignPtKeys.map(k => {
+      const resign = resignByPT[k] || 0;
+      const curHC = byPT[k] || 0;
+      const prevHC = byPTPrev[k] || 0;
+      const avgHC = (curHC + prevHC) / 2;
+      return {label:k, value:resign, pct: avgHC ? (resign/avgHC*100) : 0};
     }), 'red');
     renderBarListPct('kryByDept', withSharePct(Object.entries(byDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value)));
     renderBarListPct('kryKab', withSharePct([{label:'Lokal',value:kabLokal},{label:'Non Lokal',value:kabNonLokal}]));
