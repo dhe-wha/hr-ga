@@ -6,41 +6,41 @@
 <title>HR GA Hub - Dashboard Aset Kendaraan</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
 <style>
   :root{
-    /* sidebar palette */
-    --bg-sidebar:#1B2438;
-    --border-sb:#2A3350;
-    --text-sb:#E7E9F0;
-    --text-dim-sb:#7C8398;
-    --text-faint-sb:#565D71;
-    --purple:#F2B705;
-    --purple-soft:rgba(242,183,5,0.16);
-    --orange:#E08A3E;
-    --orange-soft:rgba(224,138,62,0.14);
-    --teal-sb:#3FB6A8;
-    --teal-soft:rgba(63,182,168,0.14);
-    --blue:#4C8DF5;
-    --blue-soft:rgba(76,141,245,0.14);
-    --gray-sb:#9AA1B4;
-    --gray-soft:rgba(154,161,180,0.12);
+    /* sidebar palette - Cybertronian gunmetal + Autobot energon accents */
+    --bg-sidebar:#12161C;
+    --border-sb:#293241;
+    --text-sb:#E9EDF3;
+    --text-dim-sb:#8994A6;
+    --text-faint-sb:#525E70;
+    --purple:#FF6A1A;
+    --purple-soft:rgba(255,106,26,0.16);
+    --orange:#29B6F6;
+    --orange-soft:rgba(41,182,246,0.14);
+    --teal-sb:#00E5C7;
+    --teal-soft:rgba(0,229,199,0.14);
+    --blue:#2E7DFF;
+    --blue-soft:rgba(46,125,255,0.14);
+    --gray-sb:#A6AEBB;
+    --gray-soft:rgba(166,174,187,0.12);
 
     /* asset dashboard palette */
-    --bg:#14181A;
-    --panel:#1E2426;
-    --panel-alt:#262D2F;
-    --border:#333B3D;
-    --text:#ECEAE4;
-    --text-dim:#9BA3A0;
-    --amber:#E8A33D;
-    --green:#8FCB84;
-    --red:#E8825A;
-    --font-display:'Oswald', sans-serif;
-    --font-body:'Inter', sans-serif;
-    --font-mono:'IBM Plex Mono', monospace;
+    --bg:#0F1318;
+    --panel:#1A2029;
+    --panel-alt:#212933;
+    --border:#2E3A48;
+    --text:#E9EDF2;
+    --text-dim:#8D98A6;
+    --amber:#FFB300;
+    --green:#4CD9A0;
+    --red:#FF4550;
+    --font-display:'Orbitron', sans-serif;
+    --font-body:'Rajdhani', sans-serif;
+    --font-mono:'Share Tech Mono', monospace;
   }
   *{box-sizing:border-box;}
   body{margin:0; display:flex; min-height:100vh; background:var(--bg); color:var(--text); font-family:var(--font-body); -webkit-font-smoothing:antialiased;}
@@ -49,7 +49,7 @@
   .sidebar{width:264px; flex-shrink:0; background:var(--bg-sidebar); border-right:1px solid var(--border-sb); display:flex; flex-direction:column; height:100vh; position:sticky; top:0; overflow-y:auto; color:var(--text-sb);}
   .sidebar::-webkit-scrollbar{width:6px;}
   .sidebar::-webkit-scrollbar-thumb{background:var(--border-sb); border-radius:10px;}
-  .recruithub-btn{display:flex; align-items:center; justify-content:center; margin:auto 20px 20px; padding:13px 16px; border-radius:10px; background:#141A2B; border:1px solid var(--border-sb); text-decoration:none; font-family:var(--font-display); font-weight:800; font-size:16px; letter-spacing:-0.2px; transition:.15s;}
+  .recruithub-btn{display:flex; align-items:center; justify-content:center; margin:auto 20px 20px; padding:13px 16px; border-radius:10px; background:#0B0E13; border:1px solid var(--border-sb); text-decoration:none; font-family:var(--font-display); font-weight:800; font-size:16px; letter-spacing:-0.2px; transition:.15s;}
   .recruithub-btn:hover{border-color:var(--purple);}
   .recruithub-btn .rh-recruit{color:var(--text-sb);}
   .recruithub-btn .rh-hub{color:var(--orange);}
@@ -64,10 +64,14 @@
 
   /* ---------- Login gate ---------- */
   body.pre-auth .sidebar, body.pre-auth .content{display:none;}
-  .login-screen{display:none; position:fixed; inset:0; background:var(--bg); z-index:1000; align-items:center; justify-content:center; padding:20px;}
+  .login-screen{display:none; position:fixed; inset:0; background:
+      radial-gradient(circle at 50% 38%, rgba(255,106,26,0.10), transparent 60%),
+      var(--bg);
+    z-index:1000; align-items:center; justify-content:center; padding:20px; overflow:hidden;}
   body.pre-auth .login-screen{display:flex;}
-  .login-card{width:100%; max-width:360px; background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:34px 30px; display:flex; flex-direction:column;}
-  .login-brand{font-size:25px; font-weight:800; letter-spacing:-0.3px; margin:0 0 6px; text-align:center;}
+  .login-bg-mech{position:absolute; inset:0; width:100%; height:100%; opacity:0.35; pointer-events:none; z-index:0;}
+  .login-card{position:relative; z-index:1; width:100%; max-width:360px; background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:34px 30px; display:flex; flex-direction:column; box-shadow:0 0 0 1px rgba(255,106,26,0.08), 0 20px 60px rgba(0,0,0,0.45);}
+  .login-brand{font-size:25px; font-weight:800; letter-spacing:-0.3px; margin:0 0 6px; text-align:center; font-family:var(--font-display);}
   .login-brand .a{color:var(--text);}
   .login-brand .b{color:var(--purple);}
   .login-sub{font-size:12.5px; color:var(--text-dim); text-align:center; margin:0 0 24px; line-height:1.5;}
@@ -75,7 +79,7 @@
   .login-input{background:var(--panel-alt); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:14px; padding:11px 13px; outline:none; transition:.15s; font-family:var(--font-body); width:100%;}
   .login-input:focus{border-color:var(--purple);}
   .login-error{color:var(--red); font-size:12px; margin:12px 0 0; min-height:14px; line-height:1.4;}
-  .login-btn{margin-top:18px; background:var(--purple); border:none; color:#1B1A05; font-family:var(--font-display); font-weight:700; letter-spacing:.3px; text-transform:uppercase; font-size:13.5px; padding:13px; border-radius:8px; cursor:pointer; transition:.15s;}
+  .login-btn{margin-top:18px; background:var(--purple); border:none; color:#1A0900; font-family:var(--font-display); font-weight:700; letter-spacing:.3px; text-transform:uppercase; font-size:13.5px; padding:13px; border-radius:8px; cursor:pointer; transition:.15s;}
   .login-btn:hover{opacity:.88;}
   .login-btn:disabled{opacity:.6; cursor:default;}
   .brand-name{font-size:21px; font-weight:800; letter-spacing:-0.3px; margin:0;}
@@ -86,9 +90,9 @@
   .section-label{font-size:10.5px; font-weight:700; letter-spacing:1.6px; color:var(--text-faint-sb); text-transform:uppercase; padding:6px 12px 8px;}
   .item{display:flex; align-items:center; gap:11px; padding:10px 12px; margin-bottom:3px; border-radius:10px; cursor:pointer; user-select:none; transition:.13s background; color:var(--text-dim-sb); font-size:14px; font-weight:600;}
   .item:hover{background:rgba(255,255,255,0.04); color:var(--text-sb);}
-  .item.active{background:var(--purple); color:#1B2438;}
+  .item.active{background:var(--purple); color:#12161C;}
   .item.active .icon-box{background:rgba(27,36,56,0.15);}
-  .item.active svg{color:#1B2438 !important;}
+  .item.active svg{color:#12161C !important;}
   .icon-box{width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
   .item-label{flex:1; white-space:nowrap;}
   .chevron{transition:transform .15s; flex-shrink:0; color:var(--text-faint-sb);}
@@ -368,6 +372,44 @@
 <body class="pre-auth">
 
 <div class="login-screen" id="loginScreen">
+  <svg class="login-bg-mech" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="mechFill" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FF6A1A"/>
+        <stop offset="55%" stop-color="#29B6F6"/>
+        <stop offset="100%" stop-color="#12161C"/>
+      </linearGradient>
+    </defs>
+    <!-- Ilustrasi robot mekanik orisinal (bukan karakter berlisensi) -->
+    <g fill="none" stroke="url(#mechFill)" stroke-width="3">
+      <!-- kepala / visor -->
+      <path d="M300 120 L400 70 L500 120 L520 230 L470 300 L400 330 L330 300 L280 230 Z" stroke-width="4"/>
+      <path d="M330 190 L400 160 L470 190 L460 230 L400 250 L340 230 Z" fill="url(#mechFill)" fill-opacity="0.55" stroke-width="2"/>
+      <circle cx="400" cy="210" r="6" fill="url(#mechFill)" stroke="none"/>
+      <!-- antena -->
+      <line x1="330" y1="140" x2="300" y2="90"/>
+      <line x1="470" y1="140" x2="500" y2="90"/>
+      <circle cx="300" cy="90" r="6" fill="url(#mechFill)" stroke="none"/>
+      <circle cx="500" cy="90" r="6" fill="url(#mechFill)" stroke="none"/>
+      <!-- badan / dada berpanel -->
+      <path d="M250 330 L400 300 L550 330 L580 480 L520 620 L400 660 L280 620 L220 480 Z"/>
+      <path d="M320 380 L400 360 L480 380 L470 470 L400 500 L330 470 Z" stroke-width="2"/>
+      <line x1="400" y1="360" x2="400" y2="500" stroke-width="2"/>
+      <path d="M250 330 L280 620 M550 330 L520 620" stroke-width="2"/>
+      <!-- garis panel / lis kecepatan -->
+      <line x1="180" y1="420" x2="620" y2="420" stroke-width="2" stroke-dasharray="6 10"/>
+      <line x1="200" y1="470" x2="600" y2="470" stroke-width="2" stroke-dasharray="6 10"/>
+      <!-- lengan -->
+      <path d="M250 350 L150 420 L140 560 L200 640"/>
+      <path d="M550 350 L650 420 L660 560 L600 640"/>
+      <!-- kaki -->
+      <path d="M330 630 L300 760 L360 780"/>
+      <path d="M470 630 L500 760 L440 780"/>
+    </g>
+    <!-- garis balap diagonal -->
+    <path d="M0 620 L800 380" stroke="url(#mechFill)" stroke-width="14" stroke-opacity="0.25"/>
+    <path d="M0 660 L800 420" stroke="url(#mechFill)" stroke-width="6" stroke-opacity="0.35"/>
+  </svg>
   <form class="login-card" id="loginForm">
     <p class="login-brand"><span class="a">HR</span> <span class="b">GA Hub</span></p>
     <p class="login-sub">Masuk untuk melanjutkan ke HR &amp; General Affair Hub</p>
@@ -2756,8 +2798,8 @@
   let dashPtValue = 'semua';
   let dashTrendChartType = 'line';
   let dashLineChart = null, dashPieKabChart = null, dashPieProvChart = null, dashDoughnutChart = null;
-  const DASH_PT_COLORS = { BJA:'#E8A33D', BTL:'#4C8DF5', IGL:'#3FB6A8' };
-  const DASH_PT_FALLBACK_COLORS = ['#F2B705','#E08A3E','#9AA1B4','#8FCB84','#E8825A'];
+  const DASH_PT_COLORS = { BJA:'#FFB300', BTL:'#2E7DFF', IGL:'#00E5C7' };
+  const DASH_PT_FALLBACK_COLORS = ['#FF6A1A','#29B6F6','#A6AEBB','#4CD9A0','#FF4550'];
 
   function dashPtColor(pt, idx){
     return DASH_PT_COLORS[pt] || DASH_PT_FALLBACK_COLORS[idx % DASH_PT_FALLBACK_COLORS.length];
@@ -2776,7 +2818,7 @@
           const value = dataset.data[index];
           if(value === null || value === undefined || value === 0) return;
           ctx.save();
-          ctx.fillStyle = dataset.borderColor || dataset.backgroundColor || '#ECEAE4';
+          ctx.fillStyle = dataset.borderColor || dataset.backgroundColor || '#E9EDF2';
           ctx.font = "10px 'IBM Plex Mono', monospace";
           ctx.textAlign = 'center';
           ctx.textBaseline = 'bottom';
@@ -2936,8 +2978,8 @@
           tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
         },
         scales: {
-          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
-          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
+          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#2E3A48' } },
+          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#2E3A48' } },
         },
       },
     });
@@ -2969,7 +3011,7 @@
       type: 'pie',
       data: {
         labels: ['Lokal','Non Lokal'],
-        datasets: [{ data: [kabLokal, kabNonLokal], backgroundColor: ['#8FCB84','#E8825A'], borderColor:'#1E2426', borderWidth:2 }],
+        datasets: [{ data: [kabLokal, kabNonLokal], backgroundColor: ['#4CD9A0','#FF4550'], borderColor:'#1A2029', borderWidth:2 }],
       },
       options: dashPieOptions(),
     });
@@ -2985,7 +3027,7 @@
       type: 'pie',
       data: {
         labels: ['Lokal','Non Lokal'],
-        datasets: [{ data: [provLokal, provNonLokal], backgroundColor: ['#4C8DF5','#F2B705'], borderColor:'#1E2426', borderWidth:2 }],
+        datasets: [{ data: [provLokal, provNonLokal], backgroundColor: ['#2E7DFF','#FF6A1A'], borderColor:'#1A2029', borderWidth:2 }],
       },
       options: dashPieOptions(),
     });
@@ -3008,7 +3050,7 @@
       type: 'doughnut',
       data: {
         labels: Object.keys(klas),
-        datasets: [{ data: Object.values(klas), backgroundColor: ['#E8A33D','#4C8DF5','#8FCB84','#E8825A','#3FB6A8','#F2B705'], borderColor:'#1E2426', borderWidth:2 }],
+        datasets: [{ data: Object.values(klas), backgroundColor: ['#FFB300','#2E7DFF','#4CD9A0','#FF4550','#00E5C7','#FF6A1A'], borderColor:'#1A2029', borderWidth:2 }],
       },
       plugins: [dashDoughnutLabelsPlugin],
       options: dashPieOptions(),
@@ -3029,7 +3071,7 @@
   const DASH_VEHICLE_3D_DEPTH = 7;
 
   function shadeHexColor(hex, percent){
-    hex = (hex||'#4C8DF5').replace('#','');
+    hex = (hex||'#2E7DFF').replace('#','');
     if(hex.length===3) hex = hex.split('').map(c=>c+c).join('');
     const num = parseInt(hex, 16);
     let r = (num >> 16) + Math.round(2.55*percent);
@@ -3056,7 +3098,7 @@
           const value = dataset.data[index];
           if(!value) return;
           const colorRaw = Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[index] : dataset.backgroundColor;
-          const color = colorRaw || '#4C8DF5';
+          const color = colorRaw || '#2E7DFF';
           const left = bar.x - bar.width/2;
           const right = bar.x + bar.width/2;
           const top = bar.y;
@@ -3098,7 +3140,7 @@
         ctx.font = "bold 11px 'IBM Plex Mono', monospace";
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
-        ctx.fillStyle = '#ECEAE4';
+        ctx.fillStyle = '#E9EDF2';
         ctx.fillText(String(value), bar.x, bar.y - DASH_VEHICLE_3D_DEPTH - 6);
         ctx.restore();
       });
@@ -3124,7 +3166,7 @@
       const entries = Object.entries(counts).sort((a,b)=> b[1]-a[1]);
       const labels = entries.map(e=>e[0]);
       const data = entries.map(e=>e[1]);
-      const palette = ['#E8A33D','#4C8DF5','#3FB6A8','#8FCB84','#E8825A','#F2B705','#E08A3E','#9AA1B4'];
+      const palette = ['#FFB300','#2E7DFF','#00E5C7','#4CD9A0','#FF4550','#FF6A1A','#29B6F6','#A6AEBB'];
       const colors = labels.map((_,i)=> palette[i % palette.length]);
 
       if(dashVehicleChart) dashVehicleChart.destroy();
@@ -3142,7 +3184,7 @@
           },
           scales: {
             x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { display:false } },
-            y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, precision:0 }, grid: { color:'#333B3D' } },
+            y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, precision:0 }, grid: { color:'#2E3A48' } },
           },
         },
       });
@@ -3924,8 +3966,8 @@
       data: {
         labels: ID_MONTH_LABELS,
         datasets: [
-          buildDataset('Masuk', masukMonths, '#8FCB84'),
-          buildDataset('Keluar', keluarMonths, '#E8825A'),
+          buildDataset('Masuk', masukMonths, '#4CD9A0'),
+          buildDataset('Keluar', keluarMonths, '#FF4550'),
         ],
       },
       options: {
@@ -3937,8 +3979,8 @@
           tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
         },
         scales: {
-          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
-          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, precision:0 }, grid: { color:'#333B3D' } },
+          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#2E3A48' } },
+          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, precision:0 }, grid: { color:'#2E3A48' } },
         },
       },
     });
@@ -4075,8 +4117,8 @@
       data: {
         labels: ID_MONTH_LABELS,
         datasets: [
-          buildDataset('Masuk', masukMonths, '#8FCB84'),
-          buildDataset('Keluar', keluarMonths, '#E8825A'),
+          buildDataset('Masuk', masukMonths, '#4CD9A0'),
+          buildDataset('Keluar', keluarMonths, '#FF4550'),
         ],
       },
       options: {
@@ -4088,8 +4130,8 @@
           tooltip: { titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono'} },
         },
         scales: {
-          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#333B3D' } },
-          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, precision:0 }, grid: { color:'#333B3D' } },
+          x: { ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5} }, grid: { color:'#2E3A48' } },
+          y: { beginAtZero:true, ticks: { color:'#9BA3A0', font:{family:'IBM Plex Mono', size:10.5}, precision:0 }, grid: { color:'#2E3A48' } },
         },
       },
     });
