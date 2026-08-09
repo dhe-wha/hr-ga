@@ -58,7 +58,7 @@
 
   /* ---------- Login gate (kredensial sama dgn HRGA Hub) ---------- */
   body.pre-auth > *:not(#loginScreen){display:none;}
-  #loginScreen{display:none; position:fixed; inset:0; background:#fafafa; z-index:1000; align-items:center; justify-content:center; padding:20px;}
+  #loginScreen{display:none; position:fixed; inset:0; background:linear-gradient(rgba(250,250,250,.55),rgba(250,250,250,.55)), url('../main/bg_login.png') center/cover no-repeat, #fafafa; z-index:1000; align-items:center; justify-content:center; padding:20px;}
   body.pre-auth #loginScreen{display:flex;}
   .login-card{width:100%; max-width:340px; background:#fff; border:1px solid #ddd; border-radius:8px; padding:32px 28px; box-shadow:0 2px 12px rgba(0,0,0,.07);}
   .login-card h2{margin:0 0 6px; font-size:19px; text-align:center; text-transform:uppercase; letter-spacing:.3px; color:#111;}
@@ -410,6 +410,43 @@ document.getElementById('loginForm').addEventListener('submit', handleLoginSubmi
    dipercaya (lihat tryRestoreLogin). Kalau belum ada sesi, layar login
    (default tampil lewat body.pre-auth) yang jadi satu-satunya hal yang
    terlihat. */
+/* ---------- Auto-logout kalau idle (tidak ada aktivitas) > 6 jam ---------- */
+const IDLE_KEY = 'hrgaLastActivity';
+const IDLE_LIMIT_MS = 6*60*60*1000; // 6 jam
+
+function markActivity(){
+  try{ localStorage.setItem(IDLE_KEY, String(Date.now())); }catch(e){}
+}
+function isIdleTimedOut(){
+  try{
+    const last = parseInt(localStorage.getItem(IDLE_KEY)||'0', 10);
+    return last > 0 && (Date.now() - last) > IDLE_LIMIT_MS;
+  }catch(e){ return false; }
+}
+function forceIdleLogout(){
+  try{
+    localStorage.removeItem(LOGIN_KEY);
+    localStorage.removeItem(IDLE_KEY);
+  }catch(e){}
+  location.reload();
+}
+// Kalau sesi terakhir sudah lewat 6 jam idle sebelum halaman ini dibuka
+// (mis. tab ditinggal lama lalu di-refresh/dibuka lagi), paksa logout dulu
+// sebelum tryRestoreLogin() sempat memulihkan sesi lama.
+if(isIdleTimedOut()){
+  try{
+    localStorage.removeItem(LOGIN_KEY);
+    localStorage.removeItem(IDLE_KEY);
+  }catch(e){}
+}
+markActivity();
+['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(ev=>{
+  document.addEventListener(ev, markActivity, {passive:true});
+});
+// Cek berkala (tiap 1 menit) selama tab tetap terbuka - supaya auto-logout
+// tetap terjadi walau user tidak reload/navigasi halaman.
+setInterval(()=>{ if(isIdleTimedOut()) forceIdleLogout(); }, 60*1000);
+
 tryRestoreLogin();
 </script>
 </body>
