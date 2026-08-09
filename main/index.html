@@ -27,7 +27,6 @@
     --blue-soft:rgba(46,125,255,0.14);
     --gray-sb:#A6AEBB;
     --gray-soft:rgba(166,174,187,0.12);
-
     /* asset dashboard palette */
     --bg:#0F1318;
     --panel:#1A2029;
@@ -44,7 +43,6 @@
   }
   *{box-sizing:border-box;}
   body{margin:0; display:flex; min-height:100vh; background:var(--bg); color:var(--text); font-family:var(--font-body); -webkit-font-smoothing:antialiased;}
-
   /* ============ SIDEBAR ============ */
   .sidebar{width:264px; flex-shrink:0; background:var(--bg-sidebar); border-right:1px solid var(--border-sb); display:flex; flex-direction:column; height:100vh; position:sticky; top:0; overflow-y:auto; color:var(--text-sb);}
   .sidebar::-webkit-scrollbar{width:6px;}
@@ -61,15 +59,15 @@
   .user-role{margin:2px 0 0; font-size:10.5px; color:var(--text-dim-sb); text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .user-logout-btn{background:transparent; border:1px solid var(--border-sb); color:var(--text-dim-sb); width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:.15s;}
   .user-logout-btn:hover{color:var(--text-sb); border-color:var(--text-dim-sb);}
-
   /* ---------- Login gate ---------- */
   body.pre-auth .sidebar, body.pre-auth .content{display:none;}
   .login-screen{display:none; position:fixed; inset:0; background:
-      radial-gradient(circle at 50% 38%, rgba(255,106,26,0.10), transparent 60%),
-      var(--bg);
+      radial-gradient(circle at 50% 38%, rgba(255,106,26,0.12), transparent 60%),
+      linear-gradient(180deg, rgba(10,12,15,0.72), rgba(10,12,15,0.88)),
+      url('bg_login.png') center/cover no-repeat;
     z-index:1000; align-items:center; justify-content:center; padding:20px; overflow:hidden;}
   body.pre-auth .login-screen{display:flex;}
-  .login-bg-mech{position:absolute; inset:0; width:100%; height:100%; opacity:0.35; pointer-events:none; z-index:0;}
+  .login-bg-mech{display:none;}
   .login-card{position:relative; z-index:1; width:100%; max-width:360px; background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:34px 30px; display:flex; flex-direction:column; box-shadow:0 0 0 1px rgba(255,106,26,0.08), 0 20px 60px rgba(0,0,0,0.45);}
   .login-brand{font-size:25px; font-weight:800; letter-spacing:-0.3px; margin:0 0 6px; text-align:center; font-family:var(--font-display);}
   .login-brand .a{color:var(--text);}
@@ -103,14 +101,12 @@
   .sub-item:hover{background:rgba(255,255,255,0.04); color:var(--text-sb);}
   .sub-item.active{color:var(--purple); background:var(--purple-soft); font-weight:600;}
   .divider{height:1px; background:var(--border-sb); margin:6px 12px;}
-
   /* ============ CONTENT AREA ============ */
   .content{flex:1; min-width:0;}
   .placeholder{padding:36px 40px;}
   .placeholder h1{font-size:24px; margin:0 0 6px;}
   .placeholder p{color:var(--text-dim-sb); font-size:14px; margin:0;}
   .crumb{font-family:monospace; font-size:12px; color:var(--text-faint-sb); margin-top:14px; background:var(--bg-sidebar); border:1px solid var(--border-sb); display:inline-block; padding:6px 12px; border-radius:8px;}
-
   /* ---------- Asset dashboard (Kendaraan) ---------- */
   .grid-texture{position:absolute; inset:0; pointer-events:none; z-index:0; background-image:linear-gradient(rgba(236,234,228,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(236,234,228,0.025) 1px, transparent 1px); background-size:32px 32px;}
   .asset-view{position:relative; min-height:100vh;}
@@ -123,7 +119,6 @@
   .stat{text-align:right;}
   .stat .n{font-family:var(--font-display); font-size:26px; font-weight:600;}
   .stat .l{font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; color:var(--text-dim); text-transform:uppercase;}
-
   .controls{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:24px;}
   .group-select{position:relative;}
   .group-select select{appearance:none; -webkit-appearance:none; background:var(--panel); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:var(--font-mono); font-size:12px; letter-spacing:.5px; text-transform:uppercase; padding:10px 34px 10px 14px; cursor:pointer;}
@@ -137,12 +132,10 @@
   .refresh-btn svg{transition:transform .4s;}
   .refresh-btn.spinning svg{animation:spin .7s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
-
   .view-toggle{display:flex; gap:4px; background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:4px;}
   .view-toggle button{background:transparent; border:none; color:var(--text-dim); padding:8px 12px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.15s;}
   .view-toggle button:hover{color:var(--text);}
   .view-toggle button.active{background:var(--panel-alt); color:var(--amber);}
-
   .table-wrap{overflow-x:auto; border:1px solid var(--border); border-radius:10px; background:var(--panel);}
   table.asset-table{width:100%; border-collapse:collapse; font-size:13px;}
   table.asset-table th{text-align:left; font-family:var(--font-mono); font-size:11.5px; letter-spacing:1px; text-transform:uppercase; color:var(--text); padding:12px 14px; border-bottom:1px solid var(--border); white-space:nowrap;}
@@ -151,11 +144,6 @@
   table.asset-table tbody tr{cursor:pointer; transition:.1s background;}
   table.asset-table tbody tr:hover{background:var(--panel-alt);}
   table.asset-table tbody tr:last-child td{border-bottom:none;}
-
-  /* Freeze header + 2 kolom pertama (Departemen, Jabatan Dibutuhkan) khusus tabel Progres Rekrutmen.
-     table-layout:fixed + lebar eksplisit di semua kolom supaya lebar kolom pasti/konsisten
-     (auto-layout sebelumnya bikin kolom "Jabatan Dibutuhkan" melebar tak terduga & menutupi
-     header "Kebutuhan" di sebelahnya). */
   #recTableWrap{overflow:auto; max-height:560px;}
   #recTableWrap table.asset-table{table-layout:fixed; width:2010px;}
   #recTableWrap table.asset-table th,
@@ -185,30 +173,20 @@
   #recTableWrap table.asset-table thead th:nth-child(2){z-index:4;}
   #recTableWrap table.asset-table tbody tr:hover td:nth-child(1),
   #recTableWrap table.asset-table tbody tr:hover td:nth-child(2){background:var(--panel-alt);}
-
-  /* Job Description: table-layout:fixed + lebar eksplisit supaya kolom Kode
-     tidak "ambil" lebar berlebihan gara-gara table-layout:auto (yang menghitung
-     lebar kolom dari konten terlebar termasuk baris Nama Incumbent yang bisa
-     berisi banyak nama sekaligus dalam 1 sel). white-space:normal di kolom
-     Nama Incumbent supaya daftar nama yang panjang membungkus ke baris baru,
-     bukan memaksa kolom melebar. */
   #jobdescTableWrap table.asset-table{table-layout:fixed;}
   #jobdescTableWrap table.asset-table th:nth-child(1),
   #jobdescTableWrap table.asset-table td:nth-child(1){width:190px; font-family:var(--font-mono); font-size:11.5px; color:var(--text); white-space:normal;}
   #jobdescTableWrap table.asset-table th:nth-child(2),
   #jobdescTableWrap table.asset-table td:nth-child(2){width:300px;}
   #jobdescTableWrap table.asset-table td:nth-child(3){white-space:normal;}
-
   .jobdesc-link{color:var(--amber); cursor:pointer; text-decoration:underline; text-underline-offset:2px; text-decoration-color:transparent; transition:.15s text-decoration-color;}
   .jobdesc-link:hover{text-decoration-color:var(--amber);}
   .jobdesc-detail-bar{display:flex; align-items:center; gap:14px; margin-bottom:14px; flex-wrap:wrap;}
   .jobdesc-detail-title{font-family:var(--font-mono); font-size:12px; color:var(--text-dim);}
   .jobdesc-frame-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:40px;}
   .jobdesc-frame-wrap iframe{width:100%; height:78vh; min-height:520px; border:0; display:block; background:#fff;}
-
   .orgchart-frame-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:40px;}
   .orgchart-frame-wrap iframe{width:100%; height:78vh; min-height:520px; border:0; display:block; background:#fff;}
-
   .asset-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:14px;}
   .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:0; cursor:pointer; overflow:hidden; position:relative; transition:.15s transform, .15s border-color;}
   .card:hover{transform:translateY(-2px); border-color:var(--text-dim);}
@@ -227,13 +205,10 @@
   .badge.ya{background:rgba(120,170,110,0.15); color:var(--green);}
   .badge.tidak{background:rgba(193,68,14,0.15); color:var(--red);}
   .badge.unknown{background:rgba(154,161,180,0.12); color:var(--text-dim);}
-
   .empty{grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--text-dim); font-family:var(--font-mono); font-size:13px; letter-spacing:.5px;}
   .state-msg{grid-column:1/-1; text-align:center; padding:60px 20px; font-family:var(--font-mono); font-size:13px; letter-spacing:.5px; color:var(--text-dim);}
   .state-msg.error{color:var(--red);}
   .state-msg button{margin-top:14px; background:var(--panel-alt); border:1px solid var(--border); color:var(--text); font-family:var(--font-mono); font-size:11px; padding:8px 16px; border-radius:8px; cursor:pointer;}
-
-  /* ---------- Modal / dossier ---------- */
   .overlay{position:fixed; inset:0; background:rgba(10,12,13,0.75); backdrop-filter:blur(2px); display:none; align-items:flex-start; justify-content:center; z-index:50; padding:40px 16px; overflow-y:auto;}
   .overlay.show{display:flex;}
   .dossier{background:var(--panel); border:1px solid var(--border); border-radius:14px; max-width:880px; width:100%; animation:rise .18s ease-out;}
@@ -268,8 +243,6 @@
   .view-frame img{width:100%; height:100%; object-fit:cover; cursor:zoom-in;}
   .note-box{margin-top:22px; background:var(--panel-alt); border:1px solid var(--border); border-radius:8px; padding:14px 16px; font-size:13px; color:var(--text-dim); line-height:1.5;}
   .note-box b{color:var(--text); font-weight:600;}
-
-  /* ---------- Lightbox foto (preview + zoom + geser) ---------- */
   .lightbox{position:fixed; inset:0; background:rgba(6,7,8,0.94); z-index:500; display:none; flex-direction:column;}
   .lightbox.show{display:flex;}
   .lightbox-topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 22px; flex-shrink:0;}
@@ -282,11 +255,8 @@
   .lightbox-stage.dragging{cursor:grabbing;}
   .lightbox-stage img{max-width:92vw; max-height:78vh; object-fit:contain; user-select:none; -webkit-user-drag:none; will-change:transform;}
   .lightbox-hint{text-align:center; font-family:var(--font-mono); font-size:11.5px; color:var(--text); letter-spacing:.4px; padding:0 20px 20px; flex-shrink:0;}
-
   ::-webkit-scrollbar{width:10px;}
   ::-webkit-scrollbar-thumb{background:var(--panel-alt); border-radius:10px;}
-
-  /* ---------- Dashboard Karyawan ---------- */
   .kry-note{font-family:var(--font-mono); font-size:11px; color:var(--text-dim); letter-spacing:.3px; margin:0; flex-basis:100%;}
   .kry-note b{color:var(--text);}
   .kry-grid{display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;}
@@ -300,8 +270,6 @@
   .chart-type-toggle button{background:transparent; border:none; color:var(--text); font-family:var(--font-mono); font-size:11.5px; letter-spacing:.5px; text-transform:uppercase; padding:6px 12px; border-radius:6px; cursor:pointer; transition:.15s;}
   .chart-type-toggle button.active{background:var(--panel); color:var(--text); box-shadow:inset 0 0 0 1px var(--border);}
   .chart-type-toggle button:hover{color:var(--text);}
-
-  /* ---------- Dashboard (landing page: charts) ---------- */
   .chart-box{position:relative; height:300px;}
   .chart-box.tall{height:340px;}
   .chart-legend-note{font-family:var(--font-mono); font-size:11.5px; color:var(--text); text-align:center; margin:10px 0 0;}
@@ -309,7 +277,6 @@
   .dash-section-title::before{content:''; width:4px; height:18px; border-radius:2px; background:var(--accent-color, var(--purple));}
   .dash-section-title span{font-family:var(--font-display); text-transform:uppercase; font-size:17px; font-weight:700; letter-spacing:1.5px; color:var(--text);}
   #page-dashboard header.asset-header{justify-content:center; text-align:center;}
-
   .bar-row{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
   .bar-row:last-child{margin-bottom:0;}
   .bar-row .label{width:190px; flex-shrink:0; color:var(--text); font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.4px; line-height:1.3;}
@@ -337,8 +304,6 @@
   .kry-table td:last-child{text-align:right; font-weight:600; font-family:var(--font-mono);}
   .kry-table tr.total td{border-top:2px solid var(--amber); border-bottom:none; font-weight:700; color:var(--amber); padding-top:14px;}
   .kry-table tr.total td:first-child{color:var(--amber);}
-
-  /* ---------- Progres Rekrutmen ---------- */
   .cell-kekurangan{color:var(--red); font-weight:700;}
   .cell-terpenuhi{color:var(--green); font-weight:600;}
   .kandidat-btn{background:rgba(120,170,110,0.15); color:var(--green); border:1px solid rgba(120,170,110,0.35); font-family:var(--font-mono); font-size:11px; letter-spacing:.4px; text-transform:uppercase; padding:6px 12px; border-radius:20px; cursor:pointer; white-space:nowrap; transition:.15s;}
@@ -353,8 +318,6 @@
   .cand-table th{text-align:left; font-family:var(--font-mono); font-size:11.5px; letter-spacing:.6px; text-transform:uppercase; color:var(--text); padding:10px 8px; border-bottom:1px solid var(--border);}
   .cand-table td{padding:10px 8px; border-bottom:1px solid var(--border); vertical-align:top;}
   .cand-table td.name{font-weight:600;}
-
-  /* ---------- Progress Penempatan Karyawan ---------- */
   .section-gap{margin-top:40px; padding-top:28px; border-top:1px dashed var(--border);}
   table.full-table td.num{text-align:right; font-family:var(--font-mono); font-size:12.5px;}
   table.full-table td.num.zero{color:var(--text-dim); opacity:.45;}
@@ -370,7 +333,6 @@
 </style>
 </head>
 <body class="pre-auth">
-
 <div class="login-screen" id="loginScreen">
   <svg class="login-bg-mech" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
@@ -421,24 +383,20 @@
     <button type="submit" class="login-btn" id="loginSubmitBtn">Masuk</button>
   </form>
 </div>
-
 <nav class="sidebar">
   <div class="brand">
     <p class="brand-name"><span class="a">HR</span> <span class="b">GA Hub</span></p>
     <p class="brand-sub">HR &amp; General Affair</p>
     <div class="sidebar-user" id="sidebarUserInfo" style="display:none;"></div>
   </div>
-
   <div class="menu-section">
     <div class="section-label">Menu Utama</div>
-
     <div class="item active" data-nav="Dashboard">
       <div class="icon-box" style="background:var(--blue-soft)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
       </div>
       <span class="item-label">Dashboard</span>
     </div>
-
     <!-- HUMAN RESOURCES -->
     <div class="item" id="hrToggle" data-toggle="hr">
       <div class="icon-box" style="background:var(--purple-soft)">
@@ -457,7 +415,6 @@
       <div class="sub-item">Mutasi</div>
       <div class="sub-item">PHK</div>
     </div>
-
     <!-- GENERAL AFFAIR -->
     <div class="item" id="gaToggle" data-toggle="ga">
       <div class="icon-box" style="background:var(--orange-soft)">
@@ -473,7 +430,6 @@
       <div class="sub-item" data-page="bangunan">Bangunan</div>
       <div class="sub-item" data-page="placeholder">Fasilitas Umum</div>
     </div>
-
     <!-- UMUM -->
     <div class="item" data-nav="Umum">
       <div class="icon-box" style="background:var(--gray-soft)">
@@ -482,9 +438,7 @@
       <span class="item-label">Umum</span>
     </div>
   </div>
-
   <div class="divider"></div>
-
   <div class="menu-section">
     <div class="section-label">Laporan</div>
     <div class="item" data-nav="Analitik">
@@ -500,9 +454,7 @@
       <span class="item-label">Laporan</span>
     </div>
   </div>
-
   <div class="divider"></div>
-
   <div class="menu-section">
     <div class="section-label">Pengaturan</div>
     <div class="item" data-nav="Pengaturan">
@@ -512,12 +464,9 @@
       <span class="item-label">Pengaturan</span>
     </div>
   </div>
-
   <a class="recruithub-btn" href="https://hrga.btliglbja.site/rekruts/" target="_self"><span class="rh-recruit">Recruit</span><span class="rh-hub">Hub</span></a>
 </nav>
-
 <div class="content" id="content">
-
   <!-- ===== Halaman Aset Kendaraan (General Affair > Kendaraan) ===== -->
   <div class="asset-view" id="page-kendaraan">
     <div class="grid-texture"></div>
@@ -535,7 +484,6 @@
             <div class="stat"><div class="n" id="statTidak">0</div><div class="l">Tidak Aktif</div></div>
           </div>
         </header>
-
         <div class="controls">
           <div class="group-select">
             <select id="groupFilter">
@@ -560,7 +508,6 @@
           </button>
         </div>
       </div>
-
       <div class="asset-grid" id="assetGrid">
         <div class="state-msg" id="loadingMsg">Memuat data dari Google Sheet...</div>
       </div>
@@ -581,7 +528,6 @@
       </div>
     </div>
   </div>
-
   <!-- ===== Halaman Aset Sepeda Motor (General Affair > Sepeda Motor) =====
        Bukan sheet terpisah - ini VIEW terfilter dari data Kendaraan
        (ASSETS) yang sama, cuma baris dengan Jenis = "Sepeda Motor" saja.
@@ -602,7 +548,6 @@
             <div class="stat"><div class="n" id="smStatTidak">0</div><div class="l">Tidak Aktif</div></div>
           </div>
         </header>
-
         <div class="controls">
           <div class="group-select">
             <select id="smGroupFilter">
@@ -627,7 +572,6 @@
           </button>
         </div>
       </div>
-
       <div class="asset-grid" id="smGrid">
         <div class="state-msg" id="smLoadingMsg">Memuat data dari Google Sheet...</div>
       </div>
@@ -648,7 +592,6 @@
       </div>
     </div>
   </div>
-
   <!-- ===== Halaman Aset Bangunan (General Affair > Bangunan) ===== -->
   <div class="asset-view" id="page-bangunan" style="display:none;">
     <div class="grid-texture"></div>
@@ -666,7 +609,6 @@
             <div class="stat"><div class="n" id="bldStatLokasi">0</div><div class="l">Lokasi</div></div>
           </div>
         </header>
-
         <div class="controls">
           <div class="group-select">
             <select id="bldGroupFilter">
@@ -701,7 +643,6 @@
           </button>
         </div>
       </div>
-
       <div class="asset-grid" id="bldGrid">
         <div class="state-msg" id="bldLoadingMsg">Memuat data dari Google Sheet...</div>
       </div>
@@ -723,7 +664,6 @@
       </div>
     </div>
   </div>
-
   <!-- ===== Halaman Aset Alat Berat (General Affair > Alat Berat) ===== -->
   <div class="asset-view" id="page-alatberat" style="display:none;">
     <div class="grid-texture"></div>
@@ -741,7 +681,6 @@
             <div class="stat"><div class="n" id="hvyStatJenis">0</div><div class="l">Jenis</div></div>
           </div>
         </header>
-
         <div class="controls">
           <div class="group-select">
             <select id="hvyGroupFilter">
@@ -766,7 +705,6 @@
           </button>
         </div>
       </div>
-
       <div class="asset-grid" id="hvyGrid">
         <div class="state-msg" id="hvyLoadingMsg">Memuat data dari Google Sheet...</div>
       </div>
@@ -787,7 +725,6 @@
       </div>
     </div>
   </div>
-
   <!-- ===== Halaman Dashboard Karyawan (Human Resources > Karyawan) ===== -->
   <div class="asset-view" id="page-karyawan" style="display:none;">
     <div class="grid-texture"></div>
@@ -804,7 +741,6 @@
             <div class="stat"><div class="n" id="kryKeluarTotal">0</div><div class="l" id="kryKeluarLabel">Keluar (YTD)</div></div>
           </div>
         </header>
-
         <div class="controls">
           <div class="group-select">
             <select id="kryTahunFilter"></select>
@@ -831,13 +767,11 @@
           <p class="kry-note" id="kryNote"></p>
         </div>
       </div>
-
       <div class="kry-grid" id="kryGrid">
         <div class="state-msg" id="kryLoadingMsg">Memuat data dari Google Sheet...</div>
       </div>
     </div>
   </div>
-
   <!-- ===== Halaman Progres Rekrutmen (Human Resources > Rekrutmen) ===== -->
   <div class="asset-view" id="page-rekrutmen" style="display:none;">
     <div class="grid-texture"></div>
@@ -855,7 +789,6 @@
             <div class="stat"><div class="n" id="recKekurangan">0</div><div class="l">Kekurangan</div></div>
           </div>
         </header>
-
         <div class="controls">
           <div class="group-select">
             <select id="recDeptFilter">
@@ -868,7 +801,6 @@
           </button>
         </div>
       </div>
-
       <div class="table-wrap" id="recTableWrap">
         <table class="asset-table">
           <thead>
@@ -888,7 +820,6 @@
           </tbody>
         </table>
       </div>
-
       <!-- ===== Progress Penempatan Karyawan (sheet: fulfillment) ===== -->
       <div class="sticky-bar section-gap" style="position:static;">
         <header class="asset-header">
@@ -898,7 +829,6 @@
             <p class="kry-note" id="fullSummary" style="margin-top:8px;">Memuat ringkasan...</p>
           </div>
         </header>
-
         <div class="controls">
           <div class="group-select">
             <select id="fullYearFilter"></select>
@@ -910,7 +840,6 @@
           <p class="kry-note" id="fullNote">Data penempatan karyawan per bulan berdasarkan tanggal gabung (sheet "fulfillment"). Mengikuti filter Departemen di atas.</p>
         </div>
       </div>
-
       <div class="table-wrap" id="fullTableWrap">
         <table class="asset-table full-table">
           <thead>
@@ -932,12 +861,10 @@
           </tfoot>
         </table>
       </div>
-
       <div class="page-bar" id="fullPageBar">
         <p class="kry-note" id="fullPageInfo"></p>
         <div class="page-nav" id="fullPageNav"></div>
       </div>
-
       <!-- ===== Rekap Karyawan Keluar per Jabatan per Bulan (sheet: TK_Out) ===== -->
       <div class="sticky-bar section-gap" style="position:static;">
         <header class="asset-header">
@@ -947,7 +874,6 @@
             <p class="kry-note" id="tkoutSummary" style="margin-top:8px;">Memuat ringkasan...</p>
           </div>
         </header>
-
         <div class="controls">
           <button class="refresh-btn" id="tkoutRefreshBtn">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
@@ -956,7 +882,6 @@
           <p class="kry-note" id="tkoutNote">Data karyawan keluar per bulan (sheet "TK_Out"). Mengikuti filter Departemen dan Tahun (dari Progress Penempatan Karyawan) di atas.</p>
         </div>
       </div>
-
       <div class="table-wrap" id="tkoutTableWrap">
         <table class="asset-table full-table">
           <thead>
@@ -976,12 +901,10 @@
           </tfoot>
         </table>
       </div>
-
       <div class="page-bar" id="tkoutPageBar">
         <p class="kry-note" id="tkoutPageInfo"></p>
         <div class="page-nav" id="tkoutPageNav"></div>
       </div>
-
       <!-- ===== Perbandingan Karyawan Masuk vs Keluar per Jabatan (per Bulan) ===== -->
       <div class="sticky-bar section-gap" style="position:static;">
         <header class="asset-header">
@@ -990,7 +913,6 @@
             <h1 class="asset-title" style="font-size:22px;">Karyawan Masuk vs Keluar per Jabatan</h1>
           </div>
         </header>
-
         <div class="controls">
           <div class="group-select">
             <select id="jabatanCompareFilter"></select>
@@ -1002,11 +924,9 @@
           <p class="kry-note" id="jabatanCompareNote">Tren bulanan masuk (penempatan) vs keluar untuk 1 jabatan. Mengikuti filter Departemen dan Tahun di atas.</p>
         </div>
       </div>
-
       <div class="kry-card wide">
         <div class="chart-box tall"><canvas id="jabatanCompareChart"></canvas></div>
       </div>
-
       <!-- ===== Karyawan Masuk vs Keluar per Departemen (sheet: TK_In & TK_Out) ===== -->
       <div class="sticky-bar section-gap" style="position:static;">
         <header class="asset-header">
@@ -1016,7 +936,6 @@
             <p class="kry-note" id="tkinSummary" style="margin-top:8px;">Memuat ringkasan...</p>
           </div>
         </header>
-
         <div class="controls">
           <div class="chart-type-toggle" id="tkinAlasanToggle">
             <button type="button" data-mode="semua" class="active">Semua</button>
@@ -1033,13 +952,11 @@
           <p class="kry-note" id="tkinNote">Tren bulanan masuk (sheet "TK_In") vs keluar (sheet "TK_Out"). Mengikuti filter Departemen dan Tahun di atas. "Non-Mutasi" mengecualikan baris dengan Alasan = Mutasi.</p>
         </div>
       </div>
-
       <div class="kry-card wide">
         <div class="chart-box tall"><canvas id="tkinChart"></canvas></div>
       </div>
     </div>
   </div>
-
   <!-- ===== Halaman Dashboard (landing page) ===== -->
   <div class="asset-view" id="page-dashboard" style="display:none;">
     <div class="grid-texture"></div>
@@ -1051,7 +968,6 @@
             <h1 class="asset-title">Dashboard Human Resources &amp; General Affair</h1>
           </div>
         </header>
-
         <div class="controls">
           <div class="group-select">
             <select id="dashTahunFilter"></select>
@@ -1073,7 +989,6 @@
           <p class="kry-note" id="dashNote">Memuat data dari Google Sheet...</p>
         </div>
       </div>
-
       <div class="kry-grid" id="dashGrid">
         <div class="dash-section-title" style="--accent-color:var(--purple);"><span>Human Resources</span></div>
         <div class="kry-card wide">
@@ -1126,7 +1041,6 @@
       </div>
     </div>
   </div>
-
   <!-- ===== Struktur Organisasi (embed) ===== -->
   <div class="asset-view" id="page-orgchart" style="display:none;">
     <div class="grid-texture"></div>
@@ -1142,7 +1056,6 @@
       </div>
     </div>
   </div>
-
   <!-- ===== Job Description ===== -->
   <div class="asset-view" id="page-jobdesc" style="display:none;">
     <div class="grid-texture"></div>
@@ -1155,7 +1068,6 @@
               <h1 class="asset-title">Job Description</h1>
             </div>
           </header>
-
           <div class="controls">
             <div class="group-select">
               <select id="jobdescDeptFilter">
@@ -1169,7 +1081,6 @@
             <p class="kry-note" id="jobdescNote"></p>
           </div>
         </div>
-
         <div class="table-wrap" id="jobdescTableWrap">
           <table class="asset-table">
             <thead>
@@ -1185,7 +1096,6 @@
           </table>
         </div>
       </div>
-
       <div id="jobdescDetailView" style="display:none;">
         <div class="jobdesc-detail-bar">
           <button class="refresh-btn" id="jobdescBackBtn">
@@ -1200,20 +1110,16 @@
       </div>
     </div>
   </div>
-
   <!-- ===== Halaman placeholder untuk menu lain ===== -->
   <div class="placeholder" id="page-placeholder" style="display:none;">
     <h1 id="placeholderTitle">Dashboard</h1>
     <p>Ringkasan HR &amp; General Affair akan tampil di sini.</p>
     <div class="crumb" id="crumb">Menu aktif: Dashboard</div>
   </div>
-
 </div>
-
 <div class="overlay" id="overlay">
   <div class="dossier" id="dossier"></div>
 </div>
-
 <div class="lightbox" id="lightbox">
   <div class="lightbox-topbar">
     <span class="lightbox-label" id="lightboxLabel"></span>
@@ -1230,7 +1136,6 @@
   </div>
   <p class="lightbox-hint">Scroll / pinch untuk zoom &middot; klik &amp; geser (atau satu jari) untuk memindahkan gambar &middot; klik di luar foto atau tekan Esc untuk menutup</p>
 </div>
-
 <script>
 /* =====================================================================
    SUMBER DATA: Google Sheet (tab "Kendaraan"), diambil live via CSV export.
@@ -1239,15 +1144,12 @@
   const SHEET_ID = '1ZtQ7H3Z5BsHsYQ1VSG6-CUxnLfLHw4T0FMArZLXjq4I';
   const SHEET_NAME = 'Kendaraan';
   const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
-
   let ASSETS = [];
   let groupFilterValue = 'semua';
   let searchTerm = '';
   let viewMode = localStorage.getItem('assetViewMode') || 'card';
   let kendaraanLoaded = false;
-
   const iconVehicle = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="7" cy="17" r="1.5"/><circle cx="17" cy="17" r="1.5"/></svg>`;
-
   /* Dipanggil lewat onerror="cardThumbError(this)" pada <img> thumbnail kartu aset.
      CATATAN: sebelumnya SVG iconVehicle (yang berisi banyak tanda kutip ganda) langsung
      ditulis inline di dalam atribut onerror="..." (juga pakai kutip ganda) - begitu
@@ -1261,9 +1163,7 @@
     parent.classList.remove('thumb');
     parent.innerHTML = iconVehicle;
   }
-
   const iconBuilding = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/></svg>`;
-
   /* Sama seperti cardThumbError, tapi untuk kartu Aset Bangunan (ikon gedung,
      bukan ikon kendaraan) - fungsi terpisah supaya tidak mengganggu kartu Kendaraan. */
   function bldCardThumbError(imgEl){
@@ -1272,14 +1172,11 @@
     parent.classList.remove('thumb');
     parent.innerHTML = iconBuilding;
   }
-
   function fmtVal(v){ return (v===undefined || v===null || String(v).trim()==='' || v==='#N/A') ? '—' : v; }
-
   /* Link foto di sheet biasanya berupa link "share" (OneDrive/SharePoint/Google Drive),
      bukan link gambar langsung. Fungsi ini mencoba mengubahnya jadi link yang bisa
      langsung dibaca sebagai <img>. Link tetap harus dibagikan sebagai "Anyone with the
      link can view" - kalau masih perlu login, gambar tidak akan pernah muncul di browser.
-
      CATATAN PENTING (SharePoint/OneDrive for Business "my.sharepoint.com"):
      Link share format "https://tenant-my.sharepoint.com/:i:/g/personal/{user}/{token}?e=..."
      itu link ke halaman VIEWER interaktif (bukan file gambar mentah), jadi tidak pernah
@@ -1310,20 +1207,17 @@
     }catch(e){ /* biarkan url asli kalau gagal parse */ }
     return url;
   }
-
   function statusInfo(raw){
     const v = (raw||'').trim().toLowerCase();
     if(v==='ya') return {cls:'ya', label:'Aktif'};
     if(v==='tidak') return {cls:'tidak', label:'Tidak Aktif'};
     return {cls:'unknown', label: raw ? raw : '—'};
   }
-
   function loadData(){
     const grid = document.getElementById('assetGrid');
     grid.innerHTML = `<div class="state-msg" id="loadingMsg">Memuat data dari Google Sheet...</div>`;
     const btn = document.getElementById('refreshBtn');
     btn.classList.add('spinning');
-
     Papa.parse(CSV_URL, {
       download:true,
       header:true,
@@ -1345,7 +1239,6 @@
       }
     });
   }
-
   function populateGroupFilter(){
     const sel = document.getElementById('groupFilter');
     const groups = Array.from(new Set(ASSETS.map(a => (a['Kategori']||'').trim()).filter(Boolean))).sort();
@@ -1354,25 +1247,17 @@
     sel.value = groups.includes(current) ? current : 'semua';
     groupFilterValue = sel.value;
   }
-
   function renderGrid(){
     const grid = document.getElementById('assetGrid');
     const tableWrap = document.getElementById('assetTableWrap');
     const term = searchTerm.trim().toLowerCase();
-
     const filtered = ASSETS.filter(a=>{
       if(groupFilterValue!=='semua' && (a['Kategori']||'').trim()!==groupFilterValue) return false;
       if(!term) return true;
       const hay = [a['Kode Aset'], a['Nama Display'], a['User_Driver'], a['Company'], a['Jenis'], a['No Polisi']].join(' ').toLowerCase();
       return hay.includes(term);
     });
-
-    /* Urutkan berdasarkan Nama Display (natural sort, supaya DT2 tetap sebelum DT10
-       walau nomornya tidak diberi nol di depan) - sheet sumber tidak selalu berurutan
-       (mis. unit yang ditambah belakangan bisa nyempil di baris paling bawah). */
     filtered.sort((a,b)=> (a['Nama Display']||'').localeCompare(b['Nama Display']||'', undefined, {numeric:true, sensitivity:'base'}));
-
-    /* Statistik mengikuti kelompok yang sedang dipilih di dropdown (bukan total semua aset) */
     const groupScoped = groupFilterValue==='semua' ? ASSETS : ASSETS.filter(a => (a['Kategori']||'').trim()===groupFilterValue);
     document.getElementById('statTotal').textContent = groupScoped.length;
     document.getElementById('statAktif').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='ya').length;
@@ -1381,25 +1266,20 @@
       const d = (a['User_Driver']||'').trim().toLowerCase();
       return d!=='' && d!=='kosong' && d!=='#n/a';
     }).length;
-
-    /* Tampilkan wadah sesuai mode, sembunyikan yang lain */
     grid.style.display = (viewMode==='card') ? '' : 'none';
     tableWrap.style.display = (viewMode==='table') ? '' : 'none';
-
     if(filtered.length===0){
       const emptyHtml = `<div class="empty">Tidak ada aset yang cocok dengan pencarian / filter.</div>`;
       grid.innerHTML = emptyHtml;
       document.getElementById('assetTableBody').innerHTML = `<tr><td colspan="6" class="empty">Tidak ada aset yang cocok dengan pencarian / filter.</td></tr>`;
       return;
     }
-
     if(viewMode==='card'){
       renderCards(filtered);
     }else{
       renderTable(filtered);
     }
   }
-
   function renderCards(filtered){
     const grid = document.getElementById('assetGrid');
     grid.innerHTML = filtered.map(a=>{
@@ -1425,13 +1305,11 @@
           </div>
         </div>`;
     }).join('');
-
     grid.querySelectorAll('.card').forEach(card=>{
       card.addEventListener('click', ()=>openDossier(card.dataset.no));
       card.addEventListener('keydown', e=>{ if(e.key==='Enter') openDossier(card.dataset.no); });
     });
   }
-
   function renderTable(filtered){
     const body = document.getElementById('assetTableBody');
     body.innerHTML = filtered.map(a=>{
@@ -1445,20 +1323,11 @@
           <td>${fmtVal(a['Keterangan'])}</td>
         </tr>`;
     }).join('');
-
     body.querySelectorAll('tr').forEach(row=>{
       row.addEventListener('click', ()=>openDossier(row.dataset.no));
       row.addEventListener('keydown', e=>{ if(e.key==='Enter') openDossier(row.dataset.no); });
     });
   }
-
-  /* Kolom foto di sheet (opsional): "Foto Utama", "Foto Kiri", "Foto Kanan", "Foto Belakang".
-     Jika kolom belum ada / kosong, otomatis tampil placeholder "Foto belum tersedia". */
-  /* Kalau link foto ada tapi gagal dimuat (mis. link SharePoint belum di-share
-     "Anyone with the link can view" / sudah kedaluwarsa), onerror akan mengganti
-     frame ini dengan tampilan placeholder "Foto belum tersedia" yang sama seperti
-     kalau kolomnya memang kosong - daripada dibiarkan jadi ikon broken-image bawaan
-     browser yang membingungkan. */
   function photoFrame(url, label){
     if(url){
       return `<div class="photo-frame"><img src="${url}" alt="${label}" data-label="${label}" data-kind="main" onerror="mediaFrameError(this)">
@@ -1468,7 +1337,6 @@
     return `<div class="photo-frame"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
       <span class="no-photo">Foto ${label.toLowerCase()}<br>belum tersedia</span></div>`;
   }
-
   function viewFrame(url, label){
     if(url){
       return `<div class="view-frame"><img src="${url}" alt="${label}" data-label="${label}" data-kind="view" onerror="mediaFrameError(this)">
@@ -1477,7 +1345,6 @@
     }
     return `<div class="view-frame"><span class="no-photo" style="font-size:10px;">${label}<br>belum tersedia</span></div>`;
   }
-
   function mediaFrameError(imgEl){
     const label = imgEl.dataset.label || '';
     const isMain = imgEl.dataset.kind === 'main';
@@ -1488,20 +1355,10 @@
           <span class="no-photo">Foto ${label.toLowerCase()}<br>belum tersedia</span></div>`
       : `<div class="view-frame"><span class="no-photo" style="font-size:10px;">${label}<br>belum tersedia</span></div>`;
   }
-
-  /* =====================================================================
-     LIGHTBOX FOTO - preview full-screen untuk semua foto di dalam
-     .photo-frame / .view-frame (Foto Utama + Tampak Sekeliling), dipakai
-     bersama oleh dossier Kendaraan maupun Bangunan (event delegation, jadi
-     otomatis nyambung ke foto yang di-render belakangan lewat innerHTML).
-     Fitur: zoom lewat scroll/pinch atau tombol +/-, dan geser (pan) lewat
-     klik-tahan-drag (mouse) atau satu jari (layar sentuh) saat sudah di-zoom.
-     ===================================================================== */
   let lbScale = 1, lbPanX = 0, lbPanY = 0;
   const LB_MIN_SCALE = 1, LB_MAX_SCALE = 5;
   let lbDragging = false, lbDragStartX = 0, lbDragStartY = 0, lbPanStartX = 0, lbPanStartY = 0;
   let lbPinchStartDist = 0, lbPinchStartScale = 1;
-
   function lbApplyTransform(){
     const img = document.getElementById('lightboxImg');
     if(!img) return;
@@ -1509,7 +1366,6 @@
     const zoomLevelEl = document.getElementById('lightboxZoomLevel');
     if(zoomLevelEl) zoomLevelEl.textContent = Math.round(lbScale*100) + '%';
   }
-
   function lbZoomBy(factor){
     const oldScale = lbScale;
     const newScale = Math.min(LB_MAX_SCALE, Math.max(LB_MIN_SCALE, oldScale*factor));
@@ -1518,7 +1374,6 @@
     if(lbScale<=1){ lbPanX = 0; lbPanY = 0; }
     lbApplyTransform();
   }
-
   function openLightbox(url, label){
     if(!url) return;
     const lb = document.getElementById('lightbox');
@@ -1530,19 +1385,16 @@
     lbApplyTransform();
     lb.classList.add('show');
   }
-
   function closeLightbox(){
     const lb = document.getElementById('lightbox');
     lb.classList.remove('show');
     const img = document.getElementById('lightboxImg');
     if(img) img.src = '';
   }
-
   document.addEventListener('click', e=>{
     const img = e.target.closest('.photo-frame img, .view-frame img');
     if(img) openLightbox(img.src, img.dataset.label || '');
   });
-
   document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
   document.getElementById('lightbox').addEventListener('click', e=>{
     if(e.target.id==='lightbox') closeLightbox();
@@ -1550,26 +1402,21 @@
   document.addEventListener('keydown', e=>{
     if(e.key==='Escape' && document.getElementById('lightbox').classList.contains('show')) closeLightbox();
   });
-
   document.getElementById('lightboxZoomIn').addEventListener('click', ()=> lbZoomBy(1.35));
   document.getElementById('lightboxZoomOut').addEventListener('click', ()=> lbZoomBy(1/1.35));
   document.getElementById('lightboxZoomReset').addEventListener('click', ()=>{
     lbScale = 1; lbPanX = 0; lbPanY = 0; lbApplyTransform();
   });
-
   const lbStageEl = document.getElementById('lightboxStage');
-
   lbStageEl.addEventListener('wheel', e=>{
     if(!document.getElementById('lightbox').classList.contains('show')) return;
     e.preventDefault();
     lbZoomBy(e.deltaY < 0 ? 1.12 : 1/1.12);
   }, { passive:false });
-
   lbStageEl.addEventListener('dblclick', ()=>{
     if(lbScale>1){ lbScale=1; lbPanX=0; lbPanY=0; } else { lbScale=2.2; }
     lbApplyTransform();
   });
-
   lbStageEl.addEventListener('mousedown', e=>{
     if(e.button!==0) return;
     lbDragging = true;
@@ -1586,8 +1433,6 @@
   window.addEventListener('mouseup', ()=>{
     if(lbDragging){ lbDragging = false; lbStageEl.classList.remove('dragging'); }
   });
-
-  /* Layar sentuh: 1 jari = geser, 2 jari (cubit) = zoom */
   lbStageEl.addEventListener('touchstart', e=>{
     if(e.touches.length===1){
       lbDragging = true;
@@ -1617,12 +1462,10 @@
     }
   }, { passive:false });
   lbStageEl.addEventListener('touchend', ()=>{ lbDragging = false; lbPinchStartDist = 0; });
-
   function openDossier(no){
     const a = ASSETS.find(x=>String(x['No'])===String(no));
     if(!a) return;
     const st = statusInfo(a['Status Aset (Acc)']);
-
     const rows = [
       ['Company', a['Company']],
       ['Jenis', a['Jenis']],
@@ -1636,17 +1479,13 @@
       ['Berlaku Pajak', a['Berlaku Pajak']],
       ['Jumlah Pajak', a['Jumlah Pajak']],
     ];
-
-    /* Baris ini ditampilkan di bawah foto (kolom kiri), bukan di tabel spesifikasi kanan */
     const rowsBelowPhoto = [
       ['User / Driver', a['User_Driver']],
       ['Status Aset (Acc)', st.label],
       ['Keterangan', a['Keterangan']],
     ];
-
     const specRows = rows.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
     const belowPhotoRows = rowsBelowPhoto.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
-
     const dossier = document.getElementById('dossier');
     dossier.innerHTML = `
       <div class="dossier-header">
@@ -1675,16 +1514,13 @@
     document.getElementById('closeBtn').addEventListener('click', closeDossier);
     document.getElementById('overlay').classList.add('show');
   }
-
   function closeDossier(){
     document.getElementById('overlay').classList.remove('show');
   }
-
   document.getElementById('overlay').addEventListener('click', e=>{
     if(e.target.id==='overlay') closeDossier();
   });
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDossier(); });
-
   document.getElementById('groupFilter').addEventListener('change', e=>{
     groupFilterValue = e.target.value;
     renderGrid();
@@ -1694,8 +1530,6 @@
     renderGrid();
   });
   document.getElementById('refreshBtn').addEventListener('click', loadData);
-
-  /* Toggle tampilan Kartu / Tabel */
   const viewToggle = document.getElementById('viewToggle');
   viewToggle.querySelectorAll('button[data-view]').forEach(btn=>{
     if(btn.dataset.view === viewMode) btn.classList.add('active'); else btn.classList.remove('active');
@@ -1706,7 +1540,6 @@
       renderGrid();
     });
   });
-
   /* =====================================================================
      ASET SEPEDA MOTOR (General Affair > Sepeda Motor)
      BUKAN sheet terpisah - ini cuma VIEW terfilter dari ASSETS (sheet
@@ -1721,11 +1554,9 @@
   let smGroupFilterValue = 'semua';
   let smSearchTerm = '';
   let smViewMode = localStorage.getItem('sepedaMotorViewMode') || 'card';
-
   function smScoped(){
     return ASSETS.filter(a => (a['Jenis']||'').trim().toLowerCase()==='sepeda motor');
   }
-
   function populateSmGroupFilter(){
     const sel = document.getElementById('smGroupFilter');
     if(!sel) return;
@@ -1735,13 +1566,11 @@
     sel.value = groups.includes(current) ? current : 'semua';
     smGroupFilterValue = sel.value;
   }
-
   function renderSmGrid(){
     const grid = document.getElementById('smGrid');
     const tableWrap = document.getElementById('smTableWrap');
     if(!grid || !tableWrap) return;
     const term = smSearchTerm.trim().toLowerCase();
-
     const base = smScoped();
     const filtered = base.filter(a=>{
       if(smGroupFilterValue!=='semua' && (a['Kategori']||'').trim()!==smGroupFilterValue) return false;
@@ -1749,9 +1578,7 @@
       const hay = [a['Kode Aset'], a['Nama Display'], a['User_Driver'], a['Company'], a['Jenis'], a['No Polisi']].join(' ').toLowerCase();
       return hay.includes(term);
     });
-
     filtered.sort((a,b)=> (a['Nama Display']||'').localeCompare(b['Nama Display']||'', undefined, {numeric:true, sensitivity:'base'}));
-
     const groupScoped = smGroupFilterValue==='semua' ? base : base.filter(a => (a['Kategori']||'').trim()===smGroupFilterValue);
     document.getElementById('smStatTotal').textContent = groupScoped.length;
     document.getElementById('smStatAktif').textContent = groupScoped.filter(a => (a['Status Aset (Acc)']||'').trim().toLowerCase()==='ya').length;
@@ -1760,23 +1587,19 @@
       const d = (a['User_Driver']||'').trim().toLowerCase();
       return d!=='' && d!=='kosong' && d!=='#n/a';
     }).length;
-
     grid.style.display = (smViewMode==='card') ? '' : 'none';
     tableWrap.style.display = (smViewMode==='table') ? '' : 'none';
-
     if(filtered.length===0){
       grid.innerHTML = `<div class="empty">Tidak ada sepeda motor yang cocok dengan pencarian / filter.</div>`;
       document.getElementById('smTableBody').innerHTML = `<tr><td colspan="6" class="empty">Tidak ada sepeda motor yang cocok dengan pencarian / filter.</td></tr>`;
       return;
     }
-
     if(smViewMode==='card'){
       renderSmCards(filtered);
     }else{
       renderSmTable(filtered);
     }
   }
-
   function renderSmCards(filtered){
     const grid = document.getElementById('smGrid');
     grid.innerHTML = filtered.map(a=>{
@@ -1802,13 +1625,11 @@
           </div>
         </div>`;
     }).join('');
-
     grid.querySelectorAll('.card').forEach(card=>{
       card.addEventListener('click', ()=>openDossier(card.dataset.no));
       card.addEventListener('keydown', e=>{ if(e.key==='Enter') openDossier(card.dataset.no); });
     });
   }
-
   function renderSmTable(filtered){
     const body = document.getElementById('smTableBody');
     body.innerHTML = filtered.map(a=>{
@@ -1822,13 +1643,11 @@
           <td>${fmtVal(a['Keterangan'])}</td>
         </tr>`;
     }).join('');
-
     body.querySelectorAll('tr').forEach(row=>{
       row.addEventListener('click', ()=>openDossier(row.dataset.no));
       row.addEventListener('keydown', e=>{ if(e.key==='Enter') openDossier(row.dataset.no); });
     });
   }
-
   document.getElementById('smGroupFilter').addEventListener('change', e=>{
     smGroupFilterValue = e.target.value;
     renderSmGrid();
@@ -1838,7 +1657,6 @@
     renderSmGrid();
   });
   document.getElementById('smRefreshBtn').addEventListener('click', loadData);
-
   const smViewToggle = document.getElementById('smViewToggle');
   smViewToggle.querySelectorAll('button[data-view]').forEach(btn=>{
     if(btn.dataset.view === smViewMode) btn.classList.add('active'); else btn.classList.remove('active');
@@ -1849,7 +1667,6 @@
       renderSmGrid();
     });
   });
-
   /* =====================================================================
      ASET BANGUNAN (General Affair > Bangunan)
      Sumber data: sheet "Bangunan" di spreadsheet Asset_GA yang sama dengan
@@ -1865,7 +1682,6 @@
   const BLD_SHEET_ID = '1ZtQ7H3Z5BsHsYQ1VSG6-CUxnLfLHw4T0FMArZLXjq4I';
   const BLD_SHEET_NAME = 'Bangunan';
   const BLD_CSV_URL = `https://docs.google.com/spreadsheets/d/${BLD_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(BLD_SHEET_NAME)}`;
-
   let BUILDINGS = [];
   let bldGroupFilterValue = 'semua';
   let bldJenisFilterValue = 'semua';
@@ -1873,13 +1689,11 @@
   let bldSearchTerm = '';
   let bldViewMode = localStorage.getItem('bangunanViewMode') || 'card';
   let bldLoaded = false;
-
   function loadBangunanData(){
     const grid = document.getElementById('bldGrid');
     grid.innerHTML = `<div class="state-msg" id="bldLoadingMsg">Memuat data dari Google Sheet...</div>`;
     const btn = document.getElementById('bldRefreshBtn');
     btn.classList.add('spinning');
-
     Papa.parse(BLD_CSV_URL, {
       download:true,
       header:true,
@@ -1901,7 +1715,6 @@
       }
     });
   }
-
   function populateBldGroupFilter(){
     const sel = document.getElementById('bldGroupFilter');
     const groups = Array.from(new Set(BUILDINGS.map(a => (a['Kategori']||'').trim()).filter(Boolean))).sort();
@@ -1910,24 +1723,17 @@
     sel.value = groups.includes(current) ? current : 'semua';
     bldGroupFilterValue = sel.value;
   }
-
-  /* Filter Jenis & Lokasi berjenjang (cascading): pilihan Jenis mengikuti
-     Kategori yang sedang dipilih, dan pilihan Lokasi mengikuti Kategori +
-     Jenis yang sedang dipilih - supaya tidak muncul kombinasi yang sebenarnya
-     tidak ada datanya di sheet. */
   function bldScopedByKategori(){
     return bldGroupFilterValue==='semua'
       ? BUILDINGS
       : BUILDINGS.filter(a => (a['Kategori']||'').trim()===bldGroupFilterValue);
   }
-
   function bldScopedByKategoriJenis(){
     const scoped = bldScopedByKategori();
     return bldJenisFilterValue==='semua'
       ? scoped
       : scoped.filter(a => (a['Jenis']||'').trim()===bldJenisFilterValue);
   }
-
   function populateBldJenisFilter(){
     const sel = document.getElementById('bldJenisFilter');
     const jenisList = Array.from(new Set(bldScopedByKategori().map(a => (a['Jenis']||'').trim()).filter(Boolean))).sort();
@@ -1936,7 +1742,6 @@
     sel.value = jenisList.includes(current) ? current : 'semua';
     bldJenisFilterValue = sel.value;
   }
-
   function populateBldLokasiFilter(){
     const sel = document.getElementById('bldLokasiFilter');
     const lokasiList = Array.from(new Set(bldScopedByKategoriJenis().map(a => (a['Lokasi']||'').trim()).filter(Boolean))).sort();
@@ -1945,12 +1750,10 @@
     sel.value = lokasiList.includes(current) ? current : 'semua';
     bldLokasiFilterValue = sel.value;
   }
-
   function renderBldGrid(){
     const grid = document.getElementById('bldGrid');
     const tableWrap = document.getElementById('bldTableWrap');
     const term = bldSearchTerm.trim().toLowerCase();
-
     const filtered = BUILDINGS.filter(a=>{
       if(bldGroupFilterValue!=='semua' && (a['Kategori']||'').trim()!==bldGroupFilterValue) return false;
       if(bldJenisFilterValue!=='semua' && (a['Jenis']||'').trim()!==bldJenisFilterValue) return false;
@@ -1959,9 +1762,7 @@
       const hay = [a['Kode Bangunan'], a['Nama Bangunan'], a['Jenis'], a['Lokasi'], a['PT']].join(' ').toLowerCase();
       return hay.includes(term);
     });
-
     filtered.sort((a,b)=> (a['Nama Bangunan']||'').localeCompare(b['Nama Bangunan']||'', undefined, {numeric:true, sensitivity:'base'}));
-
     const groupScoped = BUILDINGS.filter(a=>{
       if(bldGroupFilterValue!=='semua' && (a['Kategori']||'').trim()!==bldGroupFilterValue) return false;
       if(bldJenisFilterValue!=='semua' && (a['Jenis']||'').trim()!==bldJenisFilterValue) return false;
@@ -1972,24 +1773,20 @@
     document.getElementById('bldStatPermanen').textContent = groupScoped.filter(a => (a['Tipe']||'').trim().toLowerCase()==='permanen').length;
     document.getElementById('bldStatNonPermanen').textContent = groupScoped.filter(a => (a['Tipe']||'').trim().toLowerCase()==='non permanen').length;
     document.getElementById('bldStatLokasi').textContent = new Set(groupScoped.map(a => (a['Lokasi']||'').trim()).filter(Boolean)).size;
-
     grid.style.display = (bldViewMode==='card') ? '' : 'none';
     tableWrap.style.display = (bldViewMode==='table') ? '' : 'none';
-
     if(filtered.length===0){
       const emptyHtml = `<div class="empty">Tidak ada bangunan yang cocok dengan pencarian / filter.</div>`;
       grid.innerHTML = emptyHtml;
       document.getElementById('bldTableBody').innerHTML = `<tr><td colspan="7" class="empty">Tidak ada bangunan yang cocok dengan pencarian / filter.</td></tr>`;
       return;
     }
-
     if(bldViewMode==='card'){
       renderBldCards(filtered);
     }else{
       renderBldTable(filtered);
     }
   }
-
   function renderBldCards(filtered){
     const grid = document.getElementById('bldGrid');
     grid.innerHTML = filtered.map(a=>{
@@ -2013,13 +1810,11 @@
           </div>
         </div>`;
     }).join('');
-
     grid.querySelectorAll('.card').forEach(card=>{
       card.addEventListener('click', ()=>openBldDossier(card.dataset.kode));
       card.addEventListener('keydown', e=>{ if(e.key==='Enter') openBldDossier(card.dataset.kode); });
     });
   }
-
   function renderBldTable(filtered){
     const body = document.getElementById('bldTableBody');
     body.innerHTML = filtered.map(a=>{
@@ -2034,17 +1829,14 @@
           <td>${fmtVal(a['PT'])}</td>
         </tr>`;
     }).join('');
-
     body.querySelectorAll('tr').forEach(row=>{
       row.addEventListener('click', ()=>openBldDossier(row.dataset.kode));
       row.addEventListener('keydown', e=>{ if(e.key==='Enter') openBldDossier(row.dataset.kode); });
     });
   }
-
   function openBldDossier(kode){
     const a = BUILDINGS.find(x=>String(x['Kode Bangunan'])===String(kode));
     if(!a) return;
-
     const rows = [
       ['PT', a['PT']],
       ['Kategori', a['Kategori']],
@@ -2057,14 +1849,11 @@
       ['Kode Lokasi', a['Kode Lokasi']],
       ['No Urut', a['No Urut']],
     ];
-
     const rowsBelowPhoto = [
       ['Kode Bangunan', a['Kode Bangunan']],
     ];
-
     const specRows = rows.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
     const belowPhotoRows = rowsBelowPhoto.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
-
     const dossier = document.getElementById('dossier');
     dossier.innerHTML = `
       <div class="dossier-header">
@@ -2093,7 +1882,6 @@
     document.getElementById('closeBtn').addEventListener('click', closeDossier);
     document.getElementById('overlay').classList.add('show');
   }
-
   document.getElementById('bldGroupFilter').addEventListener('change', e=>{
     bldGroupFilterValue = e.target.value;
     populateBldJenisFilter();
@@ -2114,7 +1902,6 @@
     renderBldGrid();
   });
   document.getElementById('bldRefreshBtn').addEventListener('click', loadBangunanData);
-
   const bldViewToggle = document.getElementById('bldViewToggle');
   bldViewToggle.querySelectorAll('button[data-view]').forEach(btn=>{
     if(btn.dataset.view === bldViewMode) btn.classList.add('active'); else btn.classList.remove('active');
@@ -2125,7 +1912,6 @@
       renderBldGrid();
     });
   });
-
   /* =====================================================================
      ASET ALAT BERAT (General Affair > Alat Berat)
      Sumber data: sheet "Alat Berat" di spreadsheet Asset_GA yang sama dengan
@@ -2139,9 +1925,7 @@
      dipakai sebagai id unik baris (dianggap unik per baris, seperti Bangunan). */
   const HVY_SHEET_NAME = 'Alat Berat';
   const HVY_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(HVY_SHEET_NAME)}`;
-
   const iconHeavy = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17h1"/><path d="M7 17h9"/><path d="M3 17V9a1 1 0 0 1 1-1h3l4 4h5a2 2 0 0 1 2 2v3"/><path d="M16 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0z"/><path d="M6 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0z"/><path d="M13 12V7h3"/></svg>`;
-
   /* Sama seperti cardThumbError/bldCardThumbError, tapi untuk kartu Aset Alat
      Berat (ikon alat berat, bukan ikon kendaraan/gedung). */
   function hvyCardThumbError(imgEl){
@@ -2150,19 +1934,16 @@
     parent.classList.remove('thumb');
     parent.innerHTML = iconHeavy;
   }
-
   let HEAVY_ASSETS = [];
   let hvyGroupFilterValue = 'semua';
   let hvySearchTerm = '';
   let hvyViewMode = localStorage.getItem('alatBeratViewMode') || 'card';
   let hvyLoaded = false;
-
   function loadHvyData(){
     const grid = document.getElementById('hvyGrid');
     grid.innerHTML = `<div class="state-msg" id="hvyLoadingMsg">Memuat data dari Google Sheet...</div>`;
     const btn = document.getElementById('hvyRefreshBtn');
     btn.classList.add('spinning');
-
     Papa.parse(HVY_CSV_URL, {
       download:true,
       header:true,
@@ -2182,7 +1963,6 @@
       }
     });
   }
-
   function populateHvyGroupFilter(){
     const sel = document.getElementById('hvyGroupFilter');
     const groups = Array.from(new Set(HEAVY_ASSETS.map(a => (a['Kategori']||'').trim()).filter(Boolean))).sort();
@@ -2191,44 +1971,36 @@
     sel.value = groups.includes(current) ? current : 'semua';
     hvyGroupFilterValue = sel.value;
   }
-
   function renderHvyGrid(){
     const grid = document.getElementById('hvyGrid');
     const tableWrap = document.getElementById('hvyTableWrap');
     const term = hvySearchTerm.trim().toLowerCase();
-
     const filtered = HEAVY_ASSETS.filter(a=>{
       if(hvyGroupFilterValue!=='semua' && (a['Kategori']||'').trim()!==hvyGroupFilterValue) return false;
       if(!term) return true;
       const hay = [a['Kode Aset'], a['Nama Display'], a['Company'], a['Jenis']].join(' ').toLowerCase();
       return hay.includes(term);
     });
-
     filtered.sort((a,b)=> (a['Nama Display']||'').localeCompare(b['Nama Display']||'', undefined, {numeric:true, sensitivity:'base'}));
-
     const groupScoped = hvyGroupFilterValue==='semua' ? HEAVY_ASSETS : HEAVY_ASSETS.filter(a => (a['Kategori']||'').trim()===hvyGroupFilterValue);
     document.getElementById('hvyStatTotal').textContent = groupScoped.length;
     document.getElementById('hvyStatCompany').textContent = new Set(groupScoped.map(a => (a['Company']||'').trim()).filter(Boolean)).size;
     document.getElementById('hvyStatKategori').textContent = new Set(groupScoped.map(a => (a['Kategori']||'').trim()).filter(Boolean)).size;
     document.getElementById('hvyStatJenis').textContent = new Set(groupScoped.map(a => (a['Jenis']||'').trim()).filter(Boolean)).size;
-
     grid.style.display = (hvyViewMode==='card') ? '' : 'none';
     tableWrap.style.display = (hvyViewMode==='table') ? '' : 'none';
-
     if(filtered.length===0){
       const emptyHtml = `<div class="empty">Tidak ada alat berat yang cocok dengan pencarian / filter.</div>`;
       grid.innerHTML = emptyHtml;
       document.getElementById('hvyTableBody').innerHTML = `<tr><td colspan="6" class="empty">Tidak ada alat berat yang cocok dengan pencarian / filter.</td></tr>`;
       return;
     }
-
     if(hvyViewMode==='card'){
       renderHvyCards(filtered);
     }else{
       renderHvyTable(filtered);
     }
   }
-
   function renderHvyCards(filtered){
     const grid = document.getElementById('hvyGrid');
     grid.innerHTML = filtered.map(a=>{
@@ -2252,13 +2024,11 @@
           </div>
         </div>`;
     }).join('');
-
     grid.querySelectorAll('.card').forEach(card=>{
       card.addEventListener('click', ()=>openHvyDossier(card.dataset.kode));
       card.addEventListener('keydown', e=>{ if(e.key==='Enter') openHvyDossier(card.dataset.kode); });
     });
   }
-
   function renderHvyTable(filtered){
     const body = document.getElementById('hvyTableBody');
     body.innerHTML = filtered.map(a=>{
@@ -2272,17 +2042,14 @@
           <td>${fmtVal(a['Tanggal Perolehan'])}</td>
         </tr>`;
     }).join('');
-
     body.querySelectorAll('tr').forEach(row=>{
       row.addEventListener('click', ()=>openHvyDossier(row.dataset.kode));
       row.addEventListener('keydown', e=>{ if(e.key==='Enter') openHvyDossier(row.dataset.kode); });
     });
   }
-
   function openHvyDossier(kode){
     const a = HEAVY_ASSETS.find(x=>String(x['Kode Aset'])===String(kode));
     if(!a) return;
-
     const rows = [
       ['Company', a['Company']],
       ['Jenis', a['Jenis']],
@@ -2291,14 +2058,11 @@
       ['Nomor Rangka', a['Nomor Rangka']],
       ['Nomor Mesin', a['Nomor Mesin']],
     ];
-
     const rowsBelowPhoto = [
       ['Kode Aset', a['Kode Aset']],
     ];
-
     const specRows = rows.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
     const belowPhotoRows = rowsBelowPhoto.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
-
     const dossier = document.getElementById('dossier');
     dossier.innerHTML = `
       <div class="dossier-header">
@@ -2327,7 +2091,6 @@
     document.getElementById('closeBtn').addEventListener('click', closeDossier);
     document.getElementById('overlay').classList.add('show');
   }
-
   document.getElementById('hvyGroupFilter').addEventListener('change', e=>{
     hvyGroupFilterValue = e.target.value;
     renderHvyGrid();
@@ -2337,7 +2100,6 @@
     renderHvyGrid();
   });
   document.getElementById('hvyRefreshBtn').addEventListener('click', loadHvyData);
-
   const hvyViewToggle = document.getElementById('hvyViewToggle');
   hvyViewToggle.querySelectorAll('button[data-view]').forEach(btn=>{
     if(btn.dataset.view === hvyViewMode) btn.classList.add('active'); else btn.classList.remove('active');
@@ -2348,7 +2110,6 @@
       renderHvyGrid();
     });
   });
-
   /* =====================================================================
      DASHBOARD KARYAWAN (Human Resources > Karyawan)
      Sumber data: Google Sheet "Summary" - satu baris = Bulan + PT + Departemen.
@@ -2364,14 +2125,12 @@
   const KRY_SHEET_NAME = 'Summary';
   const KRY_CSV_URL = `https://docs.google.com/spreadsheets/d/${KRY_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(KRY_SHEET_NAME)}`;
   const MONTH_ORDER = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
   let KRY_ROWS = [];
   let kryLoaded = false;
   let kryTahunValue = null;
   let kryPtValue = 'semua';
   let kryBulanValue = 'semua';
   let kryDeptValue = 'semua';
-
   function kryParseNum(v){
     if(v===undefined || v===null) return 0;
     const s = String(v).trim();
@@ -2379,17 +2138,14 @@
     const n = parseFloat(s.replace(/,/g,''));
     return isNaN(n) ? 0 : n;
   }
-
   function kryFmtRupiah(n){
     return 'Rp ' + Math.round(n).toLocaleString('id-ID');
   }
-
   function loadKaryawanData(){
     const grid = document.getElementById('kryGrid');
     grid.innerHTML = `<div class="state-msg" id="kryLoadingMsg">Memuat data dari Google Sheet...</div>`;
     const btn = document.getElementById('kryRefreshBtn');
     btn.classList.add('spinning');
-
     Papa.parse(KRY_CSV_URL, {
       download:true,
       header:false,
@@ -2398,7 +2154,6 @@
         btn.classList.remove('spinning');
         const raw = results.data || [];
         const dataRows = raw.slice(1); // baris pertama adalah header, dilewati
-
         /* Tahap 1: ambil semua kolom apa adanya (belum menentukan Bulan-nya) */
         const parsedRows = dataRows.map(cols => ({
           bulanRaw: (cols[0]||'').trim(),
@@ -2443,7 +2198,6 @@
           pendS1: kryParseNum(cols[39]),
           pendS2: kryParseNum(cols[40]),
         })).filter(r => r.pt && r.dept);
-
         /* Tahap 2: kolom "Bulan" adalah sel yang di-merge di Google Sheet. Kadang
            SATU BULAN PENUH (33 baris PT x Departemen) kosong semua di kolom Bulan -
            bukan cuma baris ke-2/3 dst - jadi forward-fill biasa akan salah menempelkan
@@ -2458,7 +2212,6 @@
             if(i>0 && r.pt===anchorPt && r.dept===anchorDept) blockIndex++;
             r.blockIndex = blockIndex;
           });
-
           const blockLabel = {};
           parsedRows.forEach(r=>{
             if(r.bulanRaw && !(r.blockIndex in blockLabel)){
@@ -2469,7 +2222,6 @@
               if(monthIdx>=0 && tahun){ blockLabel[r.blockIndex] = {monthIdx, tahun}; }
             }
           });
-
           const maxBlock = parsedRows[parsedRows.length-1].blockIndex;
           for(let b=0; b<=maxBlock; b++){
             if(!blockLabel[b] && blockLabel[b-1]){
@@ -2485,7 +2237,6 @@
               blockLabel[b] = {monthIdx:mi, tahun:ty};
             }
           }
-
           parsedRows.forEach(r=>{
             const lbl = blockLabel[r.blockIndex];
             r.monthIdx = lbl ? lbl.monthIdx : -1;
@@ -2494,13 +2245,10 @@
             r.sortKey = (r.tahun||0)*100 + (r.monthIdx>=0?r.monthIdx:0);
           });
         }
-
         KRY_ROWS = parsedRows;
-
         kryPopulateFilters();
         kryLoaded = true;
         renderKaryawan();
-
         dashPopulateFilters();
         renderDashboardCharts();
       },
@@ -2512,41 +2260,31 @@
       }
     });
   }
-
   function kryPopulateFilters(){
     const tahunSel = document.getElementById('kryTahunFilter');
     const ptSel = document.getElementById('kryPtFilter');
-
     const tahuns = Array.from(new Set(KRY_ROWS.map(r=>r.tahun).filter(Boolean))).sort((a,b)=>b-a);
     const curTahun = kryTahunValue || tahuns[0];
     tahunSel.innerHTML = tahuns.map(t=>`<option value="${t}">${t}</option>`).join('');
     tahunSel.value = tahuns.includes(curTahun) ? curTahun : tahuns[0];
     kryTahunValue = parseInt(tahunSel.value, 10);
-
     const pts = Array.from(new Set(KRY_ROWS.map(r=>r.pt).filter(Boolean))).sort();
     const curPt = kryPtValue || 'semua';
     ptSel.innerHTML = `<option value="semua">Semua PT</option>` + pts.map(p=>`<option value="${p}">${p}</option>`).join('');
     ptSel.value = (curPt==='semua' || pts.includes(curPt)) ? curPt : 'semua';
     kryPtValue = ptSel.value;
-
     kryPopulateBulanFilter();
     kryPopulateDeptFilter();
   }
-
-  /* Isi dropdown Departemen mengikuti PT yang sedang dipilih (reset ke "Semua Departemen"
-     kalau departemen yang sebelumnya dipilih tidak ada di cakupan PT baru) */
   function kryPopulateDeptFilter(){
     const deptSel = document.getElementById('kryDeptFilter');
     const scoped = kryPtValue==='semua' ? KRY_ROWS : KRY_ROWS.filter(r=>r.pt===kryPtValue);
     const depts = Array.from(new Set(scoped.map(r=>r.dept).filter(Boolean))).sort();
-
     const curDept = kryDeptValue || 'semua';
     deptSel.innerHTML = `<option value="semua">Semua Departemen</option>` + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
     deptSel.value = (curDept==='semua' || depts.includes(curDept)) ? curDept : 'semua';
     kryDeptValue = deptSel.value;
   }
-
-  /* Isi dropdown Bulan mengikuti Tahun yang sedang dipilih, urut kronologis */
   function kryPopulateBulanFilter(){
     const bulanSel = document.getElementById('kryBulanFilter');
     const bulanOptions = Array.from(
@@ -2554,13 +2292,11 @@
         KRY_ROWS.filter(r=>r.tahun===kryTahunValue).map(r=>[r.bulan, r.sortKey])
       ).entries()
     ).sort((a,b)=>a[1]-b[1]).map(([bulan])=>bulan);
-
     const curBulan = kryBulanValue || 'semua';
     bulanSel.innerHTML = `<option value="semua">Semua Bulan</option>` + bulanOptions.map(b=>`<option value="${b}">${b}</option>`).join('');
     bulanSel.value = (curBulan==='semua' || bulanOptions.includes(curBulan)) ? curBulan : 'semua';
     kryBulanValue = bulanSel.value;
   }
-
   function renderBarList(containerId, entries, colorClass){
     const el = document.getElementById(containerId);
     if(!el) return;
@@ -2572,7 +2308,6 @@
         <div class="bar-value">${e.value.toLocaleString('id-ID')}</div>
       </div>`).join('');
   }
-
   function renderBarListPct(containerId, entries, colorClass){
     const el = document.getElementById(containerId);
     if(!el) return;
@@ -2584,28 +2319,20 @@
         <div class="bar-value wide">${e.value.toLocaleString('id-ID')}<span class="bar-pct">(${e.pct.toFixed(1)}%)</span></div>
       </div>`).join('');
   }
-
-  /* Tambahkan field pct ke tiap entry = proporsi value terhadap total seluruh
-     entry di list yang sama (dipakai untuk kartu bar-list selain Resign per PT,
-     yang pct-nya dihitung terhadap total headcount, bukan proporsi internal). */
   function withSharePct(entries){
     const total = entries.reduce((s,e)=>s+e.value,0);
     return entries.map(e=>({ ...e, pct: total ? (e.value/total*100) : 0 }));
   }
-
   function renderGajiTable(containerId, deptEntries, total){
     const el = document.getElementById(containerId);
     if(!el) return;
     const rows = deptEntries.map(e => `<tr><td>${e.label}</td><td>${kryFmtRupiah(e.value)}</td></tr>`).join('');
     el.innerHTML = `${rows}<tr class="total"><td>Total</td><td>${kryFmtRupiah(total)}</td></tr>`;
   }
-
   function renderKaryawan(){
     if(!kryLoaded) return;
     const grid = document.getElementById('kryGrid');
-
     const rowsInYear = KRY_ROWS.filter(r => r.tahun===kryTahunValue && (kryPtValue==='semua' || r.pt===kryPtValue) && (kryDeptValue==='semua' || r.dept===kryDeptValue));
-
     if(rowsInYear.length===0){
       grid.innerHTML = `<div class="state-msg">Tidak ada data untuk filter ini.</div>`;
       document.getElementById('kryTotal').textContent = '0';
@@ -2614,11 +2341,6 @@
       document.getElementById('kryNote').innerHTML = '';
       return;
     }
-
-    /* Jika Bulan = "Semua Bulan": data jumlah/stok karyawan diambil dari snapshot
-       bulan terakhir yang tersedia di tahun ini, dan masuk/keluar dijumlah
-       sepanjang tahun (YTD). Jika user memilih bulan tertentu, semuanya
-       (stok maupun masuk/keluar) dihitung hanya untuk bulan itu saja. */
     let snapshotRows, flowRows, isSingleMonth;
     if(kryBulanValue==='semua'){
       const maxSortKey = Math.max(...rowsInYear.map(r=>r.sortKey));
@@ -2632,48 +2354,35 @@
       isSingleMonth = true;
     }
     const snapshotBulanLabel = snapshotRows[0] ? snapshotRows[0].bulan : kryBulanValue;
-
     const sum = (rows, field) => rows.reduce((s,r)=>s+r[field], 0);
     const groupSum = (rows, keyField, valField) => {
       const map = {};
       rows.forEach(r=>{ const k=r[keyField]; map[k]=(map[k]||0)+r[valField]; });
       return map;
     };
-
     const totalKry = sum(snapshotRows, 'total');
     const byPT = groupSum(snapshotRows, 'pt', 'total');
     const byDept = groupSum(snapshotRows, 'dept', 'total');
-
     const kabLokal = sum(snapshotRows,'kabLokal'), kabNonLokal = sum(snapshotRows,'kabNonLokal');
     const provLokal = sum(snapshotRows,'provLokal'), provNonLokal = sum(snapshotRows,'provNonLokal');
-
     const masukTotal = sum(flowRows,'masukPenambahan')+sum(flowRows,'masukPenggantian')+sum(flowRows,'masukMutasi')+sum(flowRows,'masukPromosi');
     const keluarTotal = sum(flowRows,'keluarResign')+sum(flowRows,'keluarMutasi')+sum(flowRows,'keluarPromosi')+sum(flowRows,'keluarHabisKontrak')+sum(flowRows,'keluarMeninggal');
-
     const resignByPT = groupSum(flowRows, 'pt', 'keluarResign');
-
-    /* Turn Over Karyawan: resign PT bulan berjalan dibagi rata-rata headcount PT
-       (bulan berjalan + bulan sebelumnya). Bulan sebelumnya dicari dari KRY_ROWS
-       GLOBAL (lintas tahun, bukan cuma rowsInYear) supaya kasus Jan -> Des tahun
-       lalu tetap kena, dengan filter PT/Departemen yang sama seperti scope halaman. */
     const scopedAllYears = KRY_ROWS.filter(r => (kryPtValue==='semua' || r.pt===kryPtValue) && (kryDeptValue==='semua' || r.dept===kryDeptValue));
     const curSortKey = snapshotRows[0] ? snapshotRows[0].sortKey : null;
     const prevMonthCandidates = curSortKey!=null ? scopedAllYears.filter(r => r.sortKey < curSortKey) : [];
     const prevSortKey = prevMonthCandidates.length ? Math.max(...prevMonthCandidates.map(r=>r.sortKey)) : null;
     const prevMonthRows = prevSortKey!=null ? scopedAllYears.filter(r => r.sortKey === prevSortKey) : [];
     const byPTPrev = groupSum(prevMonthRows, 'pt', 'total');
-
     const genderL = sum(snapshotRows,'genderL'), genderP = sum(snapshotRows,'genderP');
     const statusBulanan = sum(snapshotRows,'statusBulanan'), statusSKU = sum(snapshotRows,'statusSKU'), statusPKWT = sum(snapshotRows,'statusPKWT'), statusBHL = sum(snapshotRows,'statusBHL');
     const pangkatStaff = sum(snapshotRows,'pangkatStaff'), pangkatMandor1 = sum(snapshotRows,'pangkatMandor1'), pangkatMandorKerani = sum(snapshotRows,'pangkatMandorKerani'), pangkatWorker = sum(snapshotRows,'pangkatWorker');
     const klasDesaBinaan = sum(snapshotRows,'klasDesaBinaan'), klasKecamatan = sum(snapshotRows,'klasKecamatan'), klasKabupaten = sum(snapshotRows,'klasKabupaten'), klasProvinsi = sum(snapshotRows,'klasProvinsi'), klasSulawesi = sum(snapshotRows,'klasSulawesi'), klasNonSulawesi = sum(snapshotRows,'klasNonSulawesi');
     const pendSD = sum(snapshotRows,'pendSD'), pendSMP = sum(snapshotRows,'pendSMP'), pendSMA = sum(snapshotRows,'pendSMA'), pendD123 = sum(snapshotRows,'pendD123'), pendS1 = sum(snapshotRows,'pendS1'), pendS2 = sum(snapshotRows,'pendS2');
-
     const gajiBrutoByDept = groupSum(snapshotRows, 'dept', 'gajiBruto');
     const gajiNettoByDept = groupSum(snapshotRows, 'dept', 'gajiNetto');
     const totalBruto = sum(snapshotRows,'gajiBruto');
     const totalNetto = sum(snapshotRows,'gajiNetto');
-
     document.getElementById('kryTotal').textContent = totalKry.toLocaleString('id-ID');
     document.getElementById('kryMasukTotal').textContent = masukTotal.toLocaleString('id-ID');
     document.getElementById('kryKeluarTotal').textContent = keluarTotal.toLocaleString('id-ID');
@@ -2682,7 +2391,6 @@
     document.getElementById('kryNote').innerHTML = isSingleMonth
       ? `Data jumlah karyawan, masuk, dan keluar untuk bulan <b>${snapshotBulanLabel}</b>.`
       : `Data jumlah karyawan per <b>${snapshotBulanLabel}</b>. Data masuk/keluar akumulasi sepanjang tahun <b>${kryTahunValue}</b>.`;
-
     grid.innerHTML = `
       <div class="kry-card"><h3>Karyawan per PT</h3><div class="bar-list" id="kryByPT"></div></div>
       <div class="kry-card"><h3>Karyawan Resign per PT</h3><div class="bar-list" id="kryResignPT"></div></div>
@@ -2700,17 +2408,13 @@
       <div class="kry-card"><h3>Gaji Bruto per Departemen</h3><table class="kry-table" id="kryGajiBruto"></table></div>
       <div class="kry-card"><h3>Gaji Netto per Departemen</h3><table class="kry-table" id="kryGajiNetto"></table></div>
     `;
-
     renderBarListPct('kryByPT', withSharePct(Object.entries(byPT).map(([k,v])=>({label:k,value:v}))));
-    // Urutan PT SENGAJA disamakan dengan card "Karyawan per PT" di atas (ikut
-    // urutan resignPtKeys, bukan diurutkan ulang berdasarkan jumlah resign).
     const resignPtKeys = Array.from(new Set([...Object.keys(byPT), ...Object.keys(resignByPT)]));
     renderBarListPct('kryResignPT', resignPtKeys.map(k => {
       const resign = resignByPT[k] || 0;
       const headcount = byPT[k] || 0;
       return {label:k, value:resign, pct: headcount ? (resign/headcount*100) : 0};
     }), 'red');
-    // Turn Over = resign PT bulan berjalan / rata-rata(headcount PT bulan berjalan, bulan sebelumnya)
     renderBarListPct('kryTurnover', resignPtKeys.map(k => {
       const resign = resignByPT[k] || 0;
       const curHC = byPT[k] || 0;
@@ -2763,14 +2467,12 @@
       {label:'S1', value: pendS1},
       {label:'S2', value: pendS2},
     ]));
-
     renderGajiTable('kryGajiBruto', Object.entries(gajiBrutoByDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value), totalBruto);
     renderGajiTable('kryGajiNetto', Object.entries(gajiNettoByDept).map(([k,v])=>({label:k,value:v})).sort((a,b)=>b.value-a.value), totalNetto);
   }
-
   document.getElementById('kryTahunFilter').addEventListener('change', e=>{
     kryTahunValue = parseInt(e.target.value,10);
-    kryBulanValue = 'semua'; // daftar bulan berbeda per tahun, reset ke "Semua Bulan"
+    kryBulanValue = 'semua';
     kryPopulateBulanFilter();
     renderKaryawan();
   });
@@ -2780,7 +2482,7 @@
   });
   document.getElementById('kryPtFilter').addEventListener('change', e=>{
     kryPtValue = e.target.value;
-    kryPopulateDeptFilter(); // daftar departemen bisa beda per PT, sesuaikan pilihannya
+    kryPopulateDeptFilter();
     renderKaryawan();
   });
   document.getElementById('kryDeptFilter').addEventListener('change', e=>{
@@ -2788,7 +2490,6 @@
     renderKaryawan();
   });
   document.getElementById('kryRefreshBtn').addEventListener('click', loadKaryawanData);
-
   /* =====================================================================
      DASHBOARD (landing page) - chart Chart.js, sumber data sama dengan
      Dashboard Karyawan di atas (KRY_ROWS, sheet Summary).
@@ -2800,13 +2501,9 @@
   let dashLineChart = null, dashPieKabChart = null, dashPieProvChart = null, dashDoughnutChart = null;
   const DASH_PT_COLORS = { BJA:'#FFB300', BTL:'#2E7DFF', IGL:'#00E5C7' };
   const DASH_PT_FALLBACK_COLORS = ['#FF6A1A','#29B6F6','#A6AEBB','#4CD9A0','#FF4550'];
-
   function dashPtColor(pt, idx){
     return DASH_PT_COLORS[pt] || DASH_PT_FALLBACK_COLORS[idx % DASH_PT_FALLBACK_COLORS.length];
   }
-
-  /* Plugin ringan buatan sendiri untuk menampilkan nilai data langsung di atas
-     titik/bar - supaya tidak perlu tambah dependency CDN baru (chartjs-plugin-datalabels). */
   const dashDataLabelsPlugin = {
     id: 'dashDataLabels',
     afterDatasetsDraw(chart){
@@ -2829,10 +2526,6 @@
       });
     }
   };
-
-  /* Plugin terpisah khusus untuk doughnut Klasifikasi Asal Karyawan - sengaja
-     dibuat berdiri sendiri (tidak berbagi kode dengan dashDataLabelsPlugin di
-     atas) supaya perubahan di sini tidak bisa memengaruhi chart Line/Bar. */
   const dashDoughnutLabelsPlugin = {
     id: 'dashDoughnutLabels',
     afterDatasetsDraw(chart){
@@ -2865,28 +2558,21 @@
       });
     }
   };
-
   function dashPopulateFilters(){
     const tahunSel = document.getElementById('dashTahunFilter');
     const ptSel = document.getElementById('dashPtFilter');
-
     const tahuns = Array.from(new Set(KRY_ROWS.map(r=>r.tahun).filter(Boolean))).sort((a,b)=>b-a);
     const curTahun = dashTahunValue || tahuns[0];
     tahunSel.innerHTML = tahuns.map(t=>`<option value="${t}">${t}</option>`).join('');
     tahunSel.value = tahuns.includes(curTahun) ? curTahun : tahuns[0];
     dashTahunValue = parseInt(tahunSel.value, 10);
-
     const pts = Array.from(new Set(KRY_ROWS.map(r=>r.pt).filter(Boolean))).sort();
     const curPt = dashPtValue || 'semua';
     ptSel.innerHTML = `<option value="semua">Semua PT</option>` + pts.map(p=>`<option value="${p}">${p}</option>`).join('');
     ptSel.value = (curPt==='semua' || pts.includes(curPt)) ? curPt : 'semua';
     dashPtValue = ptSel.value;
-
     dashPopulateBulanFilter();
   }
-
-  /* Isi dropdown Bulan mengikuti Tahun yang sedang dipilih, urut kronologis.
-     Filter ini hanya berlaku utk snapshot pie/doughnut di section Human Resources. */
   function dashPopulateBulanFilter(){
     const bulanSel = document.getElementById('dashBulanFilter');
     const bulanOptions = Array.from(
@@ -2894,13 +2580,11 @@
         KRY_ROWS.filter(r=>r.tahun===dashTahunValue).map(r=>[r.bulan, r.sortKey])
       ).entries()
     ).sort((a,b)=>a[1]-b[1]).map(([bulan])=>bulan);
-
     const curBulan = dashBulanValue || 'semua';
     bulanSel.innerHTML = `<option value="semua">Semua Bulan</option>` + bulanOptions.map(b=>`<option value="${b}">${b}</option>`).join('');
     bulanSel.value = (curBulan==='semua' || bulanOptions.includes(curBulan)) ? curBulan : 'semua';
     dashBulanValue = bulanSel.value;
   }
-
   function dashPieOptions(){
     return {
       responsive: true,
@@ -2911,15 +2595,12 @@
       },
     };
   }
-
   function renderDashboardCharts(){
     if(!KRY_ROWS.length) return;
-
     if(typeof Chart === 'undefined'){
       document.getElementById('dashNote').textContent = 'Gagal memuat library chart (Chart.js). Cek koneksi internet lalu refresh halaman.';
       return;
     }
-
     try{
       renderDashboardChartsInner();
     }catch(err){
@@ -2927,18 +2608,14 @@
       document.getElementById('dashNote').textContent = 'Terjadi error saat menggambar chart: ' + (err && err.message ? err.message : err);
     }
   }
-
   function renderDashboardChartsInner(){
-    /* ---------- Line chart: total karyawan per PT per bulan (tahun terpilih) ---------- */
     const yearRows = KRY_ROWS.filter(r=>r.tahun===dashTahunValue);
     const months = Array.from(
       new Map(yearRows.map(r=>[r.bulan, r.sortKey])).entries()
     ).sort((a,b)=>a[1]-b[1]).map(([bulan])=>bulan);
-
     const ptsForLine = dashPtValue==='semua'
       ? Array.from(new Set(yearRows.map(r=>r.pt))).sort()
       : [dashPtValue];
-
     const isBar = dashTrendChartType === 'bar';
     const lineDatasets = ptsForLine.map((pt, idx)=>{
       const data = months.map(bulan=> yearRows.filter(r=>r.pt===pt && r.bulan===bulan).reduce((s,r)=>s+r.total,0));
@@ -2962,7 +2639,6 @@
       }
       return base;
     });
-
     if(dashLineChart) dashLineChart.destroy();
     dashLineChart = new Chart(document.getElementById('dashLineChart'), {
       type: dashTrendChartType,
@@ -2983,10 +2659,6 @@
         },
       },
     });
-
-    /* ---------- Snapshot bulan (untuk pie/doughnut, khusus section Human Resources) ----------
-       Jika dashBulanValue==='semua', ambil bulan terakhir yang tersedia dalam cakupan filter.
-       Jika bulan tertentu dipilih, pakai bulan itu sebagai snapshot. */
     const scopedRows = dashPtValue==='semua' ? yearRows : yearRows.filter(r=>r.pt===dashPtValue);
     let snapshotBulan = null;
     if(dashBulanValue==='semua'){
@@ -2999,12 +2671,9 @@
     }
     const snapshotRows = scopedRows.filter(r=>r.bulan===snapshotBulan);
     const sum = (field) => snapshotRows.reduce((s,r)=>s+r[field],0);
-
     document.getElementById('dashNote').innerHTML = snapshotBulan
       ? ``
       : `Tidak ada data karyawan untuk bulan yang dipilih.`;
-
-    /* ---------- Pie: Lokal/Non-Lokal by Kabupaten ---------- */
     const kabLokal = sum('kabLokal'), kabNonLokal = sum('kabNonLokal');
     if(dashPieKabChart) dashPieKabChart.destroy();
     dashPieKabChart = new Chart(document.getElementById('dashPieKabChart'), {
@@ -3019,8 +2688,6 @@
     document.getElementById('dashPieKabNote').textContent = kabTotal
       ? `Lokal ${kabLokal} (${Math.round(kabLokal/kabTotal*100)}%) · Non Lokal ${kabNonLokal} (${Math.round(kabNonLokal/kabTotal*100)}%)`
       : 'Tidak ada data.';
-
-    /* ---------- Pie: Lokal/Non-Lokal by Provinsi ---------- */
     const provLokal = sum('provLokal'), provNonLokal = sum('provNonLokal');
     if(dashPieProvChart) dashPieProvChart.destroy();
     dashPieProvChart = new Chart(document.getElementById('dashPieProvChart'), {
@@ -3035,8 +2702,6 @@
     document.getElementById('dashPieProvNote').textContent = provTotal
       ? `Lokal ${provLokal} (${Math.round(provLokal/provTotal*100)}%) · Non Lokal ${provNonLokal} (${Math.round(provNonLokal/provTotal*100)}%)`
       : 'Tidak ada data.';
-
-    /* ---------- Doughnut: Klasifikasi asal karyawan ---------- */
     const klas = {
       'Desa Binaan': sum('klasDesaBinaan'),
       'Satu Kecamatan': sum('klasKecamatan'),
@@ -3058,18 +2723,13 @@
     const klasTotal = Object.values(klas).reduce((a,b)=>a+b,0);
     document.getElementById('dashDoughnutNote').textContent = klasTotal ? `Total ${klasTotal} karyawan` : 'Tidak ada data.';
   }
-
   /* =====================================================================
      Total Kendaraan per Kategori (bar 3D) - sumber data sheet "Kendaraan"
      yang sama dengan halaman General Affair > Kendaraan (variabel ASSETS).
-     Plugin di bawah sengaja dibuat berdiri sendiri (tidak berbagi kode
-     dengan dashDataLabelsPlugin/dashDoughnutLabelsPlugin) supaya perubahan
-     di sini tidak bisa memengaruhi chart lain yang sudah berjalan baik.
      ===================================================================== */
   let dashVehicleChart = null;
   let dashVehicleFilter = 'semua'; // 'semua' | 'wajib'
   const DASH_VEHICLE_3D_DEPTH = 7;
-
   function shadeHexColor(hex, percent){
     hex = (hex||'#2E7DFF').replace('#','');
     if(hex.length===3) hex = hex.split('').map(c=>c+c).join('');
@@ -3082,10 +2742,6 @@
     b = Math.max(0, Math.min(255, b));
     return '#' + (0x1000000 + r*0x10000 + g*0x100 + b).toString(16).slice(1);
   }
-
-  /* Menggambar "tutup atas" + "sisi kanan" di setiap bar supaya terlihat
-     seperti balok 3D - Chart.js sendiri sudah menggambar sisi depan (rect
-     datar) secara normal, plugin ini cuma menambah 2 bidang semu di atasnya. */
   const dashVehicle3DPlugin = {
     id: 'dashVehicle3D',
     afterDatasetsDraw(chart){
@@ -3125,7 +2781,6 @@
       });
     }
   };
-
   const dashVehicleLabelsPlugin = {
     id: 'dashVehicleLabels',
     afterDatasetsDraw(chart){
@@ -3146,7 +2801,6 @@
       });
     }
   };
-
   function renderDashVehicleChart(){
     if(!ASSETS.length) return;
     if(typeof Chart === 'undefined'){
@@ -3157,7 +2811,6 @@
       const scoped = dashVehicleFilter === 'wajib'
         ? ASSETS.filter(a => (a['Kewajiban']||'').trim().toLowerCase() === 'ya')
         : ASSETS;
-
       const counts = {};
       scoped.forEach(a => {
         const k = (a['Kategori']||'').trim() || 'Tanpa Kategori';
@@ -3168,7 +2821,6 @@
       const data = entries.map(e=>e[1]);
       const palette = ['#FFB300','#2E7DFF','#00E5C7','#4CD9A0','#FF4550','#FF6A1A','#29B6F6','#A6AEBB'];
       const colors = labels.map((_,i)=> palette[i % palette.length]);
-
       if(dashVehicleChart) dashVehicleChart.destroy();
       dashVehicleChart = new Chart(document.getElementById('dashVehicleBarChart'), {
         type: 'bar',
@@ -3188,7 +2840,6 @@
           },
         },
       });
-
       const total = data.reduce((s,v)=>s+v,0);
       document.getElementById('dashVehicleNote').textContent = dashVehicleFilter==='wajib'
         ? `Total ${total} kendaraan wajib pajak (Kewajiban = Ya) dari ${ASSETS.length} unit.`
@@ -3198,7 +2849,6 @@
       document.getElementById('dashVehicleNote').textContent = 'Terjadi error saat menggambar chart: ' + (err && err.message ? err.message : err);
     }
   }
-
   document.querySelectorAll('#dashVehicleFilterToggle button').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       if(btn.dataset.filter === dashVehicleFilter) return;
@@ -3208,18 +2858,11 @@
       renderDashVehicleJenisChart();
     });
   });
-
-  /* Total Kendaraan per Jenis Kendaraan (sheet Kendaraan, kolom K "Jenis") -
-     tampil sebagai bar-list horizontal (sama seperti "Karyawan per Departemen"
-     di section Human Resources), bukan chart Chart.js. Ikut filter
-     Semua/Wajib Pajak yang sama dengan chart "Total Kendaraan per Kategori"
-     di atasnya (variabel dashVehicleFilter dipakai bersama). */
   function renderDashVehicleJenisChart(){
     if(!ASSETS.length) return;
     const scoped = dashVehicleFilter === 'wajib'
       ? ASSETS.filter(a => (a['Kewajiban']||'').trim().toLowerCase() === 'ya')
       : ASSETS;
-
     const counts = {};
     scoped.forEach(a => {
       const k = (a['Jenis']||'').trim() || 'Tanpa Jenis';
@@ -3227,21 +2870,13 @@
     });
     const entries = Object.entries(counts).map(([k,v])=>({label:k, value:v})).sort((a,b)=>b.value-a.value);
     renderBarList('dashVehicleJenisList', entries);
-
     const total = entries.reduce((s,e)=>s+e.value,0);
     document.getElementById('dashVehicleJenisNote').textContent = dashVehicleFilter==='wajib'
       ? `Total ${total} kendaraan wajib pajak dari ${entries.length} jenis berbeda.`
       : `Total ${total} kendaraan dari ${entries.length} jenis berbeda.`;
   }
-
-  /* Total Bangunan per Kategori (sheet "Bangunan", variabel BUILDINGS - sudah
-     dipakai halaman General Affair > Bangunan) - bar-list horizontal gaya
-     sama seperti "Karyawan per Departemen", TAPI tiap baris Kategori punya
-     sub bar-list di bawahnya yang merinci jumlah per Jenis di kategori itu
-     (renderBarList generik tidak mendukung nested, jadi dirakit manual di sini). */
   function renderDashBuildingChart(){
     if(!BUILDINGS.length) return;
-
     const catCounts = {};
     const catJenisCounts = {};
     BUILDINGS.forEach(a => {
@@ -3251,10 +2886,8 @@
       if(!catJenisCounts[kat]) catJenisCounts[kat] = {};
       catJenisCounts[kat][jenis] = (catJenisCounts[kat][jenis]||0) + 1;
     });
-
     const catEntries = Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);
     const maxCat = Math.max(...catEntries.map(([,v])=>v), 1);
-
     const html = catEntries.map(([kat, total]) => {
       const jenisEntries = Object.entries(catJenisCounts[kat]||{}).sort((a,b)=>b[1]-a[1]);
       const maxJenis = Math.max(...jenisEntries.map(([,v])=>v), 1);
@@ -3274,11 +2907,9 @@
           <div class="bar-subgroup">${subRows}</div>
         </div>`;
     }).join('');
-
     document.getElementById('dashBuildingList').innerHTML = html;
     document.getElementById('dashBuildingNote').textContent = `Total ${BUILDINGS.length} bangunan dari ${catEntries.length} kategori.`;
   }
-
   document.querySelectorAll('#dashTrendTypeToggle button').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       if(btn.dataset.type === dashTrendChartType) return;
@@ -3287,10 +2918,9 @@
       renderDashboardCharts();
     });
   });
-
   document.getElementById('dashTahunFilter').addEventListener('change', e=>{
     dashTahunValue = parseInt(e.target.value,10);
-    dashBulanValue = 'semua'; // daftar bulan berbeda per tahun, reset ke "Semua Bulan"
+    dashBulanValue = 'semua';
     dashPopulateBulanFilter();
     renderDashboardCharts();
   });
@@ -3303,12 +2933,10 @@
     renderDashboardCharts();
   });
   document.getElementById('dashRefreshBtn').addEventListener('click', loadKaryawanData);
-
   /* =====================================================================
      PROGRES REKRUTMEN (Human Resources > Rekrutmen)
      Sumber data: Google Sheet "Recruitment" - sheet "recap_jobs" (daftar
      kebutuhan per jabatan) dan sheet "candidate" (data pelamar).
-
      CATATAN PENTING: sheet "candidate" isinya 3000+ baris, tapi endpoint
      export CSV Google Sheets (gviz) membatasi HANYA sekitar 250 baris per
      satu kali request, berapa pun besar range yang diminta. Jadi baris
@@ -3322,15 +2950,12 @@
   let REC_CANDIDATES = [];
   let recLoaded = false;
   let recDeptValue = 'semua';
-
   function recParseBool(v){ return String(v||'').trim().toUpperCase()==='TRUE'; }
-
   async function recFetchText(url){
     const res = await fetch(url);
     const text = await res.text();
     return text;
   }
-
   async function recFetchRecapJobs(){
     const url = `https://docs.google.com/spreadsheets/d/${REC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('recap_jobs')}&range=A1:K300`;
     const text = await recFetchText(url);
@@ -3348,9 +2973,7 @@
       posting: recParseBool(r[9]),
     }));
   }
-
   function recSleep(ms){ return new Promise(resolve=>setTimeout(resolve, ms)); }
-
   /* Ambil 1 chunk CSV dengan retry, karena request beruntun ke gviz kadang
      gagal sesaat (rate limit / hiccup jaringan) - jangan langsung dianggap
      "data habis" kalau itu yang terjadi, supaya kandidat di baris jauh
@@ -3365,7 +2988,6 @@
     }
     return null;
   }
-
   async function recFetchAllCandidates(onProgress){
     const CHUNK = 250;
     let startRow = 2; // baris 1 = header, dilewati
@@ -3393,7 +3015,6 @@
     }
     return all;
   }
-
   async function loadRekrutmenData(){
     const body = document.getElementById('recTableBody');
     const setLoadingMsg = (n) => {
@@ -3421,7 +3042,6 @@
     }
     btn.classList.remove('spinning');
   }
-
   /* Daftar Departemen di dropdown ini diambil dari GABUNGAN sheet fulfillment
      (sumber utama - paling lengkap, termasuk departemen yang sedang tidak
      ada open posisi tapi punya riwayat penempatan), recap_jobs (supaya
@@ -3440,16 +3060,13 @@
     sel.value = (cur==='semua' || depts.includes(cur)) ? cur : 'semua';
     recDeptValue = sel.value;
   }
-
   function candStatusClass(status){
     const s = (status||'').trim().toLowerCase().replace(/\s+/g,'_');
     return s || 'unknown';
   }
-
   function renderRekrutmen(){
     const body = document.getElementById('recTableBody');
     const postingJobs = REC_JOBS.filter(j=>j.posting);
-
     const openPosisi = postingJobs.length;
     const totalKebutuhan = postingJobs.reduce((s,j)=>s+j.kebutuhan,0);
     const totalTerpenuhi = postingJobs.reduce((s,j)=>s+j.terpenuhi,0);
@@ -3458,14 +3075,11 @@
     document.getElementById('recKebutuhan').textContent = totalKebutuhan;
     document.getElementById('recTerpenuhi').textContent = totalTerpenuhi;
     document.getElementById('recKekurangan').textContent = totalKekurangan;
-
     const filtered = postingJobs.filter(j => recDeptValue==='semua' || j.departemen===recDeptValue);
-
     if(filtered.length===0){
       body.innerHTML = `<tr><td colspan="8" class="empty">Tidak ada posisi (posting=TRUE) untuk filter ini.</td></tr>`;
       return;
     }
-
     body.innerHTML = filtered.map(j=>{
       const candCount = REC_CANDIDATES.filter(c=>c.progress===j.id).length;
       return `
@@ -3480,12 +3094,10 @@
           <td><button class="kandidat-btn" data-job-id="${j.id}" data-job-label="${j.jabatan}">${candCount} Kandidat</button></td>
         </tr>`;
     }).join('');
-
     body.querySelectorAll('.kandidat-btn').forEach(btn=>{
       btn.addEventListener('click', ()=>openCandidateModal(btn.dataset.jobId, btn.dataset.jobLabel));
     });
   }
-
   function openCandidateModal(jobId, jobLabel){
     const list = REC_CANDIDATES.filter(c=>c.progress===jobId);
     const rows = list.map(c=>`
@@ -3496,7 +3108,6 @@
         <td><span class="cand-badge ${candStatusClass(c.status)}">${fmtVal(c.status)}</span></td>
         <td>${fmtVal(c.noTelp)}</td>
       </tr>`).join('');
-
     const dossier = document.getElementById('dossier');
     dossier.innerHTML = `
       <div class="dossier-header">
@@ -3517,7 +3128,6 @@
     document.getElementById('closeBtn').addEventListener('click', closeDossier);
     document.getElementById('overlay').classList.add('show');
   }
-
   document.getElementById('recDeptFilter').addEventListener('change', e=>{
     recDeptValue = e.target.value;
     renderRekrutmen();
@@ -3536,7 +3146,6 @@
     if(typeof renderTkinChart === 'function') renderTkinChart();
   });
   document.getElementById('recRefreshBtn').addEventListener('click', loadRekrutmenData);
-
   /* =====================================================================
      PROGRESS PENEMPATAN KARYAWAN (di bawah Progres Rekrutmen)
      Sumber data: Google Sheet "Recruitment" - sheet "fulfillment".
@@ -3551,7 +3160,6 @@
   let fullPage = 1;
   const FULL_PAGE_SIZE = 10;
   const FULL_MONTH_ABBR = ['jan','feb','mar','apr','mei','jun','jul','agu','sep','okt','nov','des'];
-
   function fullParseTanggal(str){
     const s = (str||'').trim();
     if(!s) return null;
@@ -3562,7 +3170,6 @@
     if(monIdx===-1 || isNaN(year)) return null;
     return { month: monIdx+1, year };
   }
-
   async function fullFetchAllRows(onProgress){
     const CHUNK = 250;
     let startRow = 2; // baris 1 = header, dilewati
@@ -3583,7 +3190,6 @@
     }
     return all;
   }
-
   async function loadFulfillmentData(){
     const body = document.getElementById('fullTableBody');
     const setLoadingMsg = (n) => {
@@ -3622,7 +3228,6 @@
     }
     btn.classList.remove('spinning');
   }
-
   function fullPopulateFilters(){
     const yearSel = document.getElementById('fullYearFilter');
     const years = Array.from(new Set(FULL_ROWS.map(r=>r.tgl.year))).sort((a,b)=>b-a);
@@ -3631,14 +3236,12 @@
     yearSel.value = (years.includes(curYear)) ? curYear : years[0];
     fullYearValue = parseInt(yearSel.value,10);
   }
-
   function renderFulfillment(){
     const body = document.getElementById('fullTableBody');
     const filteredRows = FULL_ROWS.filter(r =>
       (recDeptValue==='semua' || r.departemen===recDeptValue) &&
       r.tgl.year===fullYearValue
     );
-
     const groups = new Map();
     filteredRows.forEach(r=>{
       const key = [r.pt, r.departemen, r.bagian, r.jabatan].join('|||');
@@ -3649,14 +3252,11 @@
       g.months[r.tgl.month-1]++;
       g.total++;
     });
-
     let rowsArr = Array.from(groups.values());
     rowsArr.sort((a,b)=> a.departemen.localeCompare(b.departemen) || a.jabatan.localeCompare(b.jabatan));
-
     const totalJabatan = rowsArr.length;
     const totalKaryawan = rowsArr.reduce((s,r)=>s+r.total,0);
     document.getElementById('fullSummary').innerHTML = `<b>${totalJabatan}</b> jabatan &middot; <b>${totalKaryawan}</b> karyawan ditempatkan`;
-
     if(rowsArr.length===0){
       body.innerHTML = `<tr><td colspan="17" class="state-msg">Tidak ada data penempatan untuk filter ini.</td></tr>`;
       document.getElementById('fullTotalRow').innerHTML = '';
@@ -3664,13 +3264,11 @@
       document.getElementById('fullPageNav').innerHTML = '';
       return;
     }
-
     const totalPages = Math.max(1, Math.ceil(rowsArr.length / FULL_PAGE_SIZE));
     if(fullPage>totalPages) fullPage = totalPages;
     if(fullPage<1) fullPage = 1;
     const startIdx = (fullPage-1)*FULL_PAGE_SIZE;
     const pageRows = rowsArr.slice(startIdx, startIdx+FULL_PAGE_SIZE);
-
     body.innerHTML = pageRows.map(r=>{
       const monthCells = r.months.map(m=>`<td class="num${m===0?' zero':''}">${m||'—'}</td>`).join('');
       return `
@@ -3683,16 +3281,13 @@
           <td class="num total-col">${r.total}</td>
         </tr>`;
     }).join('');
-
     const monthTotals = new Array(12).fill(0);
     rowsArr.forEach(r=> r.months.forEach((m,i)=> monthTotals[i]+=m));
     const totalMonthCells = monthTotals.map(m=>`<td>${m||'—'}</td>`).join('');
     document.getElementById('fullTotalRow').innerHTML = `<td colspan="4">TOTAL (semua)</td>${totalMonthCells}<td>${totalKaryawan}</td>`;
-
     const startShown = startIdx+1;
     const endShown = Math.min(startIdx+FULL_PAGE_SIZE, rowsArr.length);
     document.getElementById('fullPageInfo').textContent = `Menampilkan ${startShown}-${endShown} dari ${rowsArr.length} jabatan`;
-
     const nav = document.getElementById('fullPageNav');
     let navHtml = `<button class="page-btn" ${fullPage<=1?'disabled':''} onclick="fullGoToPage(${fullPage-1})">&lsaquo;</button>`;
     for(let p=1;p<=totalPages;p++){
@@ -3701,12 +3296,10 @@
     navHtml += `<button class="page-btn" ${fullPage>=totalPages?'disabled':''} onclick="fullGoToPage(${fullPage+1})">&rsaquo;</button>`;
     nav.innerHTML = navHtml;
   }
-
   function fullGoToPage(p){
     fullPage = p;
     renderFulfillment();
   }
-
   document.getElementById('fullYearFilter').addEventListener('change', e=>{
     fullYearValue = parseInt(e.target.value,10);
     fullPage = 1;
@@ -3719,7 +3312,6 @@
     if(typeof tkinLoaded !== 'undefined' && tkinLoaded) renderTkinChart();
   });
   document.getElementById('fullRefreshBtn').addEventListener('click', loadFulfillmentData);
-
   /* =====================================================================
      REKAP KARYAWAN KELUAR PER JABATAN PER BULAN (di bawah Progress Penempatan Karyawan)
      Sumber data: Google Sheet "report_karyawan" (sheet Summary/KRY_SHEET_ID) - sheet "TK_Out".
@@ -3731,7 +3323,6 @@
   let tkoutLoaded = false;
   let tkoutPage = 1;
   const TKOUT_PAGE_SIZE = 10;
-
   function tkoutParseBulan(str){
     const s = (str||'').trim();
     if(!s) return null;
@@ -3742,7 +3333,6 @@
     if(monIdx===-1 || isNaN(yy)) return null;
     return { month: monIdx+1, year: 2000+yy };
   }
-
   /* PENTING: kolom Bulan di sheet TK_Out berisi CELL YANG DI-MERGE vertikal
      (satu label bulan menaungi banyak baris). Google Sheets gviz CSV export
      ternyata TIDAK KONSISTEN meng-handle merge ini untuk range/fetch yang besar -
@@ -3774,7 +3364,6 @@
     }
     return all;
   }
-
   async function loadTkoutData(){
     const body = document.getElementById('tkoutTableBody');
     const setLoadingMsg = (n) => {
@@ -3815,16 +3404,12 @@
     }
     btn.classList.remove('spinning');
   }
-
-  /* Tahun mengikuti fullYearValue (dropdown Tahun di section "Progress Penempatan
-     Karyawan") - tidak ada dropdown Tahun terpisah lagi di section ini. */
   function renderTkout(){
     const body = document.getElementById('tkoutTableBody');
     const filteredRows = TKOUT_ROWS.filter(r =>
       (recDeptValue==='semua' || r.departemen===recDeptValue) &&
       r.tgl.year===fullYearValue
     );
-
     const groups = new Map();
     filteredRows.forEach(r=>{
       const key = [r.departemen, r.jabatan].join('|||');
@@ -3835,14 +3420,11 @@
       g.months[r.tgl.month-1]++;
       g.total++;
     });
-
     let rowsArr = Array.from(groups.values());
     rowsArr.sort((a,b)=> a.departemen.localeCompare(b.departemen) || a.jabatan.localeCompare(b.jabatan));
-
     const totalJabatan = rowsArr.length;
     const totalKaryawan = rowsArr.reduce((s,r)=>s+r.total,0);
     document.getElementById('tkoutSummary').innerHTML = `<b>${totalJabatan}</b> jabatan &middot; <b>${totalKaryawan}</b> karyawan keluar`;
-
     if(rowsArr.length===0){
       body.innerHTML = `<tr><td colspan="15" class="state-msg">Tidak ada data karyawan keluar untuk filter ini.</td></tr>`;
       document.getElementById('tkoutTotalRow').innerHTML = '';
@@ -3850,13 +3432,11 @@
       document.getElementById('tkoutPageNav').innerHTML = '';
       return;
     }
-
     const totalPages = Math.max(1, Math.ceil(rowsArr.length / TKOUT_PAGE_SIZE));
     if(tkoutPage>totalPages) tkoutPage = totalPages;
     if(tkoutPage<1) tkoutPage = 1;
     const startIdx = (tkoutPage-1)*TKOUT_PAGE_SIZE;
     const pageRows = rowsArr.slice(startIdx, startIdx+TKOUT_PAGE_SIZE);
-
     body.innerHTML = pageRows.map(r=>{
       const monthCells = r.months.map(m=>`<td class="num${m===0?' zero':''}">${m||'—'}</td>`).join('');
       return `
@@ -3867,16 +3447,13 @@
           <td class="num total-col">${r.total}</td>
         </tr>`;
     }).join('');
-
     const monthTotals = new Array(12).fill(0);
     rowsArr.forEach(r=> r.months.forEach((m,i)=> monthTotals[i]+=m));
     const totalMonthCells = monthTotals.map(m=>`<td>${m||'—'}</td>`).join('');
     document.getElementById('tkoutTotalRow').innerHTML = `<td colspan="2">TOTAL (semua)</td>${totalMonthCells}<td>${totalKaryawan}</td>`;
-
     const startShown = startIdx+1;
     const endShown = Math.min(startIdx+TKOUT_PAGE_SIZE, rowsArr.length);
     document.getElementById('tkoutPageInfo').textContent = `Menampilkan ${startShown}-${endShown} dari ${rowsArr.length} jabatan`;
-
     const nav = document.getElementById('tkoutPageNav');
     let navHtml = `<button class="page-btn" ${tkoutPage<=1?'disabled':''} onclick="tkoutGoToPage(${tkoutPage-1})">&lsaquo;</button>`;
     for(let p=1;p<=totalPages;p++){
@@ -3885,14 +3462,11 @@
     navHtml += `<button class="page-btn" ${tkoutPage>=totalPages?'disabled':''} onclick="tkoutGoToPage(${tkoutPage+1})">&rsaquo;</button>`;
     nav.innerHTML = navHtml;
   }
-
   function tkoutGoToPage(p){
     tkoutPage = p;
     renderTkout();
   }
-
   document.getElementById('tkoutRefreshBtn').addEventListener('click', loadTkoutData);
-
   /* =====================================================================
      KARYAWAN MASUK VS KELUAR PER JABATAN (chart line, di bawah Rekap Keluar)
      Masuk = FULL_ROWS (sheet fulfillment, penempatan/join), Keluar = TKOUT_ROWS
@@ -3903,7 +3477,6 @@
   let jabatanCompareChart = null;
   let jabatanCompareChartType = 'line';
   const ID_MONTH_LABELS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-
   function populateJabatanCompareFilter(){
     const sel = document.getElementById('jabatanCompareFilter');
     if(!sel) return;
@@ -3913,36 +3486,30 @@
       ...scopedFull.map(r=>r.jabatan),
       ...scopedOut.map(r=>r.jabatan)
     ].filter(Boolean))).sort();
-
     const cur = jabatanCompareValue;
     sel.innerHTML = jabatans.map(j=>`<option value="${j}">${j}</option>`).join('');
     sel.value = (cur && jabatans.includes(cur)) ? cur : (jabatans[0] || '');
     jabatanCompareValue = sel.value || null;
   }
-
   function renderJabatanCompareChart(){
     const canvas = document.getElementById('jabatanCompareChart');
     if(!canvas || typeof Chart === 'undefined') return;
     const note = document.getElementById('jabatanCompareNote');
-
     if(!jabatanCompareValue){
       if(jabatanCompareChart){ jabatanCompareChart.destroy(); jabatanCompareChart = null; }
       if(note) note.textContent = 'Belum ada data jabatan untuk dibandingkan.';
       return;
     }
-
     const matchScope = r => r.jabatan===jabatanCompareValue && r.tgl.year===fullYearValue && (recDeptValue==='semua' || r.departemen===recDeptValue);
     const masukMonths = new Array(12).fill(0);
     FULL_ROWS.filter(matchScope).forEach(r=> masukMonths[r.tgl.month-1]++);
     const keluarMonths = new Array(12).fill(0);
     TKOUT_ROWS.filter(matchScope).forEach(r=> keluarMonths[r.tgl.month-1]++);
-
     const totalMasuk = masukMonths.reduce((a,b)=>a+b,0);
     const totalKeluar = keluarMonths.reduce((a,b)=>a+b,0);
     if(note){
       note.innerHTML = `<b>${jabatanCompareValue}</b> &middot; tahun <b>${fullYearValue}</b> &middot; Masuk: <b>${totalMasuk}</b> &middot; Keluar: <b>${totalKeluar}</b>`;
     }
-
     const isBar = jabatanCompareChartType === 'bar';
     const buildDataset = (label, data, color) => {
       const base = { label, data, borderColor: color, backgroundColor: isBar ? color + 'CC' : color };
@@ -3959,7 +3526,6 @@
       }
       return base;
     };
-
     if(jabatanCompareChart) jabatanCompareChart.destroy();
     jabatanCompareChart = new Chart(canvas, {
       type: jabatanCompareChartType,
@@ -3985,12 +3551,10 @@
       },
     });
   }
-
   document.getElementById('jabatanCompareFilter').addEventListener('change', e=>{
     jabatanCompareValue = e.target.value;
     renderJabatanCompareChart();
   });
-
   document.querySelectorAll('#jabatanCompareTypeToggle button').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       if(btn.dataset.type === jabatanCompareChartType) return;
@@ -3999,7 +3563,6 @@
       renderJabatanCompareChart();
     });
   });
-
   /* =====================================================================
      KARYAWAN MASUK VS KELUAR PER DEPARTEMEN (chart, di bawah Masuk vs Keluar
      per Jabatan). Masuk = TKIN_ROWS (sheet TK_In), Keluar = TKOUT_ROWS (sheet
@@ -4019,7 +3582,6 @@
   let tkinAlasanMode = 'semua'; // 'semua' | 'nonmutasi'
   let tkinChartType = 'line';
   let tkinChart = null;
-
   async function tkinFetchAllRows(onProgress){
     const CHUNK = 30;
     let startRow = 2; // baris 1 = header, dilewati
@@ -4040,7 +3602,6 @@
     }
     return all;
   }
-
   async function loadTkinData(){
     const btn = document.getElementById('tkinRefreshBtn');
     const summary = document.getElementById('tkinSummary');
@@ -4070,22 +3631,18 @@
     }
     if(btn) btn.classList.remove('spinning');
   }
-
   function renderTkinChart(){
     const canvas = document.getElementById('tkinChart');
     if(!canvas || typeof Chart === 'undefined') return;
     const note = document.getElementById('tkinSummary');
-
     const scopeMatch = r =>
       r.tgl.year===fullYearValue &&
       (recDeptValue==='semua' || r.departemen===recDeptValue) &&
       (tkinAlasanMode==='semua' || r.alasan.toLowerCase()!=='mutasi');
-
     const masukMonths = new Array(12).fill(0);
     TKIN_ROWS.filter(scopeMatch).forEach(r=> masukMonths[r.tgl.month-1]++);
     const keluarMonths = new Array(12).fill(0);
     TKOUT_ROWS.filter(scopeMatch).forEach(r=> keluarMonths[r.tgl.month-1]++);
-
     const totalMasuk = masukMonths.reduce((a,b)=>a+b,0);
     const totalKeluar = keluarMonths.reduce((a,b)=>a+b,0);
     if(note){
@@ -4093,7 +3650,6 @@
       const deptLabel = recDeptValue==='semua' ? 'Semua Departemen' : recDeptValue;
       note.innerHTML = `<b>${deptLabel}</b> &middot; tahun <b>${fullYearValue}</b> &middot; Masuk: <b>${totalMasuk}</b> &middot; Keluar: <b>${totalKeluar}</b> (${modeLabel})`;
     }
-
     const isBar = tkinChartType === 'bar';
     const buildDataset = (label, data, color) => {
       const base = { label, data, borderColor: color, backgroundColor: isBar ? color + 'CC' : color };
@@ -4110,7 +3666,6 @@
       }
       return base;
     };
-
     if(tkinChart) tkinChart.destroy();
     tkinChart = new Chart(canvas, {
       type: tkinChartType,
@@ -4136,9 +3691,7 @@
       },
     });
   }
-
   document.getElementById('tkinRefreshBtn').addEventListener('click', loadTkinData);
-
   document.querySelectorAll('#tkinAlasanToggle button').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       if(btn.dataset.mode === tkinAlasanMode) return;
@@ -4147,7 +3700,6 @@
       renderTkinChart();
     });
   });
-
   document.querySelectorAll('#tkinTypeToggle button').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       if(btn.dataset.type === tkinChartType) return;
@@ -4156,7 +3708,6 @@
       renderTkinChart();
     });
   });
-
   /* =====================================================================
      JOB DESCRIPTION (HR > Job Description)
      Sumber data: Google Sheet "Struktur Organisasi" (JOBDESC_SHEET_ID) -
@@ -4174,7 +3725,6 @@
   let JOBDESC_ROWS = [];
   let jobdescLoaded = false;
   let jobdescDeptValue = 'semua';
-
   /* File jobdesc per-jabatan disimpan di GitHub repo di
      main/job_desc/{folder}/{Kode} - {Nama Jabatan}.html - foldernya (01, 02, dst)
      tidak bisa ditebak dari Kode, jadi daftar file diambil live dari GitHub
@@ -4186,7 +3736,6 @@
   const JOBDESC_FILEMAP_TTL_MS = 30 * 60 * 1000;
   let JOBDESC_FILEMAP = null; // Map: kode -> { path, label }
   let jobdescFilemapLoading = false;
-
   function jobdescBuildFilemap(fileEntries){
     const map = new Map();
     (fileEntries||[]).forEach(f=>{
@@ -4201,7 +3750,6 @@
     });
     return map;
   }
-
   function jobdescLoadFileMap(){
     if(jobdescFilemapLoading || JOBDESC_FILEMAP) return;
     try{
@@ -4212,7 +3760,6 @@
         return;
       }
     }catch(e){ /* cache rusak, abaikan */ }
-
     jobdescFilemapLoading = true;
     fetch(JOBDESC_REPO_API)
       .then(r=> r.ok ? r.json() : Promise.reject(new Error('HTTP '+r.status)))
@@ -4242,7 +3789,6 @@
         jobdescFilemapLoading = false;
       });
   }
-
   function openJobdescDetail(kode){
     const entry = JOBDESC_FILEMAP && JOBDESC_FILEMAP.get(kode);
     if(!entry) return;
@@ -4252,17 +3798,14 @@
     document.getElementById('jobdescListView').style.display = 'none';
     document.getElementById('jobdescDetailView').style.display = '';
   }
-
   function closeJobdescDetail(){
     document.getElementById('jobdescDetailView').style.display = 'none';
     document.getElementById('jobdescListView').style.display = '';
     document.getElementById('jobdescFrame').src = 'about:blank';
   }
-
   function jobdescCsvUrl(){
     return `https://docs.google.com/spreadsheets/d/${JOBDESC_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent('Struktur')}&t=${Date.now()}`;
   }
-
   function loadJobdescData(){
     const body = document.getElementById('jobdescTableBody');
     body.innerHTML = `<tr><td colspan="3" class="state-msg" id="jobdescLoadingMsg">Memuat data dari Google Sheet...</td></tr>`;
@@ -4292,7 +3835,6 @@
       }
     });
   }
-
   function jobdescPopulateDeptFilter(){
     const sel = document.getElementById('jobdescDeptFilter');
     if(!sel) return;
@@ -4302,19 +3844,11 @@
     sel.value = (cur==='semua' || depts.includes(cur)) ? cur : 'semua';
     jobdescDeptValue = sel.value;
   }
-
   const jobdescIsVac = nama => { const s=(nama||'').trim().toLowerCase(); return s==='' || s.startsWith('vacant'); };
-
   function renderJobdesc(){
     const body = document.getElementById('jobdescTableBody');
     const note = document.getElementById('jobdescNote');
     const filteredRows = JOBDESC_ROWS.filter(r => jobdescDeptValue==='semua' || r.departemen===jobdescDeptValue);
-
-    // Group per Nama Jabatan (case-insensitive) - 1 baris jabatan bisa menaungi
-    // banyak baris asal (beda Kode/beda orang). Kode HANYA diambil dari baris
-    // pertama yang ditemukan (paling atas sesuai urutan sheet, dalam scope
-    // filter departemen yang aktif) - bukan gabungan semua kode. Nama incumbent
-    // tetap dikumpulkan semua.
     const groups = new Map();
     filteredRows.forEach(r=>{
       const key = r.jabatan.toLowerCase();
@@ -4322,10 +3856,7 @@
       const g = groups.get(key);
       if(!jobdescIsVac(r.nama)) g.namas.push(r.nama);
     });
-
     let rowsArr = Array.from(groups.values());
-    // Urut ascending berdasarkan Kode (bukan Nama Jabatan). Kode tanpa nilai
-    // ditaruh paling akhir, lalu fallback ke nama jabatan kalau kode sama/kosong.
     rowsArr.sort((a,b)=>{
       if(!a.kode && !b.kode) return a.jabatan.localeCompare(b.jabatan);
       if(!a.kode) return 1;
@@ -4333,14 +3864,11 @@
       if(a.kode === b.kode) return a.jabatan.localeCompare(b.jabatan);
       return a.kode < b.kode ? -1 : 1;
     });
-
     if(note) note.textContent = `${rowsArr.length} jabatan unik dari ${filteredRows.length} posisi.`;
-
     if(rowsArr.length===0){
       body.innerHTML = `<tr><td colspan="3" class="state-msg">Tidak ada data untuk filter ini.</td></tr>`;
       return;
     }
-
     body.innerHTML = rowsArr.map(g=>{
       const kodeTxt = g.kode ? fmtVal(g.kode) : '';
       const namaTxt = g.namas.length ? fmtVal(g.namas.join(', ')) : '<span style="color:var(--text-dim);">&mdash;</span>';
@@ -4356,7 +3884,6 @@
         </tr>`;
     }).join('');
   }
-
   document.getElementById('jobdescDeptFilter').addEventListener('change', e=>{
     jobdescDeptValue = e.target.value;
     renderJobdesc();
@@ -4368,7 +3895,6 @@
     openJobdescDetail(link.getAttribute('data-kode'));
   });
   document.getElementById('jobdescBackBtn').addEventListener('click', closeJobdescDetail);
-
   /* ===================== SIDEBAR NAVIGATION ===================== */
   function toggleSubmenu(key){
     const toggle = document.getElementById(key+'Toggle');
@@ -4379,7 +3905,6 @@
   }
   document.getElementById('hrToggle').addEventListener('click', ()=>toggleSubmenu('hr'));
   document.getElementById('gaToggle').addEventListener('click', ()=>toggleSubmenu('ga'));
-
   const KNOWN_PAGES = ['dashboard','kendaraan','sepedamotor','bangunan','alatberat','karyawan','rekrutmen','orgchart','jobdesc'];
   function showPage(page, label){
     document.getElementById('page-dashboard').style.display = (page==='dashboard') ? '' : 'none';
@@ -4460,13 +3985,11 @@
       document.getElementById('crumb').textContent = 'Menu aktif: ' + label;
     }
   }
-
   function setActive(el, label, page){
     document.querySelectorAll('.item, .sub-item').forEach(i=>i.classList.remove('active'));
     el.classList.add('active');
     showPage(page, label);
   }
-
   document.querySelectorAll('.item[data-nav]').forEach(el=>{
     el.addEventListener('click', ()=>{
       const page = el.dataset.nav==='Dashboard' ? 'dashboard' : 'placeholder';
@@ -4480,7 +4003,6 @@
       setActive(el, el.textContent, page);
     });
   });
-
   /* =====================================================================
      LOGIN GATE - autentikasi client-side terhadap Google Sheet "user"
      (kolom: Nama, username, password, role) di spreadsheet terpisah
@@ -4513,7 +4035,6 @@
     return `https://docs.google.com/spreadsheets/d/${USER_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(USER_SHEET_NAME)}&t=${Date.now()}`;
   }
   const LOGIN_SESSION_KEY = 'hrgaLoggedInUser';
-
   function renderLoggedInUser(user){
     const wrap = document.getElementById('sidebarUserInfo');
     if(!wrap) return;
@@ -4531,18 +4052,15 @@
       </button>`;
     document.getElementById('logoutBtn').addEventListener('click', logoutUser);
   }
-
   function logoutUser(){
     localStorage.removeItem(LOGIN_SESSION_KEY);
     location.reload();
   }
-
   function showApp(user){
     renderLoggedInUser(user);
     document.body.classList.remove('pre-auth');
     showPage('dashboard', 'Dashboard');
   }
-
   /* Dipanggil sekali di awal (lihat pemanggilan tryRestoreSession() di paling
      bawah). Kalau ada sesi ter-cache, divalidasi ULANG live ke sheet "user"
      sebelum dipercaya - bukan cuma dipercaya begitu saja seperti sebelumnya. */
@@ -4554,7 +4072,6 @@
       cached = JSON.parse(raw);
     }catch(e){ localStorage.removeItem(LOGIN_SESSION_KEY); return; }
     if(!cached || !cached.username || !cached.password){ localStorage.removeItem(LOGIN_SESSION_KEY); return; }
-
     Papa.parse(userCsvUrl(), {
       download:true,
       header:true,
@@ -4583,7 +4100,6 @@
       }
     });
   }
-
   function handleLoginSubmit(e){
     e.preventDefault();
     const usernameEl = document.getElementById('loginUsername');
@@ -4626,13 +4142,12 @@
       }
     });
   }
-
   document.getElementById('loginForm').addEventListener('submit', handleLoginSubmit);
-
   /* Halaman awal: kalau sesi login masih ada, langsung masuk ke Dashboard.
      Kalau belum, layar login (yang tampil default lewat body.pre-auth) yang
      jadi satu-satunya hal yang terlihat. */
   tryRestoreSession();
 </script>
 </body>
+</html>
 </html>
