@@ -336,7 +336,7 @@
     /* LOGIN PAGE */
     .login-page {
       position: fixed; inset: 0; z-index: 999;
-      background: var(--bg);
+      background: url('../main/bg_login.png') center/cover no-repeat, var(--bg);
       display: flex; align-items: center; justify-content: center;
     }
     .login-page.hidden { display: none; }
@@ -735,6 +735,7 @@
     document.getElementById("user-avatar").textContent = initials;
     document.getElementById("user-name").textContent   = user.nama;
     document.getElementById("login-page").classList.add("hidden");
+    startInactivityTimer();
     loadFromSheets();
   }
 
@@ -762,13 +763,47 @@
     }
   }
 
-  function doLogout() {
+  function doLogout(reason) {
     sessionStorage.removeItem("rh_session");
     currentUser = null;
+    clearInactivityTimer();
     document.getElementById("login-page").classList.remove("hidden");
     document.getElementById("login-username").value = "";
     document.getElementById("login-password").value = "";
-    document.getElementById("login-error").classList.remove("show");
+    const errEl = document.getElementById("login-error");
+    if (reason) { errEl.textContent = reason; errEl.classList.add("show"); }
+    else { errEl.classList.remove("show"); }
+  }
+
+  // ── AUTO-LOGOUT INAKTIVITAS (6 JAM) ────────────────────────
+  const INACTIVE_LIMIT = 6 * 60 * 60 * 1000; // 6 jam dalam ms
+  let _inactiveTimer = null;
+  let _lastActivity  = Date.now();
+
+  function resetActivityTimer() {
+    _lastActivity = Date.now();
+  }
+
+  function startInactivityTimer() {
+    clearInactivityTimer();
+    _lastActivity = Date.now();
+    // Pantau aktivitas pengguna
+    ["mousemove","keydown","click","scroll","touchstart"].forEach(ev =>
+      document.addEventListener(ev, resetActivityTimer, { passive: true })
+    );
+    // Cek setiap menit
+    _inactiveTimer = setInterval(() => {
+      if (currentUser && Date.now() - _lastActivity >= INACTIVE_LIMIT) {
+        doLogout("Sesi berakhir karena tidak ada aktivitas selama 6 jam. Silakan login ulang.");
+      }
+    }, 60 * 1000);
+  }
+
+  function clearInactivityTimer() {
+    if (_inactiveTimer) { clearInterval(_inactiveTimer); _inactiveTimer = null; }
+    ["mousemove","keydown","click","scroll","touchstart"].forEach(ev =>
+      document.removeEventListener(ev, resetActivityTimer)
+    );
   }
 
   // ── KONFIGURASI GOOGLE SHEETS ──────────────────────────────
