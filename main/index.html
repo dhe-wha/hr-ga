@@ -4054,11 +4054,45 @@
   }
   function logoutUser(){
     localStorage.removeItem(LOGIN_SESSION_KEY);
+    localStorage.removeItem(LAST_ACTIVITY_KEY);
     location.reload();
   }
+  /* =====================================================================
+     AUTO-LOGOUT KARENA TIDAK ADA AKTIVITAS (6 jam)
+     Timestamp "aktivitas terakhir" disimpan di localStorage (bukan variabel
+     JS biasa) supaya konsisten dengan LOGIN_SESSION_KEY - aktivitas di tab
+     mana pun (di origin yang sama) ikut mereset jam tidak-aktif untuk semua
+     tab, dan kalau user meninggalkan browser dalam keadaan tertutup lalu
+     buka lagi setelah lebih dari 6 jam, sesi tetap ke-logout (bukan cuma
+     dihitung selama tab/app hidup di memori).
+     Dicek berkala tiap 1 menit (INACTIVITY_CHECK_INTERVAL_MS) - cukup sering
+     untuk terasa akurat, tapi tidak membebani. Event yang dianggap "aktivitas"
+     mengikuti pola umum: gerak mouse, klik, keyboard, scroll, dan sentuhan
+     (untuk perangkat layar sentuh). */
+  const INACTIVITY_LIMIT_MS = 6 * 60 * 60 * 1000; // 6 jam
+  const INACTIVITY_CHECK_INTERVAL_MS = 60 * 1000; // cek tiap 1 menit
+  const LAST_ACTIVITY_KEY = 'hrgaLastActivity';
+  function markActivity(){
+    if(document.body.classList.contains('pre-auth')) return; // belum login, tidak perlu dilacak
+    try{ localStorage.setItem(LAST_ACTIVITY_KEY, String(Date.now())); }catch(e){ /* localStorage diblokir */ }
+  }
+  function checkInactivity(){
+    if(document.body.classList.contains('pre-auth')) return; // sudah logout / belum login
+    let last;
+    try{ last = parseInt(localStorage.getItem(LAST_ACTIVITY_KEY) || '0', 10); }catch(e){ last = 0; }
+    if(!last){ markActivity(); return; }
+    if(Date.now() - last >= INACTIVITY_LIMIT_MS){
+      logoutUser();
+    }
+  }
+  ['mousemove','mousedown','keydown','scroll','touchstart','wheel'].forEach(evt=>{
+    document.addEventListener(evt, markActivity, { passive:true });
+  });
+  setInterval(checkInactivity, INACTIVITY_CHECK_INTERVAL_MS);
   function showApp(user){
     renderLoggedInUser(user);
     document.body.classList.remove('pre-auth');
+    markActivity(); // reset jam tidak-aktif tiap kali sesi (baru login / dipulihkan) mulai aktif
     showPage('dashboard', 'Dashboard');
   }
   /* Dipanggil sekali di awal (lihat pemanggilan tryRestoreSession() di paling
@@ -4072,6 +4106,19 @@
       cached = JSON.parse(raw);
     }catch(e){ localStorage.removeItem(LOGIN_SESSION_KEY); return; }
     if(!cached || !cached.username || !cached.password){ localStorage.removeItem(LOGIN_SESSION_KEY); return; }
+    /* Sebelum memulihkan sesi, cek dulu apakah sesi ini sudah melewati batas
+       6 jam tidak-aktif (dihitung dari timestamp LAST_ACTIVITY_KEY yang
+       terakhir tercatat, termasuk dari sesi browser sebelumnya kalau tab
+       sempat ditutup). Kalau sudah lewat, jangan panggil showApp() sama
+       sekali - langsung anggap logout supaya layar login yang tampil,
+       bukan sekilas masuk lalu ke-logout oleh checkInactivity(). */
+    let lastActivity;
+    try{ lastActivity = parseInt(localStorage.getItem(LAST_ACTIVITY_KEY) || '0', 10); }catch(e){ lastActivity = 0; }
+    if(lastActivity && (Date.now() - lastActivity) >= INACTIVITY_LIMIT_MS){
+      localStorage.removeItem(LOGIN_SESSION_KEY);
+      localStorage.removeItem(LAST_ACTIVITY_KEY);
+      return;
+    }
     Papa.parse(userCsvUrl(), {
       download:true,
       header:true,
@@ -4149,5 +4196,4 @@
   tryRestoreSession();
 </script>
 </body>
-</html>
 </html>
