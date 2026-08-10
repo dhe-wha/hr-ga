@@ -1620,7 +1620,9 @@
      reuse variabel lb*) supaya kedua fitur ini independen dan tidak saling
      ganggu kalau salah satunya lagi kebuka.
      ===================================================================== */
-  const PM_IMG_URL = 'https://lh3.googleusercontent.com/d/1XFiOwHzeUd3kPrfrs_xnvZfZ03zCIs_b';
+  // "=w4000" minta versi resolusi penuh (4000x3583, ukuran asli file) - tanpa ini
+  // lh3.googleusercontent.com cuma ngasih versi kecil (~1600px) yang pecah kalau di-zoom.
+  const PM_IMG_URL = 'https://lh3.googleusercontent.com/d/1XFiOwHzeUd3kPrfrs_xnvZfZ03zCIs_b=w4000';
   let pmScale = 1, pmPanX = 0, pmPanY = 0;
   const PM_MIN_SCALE = 1, PM_MAX_SCALE = 6;
   let pmDragging = false, pmDragStartX = 0, pmDragStartY = 0, pmPanStartX = 0, pmPanStartY = 0;
