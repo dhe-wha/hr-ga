@@ -413,6 +413,7 @@
     </div>
     <div class="submenu" id="hrSubmenu">
       <div class="sub-item" data-page="karyawan">Karyawan</div>
+      <div class="sub-item" data-page="karyawandetail">Detail Karyawan</div>
       <div class="sub-item" data-page="orgchart">Struktur Organisasi</div>
       <div class="sub-item" data-page="jobdesc">Job Description</div>
       <div class="sub-item">Key Performance Indicator (KPI)</div>
@@ -1044,6 +1045,18 @@
           <div class="bar-list" id="dashBuildingList"></div>
           <p class="chart-legend-note" id="dashBuildingNote"></p>
         </div>
+      </div>
+    </div>
+  </div>
+  <!-- ===== Detail Karyawan (embed) =====
+       Sama persis pola-nya seperti Struktur Organisasi di bawah - iframe
+       full-height tanpa judul ganda (halaman yang di-embed sudah punya
+       judul/konteksnya sendiri). -->
+  <div class="asset-view" id="page-karyawandetail" style="display:none;">
+    <div class="grid-texture"></div>
+    <div class="wrap" style="padding:20px 24px;">
+      <div class="orgchart-frame-wrap">
+        <iframe src="https://hrga.btliglbja.site/karyawan/" title="Detail Karyawan" loading="lazy"></iframe>
       </div>
     </div>
   </div>
@@ -3908,7 +3921,7 @@
   }
   document.getElementById('hrToggle').addEventListener('click', ()=>toggleSubmenu('hr'));
   document.getElementById('gaToggle').addEventListener('click', ()=>toggleSubmenu('ga'));
-  const KNOWN_PAGES = ['dashboard','kendaraan','sepedamotor','bangunan','alatberat','karyawan','rekrutmen','orgchart','jobdesc'];
+  const KNOWN_PAGES = ['dashboard','kendaraan','sepedamotor','bangunan','alatberat','karyawan','karyawandetail','rekrutmen','orgchart','jobdesc'];
   function showPage(page, label){
     document.getElementById('page-dashboard').style.display = (page==='dashboard') ? '' : 'none';
     document.getElementById('page-kendaraan').style.display = (page==='kendaraan') ? '' : 'none';
@@ -3916,6 +3929,7 @@
     document.getElementById('page-bangunan').style.display = (page==='bangunan') ? '' : 'none';
     document.getElementById('page-alatberat').style.display = (page==='alatberat') ? '' : 'none';
     document.getElementById('page-karyawan').style.display = (page==='karyawan') ? '' : 'none';
+    document.getElementById('page-karyawandetail').style.display = (page==='karyawandetail') ? '' : 'none';
     document.getElementById('page-rekrutmen').style.display = (page==='rekrutmen') ? '' : 'none';
     document.getElementById('page-orgchart').style.display = (page==='orgchart') ? '' : 'none';
     document.getElementById('page-jobdesc').style.display = (page==='jobdesc') ? '' : 'none';
