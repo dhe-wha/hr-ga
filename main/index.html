@@ -187,8 +187,12 @@
   .jobdesc-detail-title{font-family:var(--font-mono); font-size:12px; color:var(--text-dim);}
   .jobdesc-frame-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:40px;}
   .jobdesc-frame-wrap iframe{width:100%; height:78vh; min-height:520px; border:0; display:block; background:#fff;}
-  .orgchart-frame-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:40px;}
-  .orgchart-frame-wrap iframe{width:100%; height:78vh; min-height:520px; border:0; display:block; background:#fff;}
+  /* Full sampai bawah viewport (bukan tinggi tetap 78vh) - supaya tidak ada
+     scrollbar ganda (scrollbar box + scrollbar halaman). Perhitungan
+     "calc(100vh - 40px)" mengikuti padding atas+bawah wrap khusus halaman
+     ini (20px + 20px, lihat style inline di #page-orgchart .wrap). */
+  .orgchart-frame-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:0;}
+  .orgchart-frame-wrap iframe{width:100%; height:calc(100vh - 40px); min-height:520px; border:0; display:block; background:#fff;}
   .asset-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:14px;}
   .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:0; cursor:pointer; overflow:hidden; position:relative; transition:.15s transform, .15s border-color;}
   .card:hover{transform:translateY(-2px); border-color:var(--text-dim);}
@@ -1049,7 +1053,7 @@
        iframe, jadi menampilkan judul ganda di sini cuma makan tempat. -->
   <div class="asset-view" id="page-orgchart" style="display:none;">
     <div class="grid-texture"></div>
-    <div class="wrap" style="padding-top:20px;">
+    <div class="wrap" style="padding:20px 24px;">
       <div class="orgchart-frame-wrap">
         <iframe src="https://hrga.btliglbja.site/orgchart/" title="Struktur Organisasi" loading="lazy"></iframe>
       </div>
