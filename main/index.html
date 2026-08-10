@@ -1187,19 +1187,93 @@
   // Koordinat perkiraan per zona "Lokasi" (dicocokkan dari foto udara ke Google Maps satelit).
   // Zona yang belum punya koordinat (Dermaga, Gardu Induk, Malango) sengaja tidak dimasukkan -
   // Kode Bangunan di zona itu akan tampil sebagai teks biasa (tidak clickable) sampai koordinatnya tersedia.
-  // Kolom koordinat GPS per bangunan di sheet Bangunan (kolom Q, header "Koordinat", isi teks "lat, lng").
-  // PENTING: header kolom ini TIDAK BOLEH sama persis dengan header lain (mis. "Lokasi") - PapaParse 5.4.1
-  // (versi yang dipakai di sini) punya bug: kalau ada 2 header dengan teks identik dalam satu baris,
-  // parsing baris itu rusak total dan semua kolom sesudahnya jadi salah baca. Makanya kolom ini
-  // sengaja dibaca dari header "Koordinat", bukan "Lokasi" kedua.
-  function bldParseCoord(str){
-    if(!str) return null;
-    const parts = String(str).split(',').map(s=>parseFloat(s.trim()));
-    if(parts.length!==2 || parts.some(n=>isNaN(n))) return null;
-    return {lat:parts[0], lng:parts[1]};
-  }
+  // Koordinat GPS per Kode Bangunan - di-hardcode di sini (bukan dibaca dari sheet) karena kolom
+  // koordinat di sheet Bangunan sempat bentrok nama header dengan kolom "Lokasi" lain dan bikin
+  // parsing CSV rusak (bug PapaParse 5.4.1: 2 header identik dalam 1 baris = parsing baris itu rusak).
+  // Kalau ada bangunan baru atau koordinatnya berubah, tambah/update entri di objek ini.
+  const BLD_KODE_COORDS = {
+    'BP-PAB-GDT-01': {lat:0.6980435729049226, lng:121.47978420952809},
+    'BP-PAB-POL-01': {lat:0.697983619967722, lng:121.47978024709653},
+    'NP-PAB-DPA-01': {lat:0.6977858407419871, lng:121.48171720801327},
+    'NP-PAB-MSH-01': {lat:0.6977221935723311, lng:121.48107153264294},
+    'NP-BBT-GDB-01': {lat:0.7012946699252292, lng:121.47647382409495},
+    'BP-PAB-POS-01': {lat:0.6987748015731302, lng:121.48045622942679},
+    'BP-PAB-KTP-01': {lat:0.6993011161183916, lng:121.48040211829719},
+    'BP-PAB-LAB-01': {lat:0.6991879830902912, lng:121.48029389603796},
+    'BP-PAB-MSH-02': {lat:0.6994044114895078, lng:121.4805005021692},
+    'BP-PAB-PBR-01': {lat:0.7003865684612067, lng:121.48046588432321},
+    'NP-BBT-CRL-01': {lat:0.6981078815773332, lng:121.47514715786004},
+    'BP-BBT-MJD-01': {lat:0.6987005977641277, lng:121.47661787425724},
+    'BP-BBT-GDC-01': {lat:0.6984210146672785, lng:121.47603257014362},
+    'NP-BBT-KTI-01': {lat:0.6980021310105536, lng:121.476024459381},
+    'NP-BBT-GOR-01': {lat:0.6978043722545635, lng:121.47582103528558},
+    'NP-BBT-B4-01': {lat:0.6989328399527831, lng:121.47609890644891},
+    'NP-BBT-B4-02': {lat:0.6988614452016857, lng:121.47582953348622},
+    'NP-BBT-B4-03': {lat:0.6987121652640292, lng:121.47532324213462},
+    'NP-BBT-B4-04': {lat:0.6991924572204024, lng:121.47522587841317},
+    'NP-BBT-B4-05': {lat:0.6990399320774255, lng:121.47658897051357},
+    'NP-BBT-B4-06': {lat:0.6986407705142168, lng:121.47489159629026},
+    'NP-BBT-B4-07': {lat:0.6989815181962337, lng:121.47480396894096},
+    'NP-BBT-B4-08': {lat:0.6992735876182739, lng:121.47473581433594},
+    'NP-BBT-B4-09': {lat:0.6995299596515279, lng:121.47466765973093},
+    'NP-BBT-B4-10': {lat:0.6998285194700743, lng:121.4745962596685},
+    'NP-BBT-B4-11': {lat:0.7001043627637862, lng:121.47451512323397},
+    'NP-BBT-B4-12': {lat:0.6996175804698107, lng:121.47492080540671},
+    'NP-BBT-B4-13': {lat:0.6998804429148376, lng:121.47484291442954},
+    'NP-BBT-B4-14': {lat:0.7001530409904179, lng:121.474761777995},
+    'NP-BBT-B4-15': {lat:0.6997895768814638, lng:121.47654028865288},
+    'NP-BBT-B4-16': {lat:0.7004386199097341, lng:121.47468064156043},
+    'NP-BBT-B4-17': {lat:0.6994131318865997, lng:121.47521614204102},
+    'NP-BBT-B4-18': {lat:0.6996954656445254, lng:121.47514474196274},
+    'NP-BBT-B4-19': {lat:0.6999421020090341, lng:121.47507009644296},
+    'NP-BBT-B4-20': {lat:0.7002211905111195, lng:121.47499869638055},
+    'NP-BBT-B4-21': {lat:0.7004840529223053, lng:121.47492729631816},
+    'NP-BBT-B4-22': {lat:0.7003737156114133, lng:121.47444696862894},
+    'NP-BBT-B4-23': {lat:0.6999907802283887, lng:121.4768226434451},
+    'NP-BBT-B4-24': {lat:0.6992021928676726, lng:121.47499220548167},
+    'NP-BBT-B4-25': {lat:0.6992930589077511, lng:121.47554717869399},
+    'NP-BBT-B4-26': {lat:0.6994066414554, lng:121.47553419686444},
+    'NP-BBT-B4-27': {lat:0.7012207166610122, lng:121.47370051338952},
+    'NP-BBT-B4-28': {lat:0.7009805707928409, lng:121.47340517676776},
+    'NP-BBT-B4-29': {lat:0.7012466783757605, lng:121.47346034954323},
+    'NP-BBT-B4-30': {lat:0.7009546090766295, lng:121.47367454973046},
+    'NP-BBT-B4-31': {lat:0.7015419928743085, lng:121.47351227686082},
+    'NP-BBT-B4-32': {lat:0.7018243264949869, lng:121.47355446780678},
+    'NP-BBT-B4-33': {lat:0.7015062955152415, lng:121.47373296796333},
+    'NP-BBT-B4-34': {lat:0.701817836063609, lng:121.47376542253716},
+    'NP-BBT-B4-35': {lat:0.7006885014771076, lng:121.47335324944963},
+    'NP-BBT-B4-36': {lat:0.7004094130028456, lng:121.47330132213152},
+    'NP-BBT-B4-37': {lat:0.7004516007735712, lng:121.47514149650534},
+    'NP-BBT-B4-38': {lat:0.7001725122852129, lng:121.47521614202513},
+    'NP-BBT-B4-39': {lat:0.6999161402870595, lng:121.4752778057154},
+    'NP-BBT-B4-40': {lat:0.6994001510241749, lng:121.47591716083554},
+    'NP-BBT-B4-41': {lat:0.7001335697270722, lng:121.47325913118556},
+    'NP-BBT-B6-01': {lat:0.6993583396488142, lng:121.47651561862487},
+    'NP-BBT-B6-02': {lat:0.6993240829461497, lng:121.47670618572727},
+    'NP-BBT-B6-03': {lat:0.6994846612377026, lng:121.47675329220202},
+    'NP-BBT-B6-04': {lat:0.6999064468573143, lng:121.47620942653897},
+    'NP-BBT-B6-05': {lat:0.6997480096239291, lng:121.47619657931858},
+    'NP-BBT-B6-06': {lat:0.6999321393811354, lng:121.47604455387734},
+    'NP-BBT-BRK-01': {lat:0.6997116118803736, lng:121.47679611626998},
+    'NP-DMG-B4-01': {lat:0.48403456378096776, lng:121.47550655841692},
+    'NP-DMG-B4-02': {lat:0.4842861074640564, lng:121.47540332004107},
+    'NP-GDI-B4-01': {lat:0.685166993080176, lng:121.4897479275227},
+    'NP-MLG-B4-01': {lat:0.7513914474527686, lng:121.59670606394529},
+    'NP-PAB-B4-01': {lat:0.6978427419079516, lng:121.48085769048225},
+    'NP-PAB-B4-02': {lat:0.6978561519597049, lng:121.48120637768798},
+    'NP-PAB-B4-03': {lat:0.6979178381972384, lng:121.48152019617314},
+    'NP-PAB-B4-04': {lat:0.6979634323722939, lng:121.4818420612861},
+    'NP-PAB-B4-05': {lat:0.6978105577836189, lng:121.48188229442522},
+    'NP-PAB-B4-06': {lat:0.6977595995862871, lng:121.48157115814934},
+    'NP-PAB-B4-07': {lat:0.6976979133466799, lng:121.4812251531529},
+    'NP-PAB-B4-08': {lat:0.697649637158597, lng:121.4808952414121},
+    'NP-PAB-B4-14': {lat:0.698014390567412, lng:121.48212905767849},
+    'NP-PAB-B4-15': {lat:0.6978615159804037, lng:121.48215587977124},
+    'NP-PAB-B4-18': {lat:0.6975380872182569, lng:121.48226677874194},
+    'NP-PAB-B6-01': {lat:0.697866880001077, lng:121.48252066023264}
+  };
   function bldMapsUrl(a){
-    const c = bldParseCoord(a['Koordinat']);
+    const c = BLD_KODE_COORDS[(a['Kode Bangunan']||'').trim()];
     return c ? `https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}` : null;
   }
   function bldKodeHtml(a, extraClass){
