@@ -4002,16 +4002,21 @@
     });
     return map;
   }
-  function jobdescLoadFileMap(){
-    if(jobdescFilemapLoading || JOBDESC_FILEMAP) return;
-    try{
-      const cached = JSON.parse(localStorage.getItem(JOBDESC_FILEMAP_CACHE_KEY) || 'null');
-      if(cached && cached.t && (Date.now() - cached.t) < JOBDESC_FILEMAP_TTL_MS && Array.isArray(cached.entries)){
-        JOBDESC_FILEMAP = jobdescBuildFilemap(cached.entries);
-        renderJobdesc();
-        return;
-      }
-    }catch(e){ /* cache rusak, abaikan */ }
+  function jobdescLoadFileMap(force){
+    // force=true (dipicu tombol Refresh) melewati cache in-memory & localStorage sepenuhnya,
+    // supaya file jobdesc yang baru ditambah/di-rename di GitHub langsung kelihatan tanpa
+    // harus nunggu TTL 30 menit habis atau reload halaman.
+    if(jobdescFilemapLoading || (JOBDESC_FILEMAP && !force)) return;
+    if(!force){
+      try{
+        const cached = JSON.parse(localStorage.getItem(JOBDESC_FILEMAP_CACHE_KEY) || 'null');
+        if(cached && cached.t && (Date.now() - cached.t) < JOBDESC_FILEMAP_TTL_MS && Array.isArray(cached.entries)){
+          JOBDESC_FILEMAP = jobdescBuildFilemap(cached.entries);
+          renderJobdesc();
+          return;
+        }
+      }catch(e){ /* cache rusak, abaikan */ }
+    }
     jobdescFilemapLoading = true;
     fetch(JOBDESC_REPO_API)
       .then(r=> r.ok ? r.json() : Promise.reject(new Error('HTTP '+r.status)))
@@ -4140,7 +4145,12 @@
     jobdescDeptValue = e.target.value;
     renderJobdesc();
   });
-  document.getElementById('jobdescRefreshBtn').addEventListener('click', loadJobdescData);
+  document.getElementById('jobdescRefreshBtn').addEventListener('click', ()=>{
+    loadJobdescData();
+    JOBDESC_FILEMAP = null;
+    try{ localStorage.removeItem(JOBDESC_FILEMAP_CACHE_KEY); }catch(e){ /* localStorage diblokir, abaikan */ }
+    jobdescLoadFileMap(true);
+  });
   document.getElementById('jobdescTableBody').addEventListener('click', e=>{
     const link = e.target.closest('.jobdesc-link');
     if(!link) return;
