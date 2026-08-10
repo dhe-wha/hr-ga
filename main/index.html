@@ -1187,9 +1187,11 @@
   // Koordinat perkiraan per zona "Lokasi" (dicocokkan dari foto udara ke Google Maps satelit).
   // Zona yang belum punya koordinat (Dermaga, Gardu Induk, Malango) sengaja tidak dimasukkan -
   // Kode Bangunan di zona itu akan tampil sebagai teks biasa (tidak clickable) sampai koordinatnya tersedia.
-  // Kolom "Lokasi" di sheet Bangunan sekarang dobel: kolom H = nama zona (teks, mis. "Pabrik"),
-  // kolom Q = koordinat GPS per bangunan (teks "lat, lng"). PapaParse otomatis mengganti nama
-  // header duplikat kedua jadi "Lokasi_1", jadi a['Lokasi'] tetap nama zona & a['Lokasi_1'] koordinat.
+  // Kolom koordinat GPS per bangunan di sheet Bangunan (kolom Q, header "Koordinat", isi teks "lat, lng").
+  // PENTING: header kolom ini TIDAK BOLEH sama persis dengan header lain (mis. "Lokasi") - PapaParse 5.4.1
+  // (versi yang dipakai di sini) punya bug: kalau ada 2 header dengan teks identik dalam satu baris,
+  // parsing baris itu rusak total dan semua kolom sesudahnya jadi salah baca. Makanya kolom ini
+  // sengaja dibaca dari header "Koordinat", bukan "Lokasi" kedua.
   function bldParseCoord(str){
     if(!str) return null;
     const parts = String(str).split(',').map(s=>parseFloat(s.trim()));
@@ -1197,7 +1199,7 @@
     return {lat:parts[0], lng:parts[1]};
   }
   function bldMapsUrl(a){
-    const c = bldParseCoord(a['Lokasi_1']);
+    const c = bldParseCoord(a['Koordinat']);
     return c ? `https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}` : null;
   }
   function bldKodeHtml(a, extraClass){
