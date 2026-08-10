@@ -187,8 +187,19 @@
   .jobdesc-detail-title{font-family:var(--font-mono); font-size:12px; color:var(--text-dim);}
   .jobdesc-frame-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:40px;}
   .jobdesc-frame-wrap iframe{width:100%; height:78vh; min-height:520px; border:0; display:block; background:#fff;}
-  .orgchart-frame-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:40px;}
-  .orgchart-frame-wrap iframe{width:100%; height:78vh; min-height:520px; border:0; display:block; background:#fff;}
+  /* Halaman yang di-embed (hrga.btliglbja.site/orgchart/) punya header sendiri
+     di bagian atas (link "Lihat Man Power Planning", info "Masuk sebagai...",
+     dan judul "STRUKTUR ORGANISASI DEPARTEMEN..." yang duplikat dengan judul
+     halaman kita sendiri) - bagian itu tidak relevan lagi ditampilkan di sini
+     karena login & judul sudah ada di halaman Hub ini. Trik crop: wrapper
+     dikasih tinggi tetap + overflow:hidden, iframe-nya diposisikan absolute
+     dan digeser ke atas (top negatif) sejumlah ORGCHART_CROP_OFFSET, dengan
+     tinggi ditambah sejumlah yang sama supaya bagian bawah tidak ikut kepotong.
+     CATATAN: nilai offset ini estimasi dari screenshot - kalau ternyata kurang
+     pas (masih kepotong dikit / masih nyisa header), tinggal ubah angka
+     "-190px" & "+ 190px" di bawah (satu-satunya 2 tempat yang perlu diubah). */
+  .orgchart-frame-wrap{position:relative; height:78vh; min-height:520px; overflow:hidden; border:1px solid var(--border); border-radius:10px; background:var(--panel); margin-bottom:40px;}
+  .orgchart-frame-wrap iframe{position:absolute; top:-190px; left:0; width:100%; height:calc(100% + 190px); border:0; display:block; background:#fff;}
   .asset-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:14px;}
   .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:0; cursor:pointer; overflow:hidden; position:relative; transition:.15s transform, .15s border-color;}
   .card:hover{transform:translateY(-2px); border-color:var(--text-dim);}
