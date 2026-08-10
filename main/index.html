@@ -204,6 +204,9 @@
   .card-icon.thumb{background:var(--panel-alt);}
   .card-icon.thumb img{width:100%; height:100%; object-fit:cover; display:block;}
   .card-id{font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:1px;}
+  .card-id.map-link, .kode-map-link{display:inline-flex; align-items:center; gap:4px; color:var(--amber); text-decoration:none; cursor:pointer;}
+  .card-id.map-link:hover, .kode-map-link:hover{text-decoration:underline;}
+  .card-id.map-link svg, .kode-map-link svg{flex-shrink:0;}
   .card-name{font-family:var(--font-display); font-size:17px; font-weight:600; margin:0 0 4px; text-transform:uppercase; letter-spacing:.3px; line-height:1.25;}
   .card-meta{font-size:12.5px; color:var(--text-dim); margin:0;}
   .card-meta .driver{color:var(--text); font-weight:600;}
@@ -1180,6 +1183,35 @@
     parent.innerHTML = iconVehicle;
   }
   const iconBuilding = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/></svg>`;
+  const iconMapPin = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>`;
+  // Koordinat perkiraan per zona "Lokasi" (dicocokkan dari foto udara ke Google Maps satelit).
+  // Zona yang belum punya koordinat (Dermaga, Gardu Induk, Malango) sengaja tidak dimasukkan -
+  // Kode Bangunan di zona itu akan tampil sebagai teks biasa (tidak clickable) sampai koordinatnya tersedia.
+  const BLD_LOKASI_COORDS = {
+    'Pabrik': {lat:0.7001018, lng:121.4777721},
+    'Bibitan': {lat:0.7016558, lng:121.4723643},
+    'Gardu Induk': {lat:0.685166993080176, lng:121.4897479275227},
+    'Malango': {lat:0.7513914474527686, lng:121.59670606394529},
+    'Dermaga': {lat:0.48403456378096776, lng:121.47550655841692}
+  };
+  // Koordinat presisi per Kode Bangunan (override BLD_LOKASI_COORDS bila ada) - dipakai untuk
+  // bangunan yang koordinatnya beda-beda meski satu zona/Lokasi (mis. dua titik Dermaga).
+  const BLD_KODE_COORDS = {
+    'NP-GDI-B4-01': {lat:0.685166993080176, lng:121.4897479275227},
+    'NP-MLG-B4-01': {lat:0.7513914474527686, lng:121.59670606394529},
+    'NP-DMG-B4-01': {lat:0.48403456378096776, lng:121.47550655841692},
+    'NP-DMG-B4-02': {lat:0.4842861074640564, lng:121.47540332004107}
+  };
+  function bldMapsUrl(kode, lokasi){
+    const c = BLD_KODE_COORDS[(kode||'').trim()] || BLD_LOKASI_COORDS[(lokasi||'').trim()];
+    return c ? `https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}` : null;
+  }
+  function bldKodeHtml(kode, lokasi, extraClass){
+    const url = bldMapsUrl(kode, lokasi);
+    const label = fmtVal(kode);
+    if(!url) return `<span class="${extraClass||''}">${label}</span>`;
+    return `<a href="${url}" target="_blank" rel="noopener" class="${extraClass||''} kode-map-link" title="Buka lokasi ${fmtVal(lokasi)} di Google Maps">${label}${iconMapPin}</a>`;
+  }
   /* Sama seperti cardThumbError, tapi untuk kartu Aset Bangunan (ikon gedung,
      bukan ikon kendaraan) - fungsi terpisah supaya tidak mengganggu kartu Kendaraan. */
   function bldCardThumbError(imgEl){
@@ -1818,7 +1850,7 @@
           <div class="card-body">
             <div class="card-top">
               <div class="card-icon${thumb ? ' thumb' : ''}">${iconHtml}</div>
-              <div class="card-id">${fmtVal(kode)}</div>
+              ${bldKodeHtml(kode, a['Lokasi'], 'card-id')}
             </div>
             <p class="card-name">${fmtVal(nama)}</p>
             <p class="card-meta">${fmtVal(a['Lokasi'])} &middot; <span class="driver">${fmtVal(a['Tipe'])}</span></p>
@@ -1830,13 +1862,16 @@
       card.addEventListener('click', ()=>openBldDossier(card.dataset.kode));
       card.addEventListener('keydown', e=>{ if(e.key==='Enter') openBldDossier(card.dataset.kode); });
     });
+    grid.querySelectorAll('a.kode-map-link').forEach(a=>{
+      a.addEventListener('click', e=>e.stopPropagation());
+    });
   }
   function renderBldTable(filtered){
     const body = document.getElementById('bldTableBody');
     body.innerHTML = filtered.map(a=>{
       return `
         <tr tabindex="0" data-kode="${a['Kode Bangunan']}">
-          <td>${fmtVal(a['Kode Bangunan'])}</td>
+          <td>${bldKodeHtml(a['Kode Bangunan'], a['Lokasi'])}</td>
           <td class="name">${fmtVal(a['Nama Bangunan'])}</td>
           <td>${fmtVal(a['Kategori'])}</td>
           <td>${fmtVal(a['Tipe'])}</td>
@@ -1848,6 +1883,9 @@
     body.querySelectorAll('tr').forEach(row=>{
       row.addEventListener('click', ()=>openBldDossier(row.dataset.kode));
       row.addEventListener('keydown', e=>{ if(e.key==='Enter') openBldDossier(row.dataset.kode); });
+    });
+    body.querySelectorAll('a.kode-map-link').forEach(a=>{
+      a.addEventListener('click', e=>e.stopPropagation());
     });
   }
   function openBldDossier(kode){
@@ -1865,11 +1903,8 @@
       ['Kode Lokasi', a['Kode Lokasi']],
       ['No Urut', a['No Urut']],
     ];
-    const rowsBelowPhoto = [
-      ['Kode Bangunan', a['Kode Bangunan']],
-    ];
     const specRows = rows.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
-    const belowPhotoRows = rowsBelowPhoto.map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${fmtVal(v)}</span></div>`).join('');
+    const belowPhotoRows = `<div class="spec-row"><span class="k">Kode Bangunan</span><span class="v">${bldKodeHtml(a['Kode Bangunan'], a['Lokasi'])}</span></div>`;
     const dossier = document.getElementById('dossier');
     dossier.innerHTML = `
       <div class="dossier-header">
