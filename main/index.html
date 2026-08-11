@@ -653,6 +653,10 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input type="text" id="bldSearchInput" placeholder="Cari kode bangunan, nama, jenis, atau lokasi...">
           </div>
+          <button class="refresh-btn" id="bldExportCsvBtn" type="button" title="Export data sesuai filter/pencarian yang sedang aktif ke CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg>
+            Export CSV
+          </button>
           <div class="view-toggle" id="bldViewToggle">
             <button type="button" data-view="card" class="active" title="Tampilan Kartu">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
@@ -2188,6 +2192,37 @@
     renderBldGrid();
   });
   document.getElementById('bldRefreshBtn').addEventListener('click', loadBangunanData);
+  /* Export CSV - duplikat logika filter dari renderBldGrid() (bukan reuse) supaya hasil export
+     dijamin persis sama dengan yang lagi ditampilkan di layar saat tombol diklik. */
+  function exportBangunanCsv(){
+    const term = bldSearchTerm.trim().toLowerCase();
+    const filtered = BUILDINGS.filter(a=>{
+      if(bldGroupFilterValue!=='semua' && (a['Kategori']||'').trim()!==bldGroupFilterValue) return false;
+      if(bldJenisFilterValue!=='semua' && (a['Jenis']||'').trim()!==bldJenisFilterValue) return false;
+      if(bldLokasiFilterValue!=='semua' && (a['Lokasi']||'').trim()!==bldLokasiFilterValue) return false;
+      if(!term) return true;
+      const hay = [a['Kode Bangunan'], a['Nama Bangunan'], a['Jenis'], a['Lokasi'], a['PT']].join(' ').toLowerCase();
+      return hay.includes(term);
+    });
+    if(filtered.length===0){
+      alert('Tidak ada data untuk di-export - coba longgarkan filter atau pencarian dulu.');
+      return;
+    }
+    filtered.sort((a,b)=> (a['Nama Bangunan']||'').localeCompare(b['Nama Bangunan']||'', undefined, {numeric:true, sensitivity:'base'}));
+    const csv = Papa.unparse(filtered);
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const stamp = new Date().toISOString().slice(0,10);
+    const kategoriSlug = bldGroupFilterValue==='semua' ? 'semua-kategori' : bldGroupFilterValue.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `aset-bangunan-${kategoriSlug}-${stamp}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+  document.getElementById('bldExportCsvBtn').addEventListener('click', exportBangunanCsv);
   const bldViewToggle = document.getElementById('bldViewToggle');
   bldViewToggle.querySelectorAll('button[data-view]').forEach(btn=>{
     if(btn.dataset.view === bldViewMode) btn.classList.add('active'); else btn.classList.remove('active');
