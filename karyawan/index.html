@@ -507,8 +507,8 @@ function exportCSV(){
   const header='Perusahaan,ID System,No Karyawan,Nama,No KTP,JK,Tempat Lahir,Tgl Lahir,Tgl Join,Tgl Keluar,Status,Tipe,Departemen,Kelompok Jabatan,Jabatan,Gaji Pokok,Rupiah/HK';
   const rows=filtered.map(r=>cols.map(c=>'"'+(r[c]||'').replace(/"/g,'""')+'"').join(','));
   const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent([header,...rows].join('\n'));
-  a.download='karyawan_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.href='data:application/vnd.ms-excel;charset=utf-8,\uFEFF'+encodeURIComponent([header,...rows].join('\n'));
+  a.download='karyawan_'+new Date().toISOString().slice(0,10)+'.xls';
   a.click();
 }
 ['search','fP','fS','fT','fD'].forEach(id=>{
