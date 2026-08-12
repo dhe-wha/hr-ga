@@ -101,7 +101,7 @@ tr.sel.act td{background:#dbeafe}
       <select id="fT"><option value="">Semua Tipe</option></select>
       <select id="fD"><option value="">Semua Departemen</option></select>
       <button class="btn btn-reset" onclick="resetFilters()">Reset</button>
-      <button class="btn" style="background:#059669;color:#fff" onclick="exportCSV()">⬇ CSV</button>
+      <button class="btn" style="background:#059669;color:#fff" onclick="exportCSV()">↓ XLS</button>
       <span class="rinfo" id="rinfo">1 karyawan</span>
     </div>
     <div class="table-wrap">
@@ -507,8 +507,8 @@ function exportCSV(){
   const header='Perusahaan,ID System,No Karyawan,Nama,No KTP,JK,Tempat Lahir,Tgl Lahir,Tgl Join,Tgl Keluar,Status,Tipe,Departemen,Kelompok Jabatan,Jabatan,Gaji Pokok,Rupiah/HK';
   const rows=filtered.map(r=>cols.map(c=>'"'+(r[c]||'').replace(/"/g,'""')+'"').join(','));
   const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent([header,...rows].join('\n'));
-  a.download='karyawan_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.href='data:application/vnd.ms-excel;charset=utf-8,\uFEFF'+encodeURIComponent([header,...rows].join('\n'));
+  a.download='karyawan_'+new Date().toISOString().slice(0,10)+'.xls';
   a.click();
 }
 ['search','fP','fS','fT','fD'].forEach(id=>{
