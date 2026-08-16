@@ -521,7 +521,7 @@ function exportCSV(){
   
   
 <style>
-#lov{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',Arial,sans-serif}
+#lov{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;background:linear-gradient(rgba(10,20,35,.55),rgba(10,20,35,.55)),url('bg_login.png') center/cover no-repeat;display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',Arial,sans-serif}
 .lbx{background:#162032;border:1px solid #2a4060;border-radius:14px;padding:44px 40px;width:340px;box-shadow:0 24px 80px rgba(0,0,0,.6);text-align:center}
 .lbx h2{margin:0 0 4px;color:#fff;font-size:20px;font-weight:700}
 .lbx .sub{margin:0 0 26px;color:#7a9cbf;font-size:13px}
@@ -597,4 +597,29 @@ document.getElementById('lu')?.addEventListener('keydown',e=>e.key==='Enter'&&do
 chkSession();
 })();
 </script>
-</div><path d="M0 0 L0 18 L4.5 14 L7.5 21.5 L11 20 L8 13 L14 13 Z" fill="#111"></path></svg><path d="M0 0 L0 18 L4.5 14 L7.5 21.5 L11 20 L8 13 L14 13 Z" fill="#FAF9F5"></path></svg></div><script>document.getElementById("profilePanel").style.display="none";</script></body></html>
+</div><path d="M0 0 L0 18 L4.5 14 L7.5 21.5 L11 20 L8 13 L14 13 Z" fill="#111"></path></svg><path d="M0 0 L0 18 L4.5 14 L7.5 21.5 L11 20 L8 13 L14 13 Z" fill="#FAF9F5"></path></svg></div><script>document.getElementById("profilePanel").style.display="none";</script><script>
+/* INACTIVITY_LIMIT_6H — auto-logout setelah 6 jam tidak aktif */
+(function(){
+  const LIMIT = 6 * 60 * 60 * 1000; // 6 jam ms
+  const KEY   = 'hrgaLastActivity';
+  function resetTimer() {
+    localStorage.setItem(KEY, Date.now());
+  }
+  function checkInactivity() {
+    var lov = document.getElementById('lov');
+    if (!lov || lov.style.display !== 'none') return; // belum login
+    var last = parseInt(localStorage.getItem(KEY) || '0', 10);
+    if (!last) { resetTimer(); return; }
+    if (Date.now() - last >= LIMIT) {
+      if (typeof doLogout === 'function') doLogout();
+    }
+  }
+  // Reset timer saat ada aktivitas user
+  ['mousemove','keydown','touchstart','click','scroll'].forEach(function(ev){
+    document.addEventListener(ev, resetTimer, {passive:true, capture:true});
+  });
+  resetTimer();
+  setInterval(checkInactivity, 60000); // cek tiap 1 menit
+})();
+</script>
+</body></html>
