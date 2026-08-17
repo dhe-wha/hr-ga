@@ -254,6 +254,12 @@
   @media (max-width:520px){.views-grid{grid-template-columns:1fr;}}
   .view-frame{position:relative; border-radius:8px; overflow:hidden; background:var(--panel-alt); aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;}
   .view-frame img{width:100%; height:100%; object-fit:cover; cursor:zoom-in;}
+  .penghuni-heading{font-family:var(--font-mono); font-size:11px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; margin:24px 0 12px; border-top:1px solid var(--border); padding-top:20px;}
+  .penghuni-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px;}
+  .penghuni-card{background:var(--panel-alt); border:1px solid var(--border); border-radius:8px; padding:12px 14px;}
+  .penghuni-card .pintu-label{font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin:0 0 6px;}
+  .penghuni-card .pintu-name{font-size:13px; font-weight:600; line-height:1.5;}
+  .penghuni-card .pintu-name.empty{color:var(--text-dim); font-weight:400; font-style:italic;}
   .note-box{margin-top:22px; background:var(--panel-alt); border:1px solid var(--border); border-radius:8px; padding:14px 16px; font-size:13px; color:var(--text-dim); line-height:1.5;}
   .note-box b{color:var(--text); font-weight:600;}
   .lightbox{position:fixed; inset:0; background:rgba(6,7,8,0.94); z-index:500; display:none; flex-direction:column;}
@@ -1916,6 +1922,47 @@
   const BLD_SHEET_ID = '1ZtQ7H3Z5BsHsYQ1VSG6-CUxnLfLHw4T0FMArZLXjq4I';
   const BLD_SHEET_NAME = 'Bangunan';
   const BLD_CSV_URL = `https://docs.google.com/spreadsheets/d/${BLD_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(BLD_SHEET_NAME)}`;
+  // Sheet "Penghuni" (spreadsheet yang sama dengan Bangunan) - dipakai utk section
+  // "List Penghuni" di dossier bangunan perumahan (Kode Bangunan berpola "-B4-"/"-B6-"/dst).
+  // Header sheet aslinya ada spasi trailing (mis. "Kode Bangunan ") - dibersihkan pakai
+  // transformHeader supaya lookup key-nya konsisten dengan sheet Bangunan.
+  const PENGHUNI_SHEET_NAME = 'Penghuni';
+  const PENGHUNI_CSV_URL = `https://docs.google.com/spreadsheets/d/${BLD_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(PENGHUNI_SHEET_NAME)}`;
+  let PENGHUNI_ROWS = [];
+  function loadPenghuniData(){
+    Papa.parse(PENGHUNI_CSV_URL, {
+      download:true,
+      header:true,
+      skipEmptyLines:true,
+      transformHeader: h => h.trim(),
+      complete: function(results){
+        PENGHUNI_ROWS = (results.data||[]).filter(r => (r['Kode Bangunan']||'').trim()!=='');
+      },
+      error: function(){ /* gagal ambil data penghuni - section List Penghuni tampil kosong, sisanya tetap jalan */ }
+    });
+  }
+  // Bangun HTML section "List Penghuni" utk 1 Kode Bangunan. Jumlah kolom Pintu diambil dari
+  // angka setelah "B" di Kode Bangunan itu sendiri (mis. "NP-BBT-B4-06" -> pola "-B4-" -> 4 pintu).
+  // Bangunan yang bukan perumahan (kode tidak match pola ini) tidak dapat section ini sama sekali.
+  function bldPenghuniHtml(kode){
+    const doorMatch = String(kode||'').match(/-B(\d+)-/i);
+    if(!doorMatch) return '';
+    const doorCount = parseInt(doorMatch[1], 10);
+    if(!doorCount || doorCount < 1) return '';
+    const cards = [];
+    for(let i=1; i<=doorCount; i++){
+      const occupants = PENGHUNI_ROWS.filter(r =>
+        (r['Kode Bangunan']||'').trim() === kode &&
+        parseInt((r['Pintu']||'').trim(), 10) === i &&
+        (r['Active']||'').trim().toUpperCase() === 'Y'
+      ).map(r => (r['Nama']||'').trim()).filter(Boolean);
+      const nameHtml = occupants.length
+        ? `<div class="pintu-name">${occupants.map(n=>fmtVal(n)).join('<br>')}</div>`
+        : `<div class="pintu-name empty">Kosong</div>`;
+      cards.push(`<div class="penghuni-card"><p class="pintu-label">Pintu ${i}</p>${nameHtml}</div>`);
+    }
+    return `<p class="penghuni-heading">List Penghuni</p><div class="penghuni-grid">${cards.join('')}</div>`;
+  }
   let BUILDINGS = [];
   let bldGroupFilterValue = 'semua';
   let bldJenisFilterValue = 'semua';
@@ -1929,6 +1976,7 @@
     const btn = document.getElementById('bldRefreshBtn');
     btn.classList.add('spinning');
     loadBldCoordsMap();
+    loadPenghuniData();
     Papa.parse(BLD_CSV_URL, {
       download:true,
       header:true,
@@ -2115,6 +2163,7 @@
           ${viewFrame(photoUrl(a['Foto kanan']), 'Tampak Kanan')}
           ${viewFrame(photoUrl(a['Foto Belakang']), 'Tampak Belakang')}
         </div>
+        ${bldPenghuniHtml(a['Kode Bangunan'])}
       </div>
     `;
     document.getElementById('closeBtn').addEventListener('click', closeDossier);
