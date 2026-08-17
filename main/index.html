@@ -1941,6 +1941,11 @@
       error: function(){ /* gagal ambil data penghuni - section List Penghuni tampil kosong, sisanya tetap jalan */ }
     });
   }
+  // Nama penghuni di sheet ditulis ALL CAPS - ubah jadi Proper Case (huruf awal tiap kata besar)
+  // biar enak dibaca. Pemisah kata: spasi, strip, garis miring, koma (mis. nama bergelar).
+  function bldTitleCase(str){
+    return String(str||'').toLowerCase().replace(/(^|[\s\-\/,])([a-z])/g, (m, sep, ch) => sep + ch.toUpperCase());
+  }
   // Bangun HTML section "List Penghuni" utk 1 Kode Bangunan. Jumlah kolom Pintu diambil dari
   // angka setelah "B" di Kode Bangunan itu sendiri (mis. "NP-BBT-B4-06" -> pola "-B4-" -> 4 pintu).
   // Bangunan yang bukan perumahan (kode tidak match pola ini) tidak dapat section ini sama sekali.
@@ -1957,7 +1962,7 @@
         (r['Active']||'').trim().toUpperCase() === 'Y'
       ).map(r => (r['Nama']||'').trim()).filter(Boolean);
       const nameHtml = occupants.length
-        ? `<div class="pintu-name">${occupants.map(n=>fmtVal(n)).join('<br>')}</div>`
+        ? `<div class="pintu-name">${occupants.map((n,idx)=>`${idx+1}. ${bldTitleCase(n)}`).join('<br>')}</div>`
         : `<div class="pintu-name empty">Kosong</div>`;
       cards.push(`<div class="penghuni-card"><p class="pintu-label">Pintu ${i}</p>${nameHtml}</div>`);
     }
