@@ -597,7 +597,7 @@ document.getElementById('lu')?.addEventListener('keydown',e=>e.key==='Enter'&&do
 chkSession();
 })();
 </script>
-</div><path d="M0 0 L0 18 L4.5 14 L7.5 21.5 L11 20 L8 13 L14 13 Z" fill="#111"></path></svg><path d="M0 0 L0 18 L4.5 14 L7.5 21.5 L11 20 L8 13 L14 13 Z" fill="#FAF9F5"></path></svg></div><script>document.getElementById("profilePanel").style.display="none";</script><script>
+</div><path d="M0 0 L0 18 L4.5 14 L7.5 21.5 L11 20 L8 13 L14 13 Z" fill="#111"></path></svg><path d="M0 0 L0 18 L4.5 14 L7.5 21.5 L11 20 L8 13 L14 13 Z" fill="#FAF9F5"></path></svg></div><script>document.getElementById("profilePanel").classList.remove("open");</script><script>
 /* INACTIVITY_LIMIT_6H — auto-logout setelah 6 jam tidak aktif */
 (function(){
   const LIMIT = 6 * 60 * 60 * 1000; // 6 jam ms
