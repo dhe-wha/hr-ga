@@ -386,6 +386,11 @@
     .controls .chart-type-toggle, .controls .view-toggle, .no-print{ display:none !important; }
     .kry-card, .stat, .cand-table, table.asset-table{ break-inside:avoid; }
     a{ text-decoration:none !important; }
+    /* Layout grid kartu (mis. 2 chart sebaris di halaman Rekapitulasi Karyawan) di web pakai
+       breakpoint @media (max-width:820px) buat mode HP - lebar kertas cetak kebetulan juga
+       kehitung "narrow" oleh browser jadi ikut collapse ke 1 kolom kalau tidak dipaksa balik. */
+    .kry-grid{ grid-template-columns:repeat(2, 1fr) !important; }
+    .kry-card.wide{ grid-column:1/-1 !important; }
   }
 </style>
 </head>
