@@ -1,0 +1,4436 @@
+{
+  "1120100014": {
+    "lhm_id": 1000937,
+    "nama": "MAKTISON JENAPU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR MOTHER PLANT",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2024",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,139,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,102,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "Upload via Menu Karyawan",
+        "lock_data": true,
+        "active": false
+      }
+    ]
+  },
+  "1120100015": {
+    "lhm_id": 1000936,
+    "nama": "HUSAIN D. AGU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Upload via Menu Karyawan",
+        "lock_data": true,
+        "active": true
+      }
+    ]
+  },
+  "1120100016": {
+    "lhm_id": 1000930,
+    "nama": "SARMAN KOROMO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-12-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA MOTHER PLANT",
+        "st_pajak": "M2",
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "30-11-2023",
+        "tipe": "PKWT",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA MOTHER PLANT",
+        "st_pajak": "M2",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2025",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "01-01-2024",
+        "tgl_selesai": "31-12-2024",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Upload via Menu Karyawan",
+        "lock_data": true,
+        "active": false
+      }
+    ]
+  },
+  "1120100017": {
+    "lhm_id": 1001411,
+    "nama": "ABDUL KARIM M. TANGAHU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "12-05-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "12-05-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1120100018": {
+    "lhm_id": 1001416,
+    "nama": "HUSAIN D. AGU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1120100019": {
+    "lhm_id": 1001417,
+    "nama": "ERWIN LORONGASAL",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-09-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1120100020": {
+    "lhm_id": 1001418,
+    "nama": "YONI RADJAK",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-09-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1120100021": {
+    "lhm_id": 1001419,
+    "nama": "ARMAN DJALI KOROMO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "14-02-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "14-02-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1121120024": {
+    "lhm_id": 1000932,
+    "nama": "HOJI AHMAD",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "24-09-2019",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "24-09-2019",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Upload via Menu Karyawan",
+        "lock_data": true,
+        "active": true
+      }
+    ]
+  },
+  "1219070002": {
+    "lhm_id": 1001072,
+    "nama": "ABD RANDI BAMU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-12-2021",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR R&D",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-12-2021",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,102,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1220100001": {
+    "lhm_id": 1002333,
+    "nama": "ISHAK SUAIB",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2020",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER DUMP TRUCK",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-10-2020",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1220100070": {
+    "lhm_id": 1002462,
+    "nama": "MOHAMAD ADJIE",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2020",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER DUMP TRUCK",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-10-2020",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1220100071": {
+    "lhm_id": 1002460,
+    "nama": "MOH. RIVALDY HUSAIN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2020",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR TRAKSI / TRANSPORT",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-10-2020",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,530,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1221010055": {
+    "lhm_id": 1002436,
+    "nama": "SEPRIANTO LENSEHE",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2001",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA SCALLER",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2001",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1221010072": {
+    "lhm_id": 1002472,
+    "nama": "AHMAD APRIYANTO U. ADAM",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR FASILITAS/BANGUNAN",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,564,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1221080083": {
+    "lhm_id": 1002473,
+    "nama": "AMRAN MOODIATO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-08-2021",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "departemen": "BIBITAN",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR BIBITAN",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-08-2021",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,599,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1221120084": {
+    "lhm_id": 1002474,
+    "nama": "AWALUDIN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-12-2021",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "BIBITAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-12-2021",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222010002": {
+    "lhm_id": 1002334,
+    "nama": "YUSUP SATURA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA LC",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222020003": {
+    "lhm_id": 1002335,
+    "nama": "SUKRAN PANGULU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "07-02-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "07-02-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222020073": {
+    "lhm_id": 1002471,
+    "nama": "AHYAR DAMOPOLII",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-02-2022",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR JALAN & JEMBATAN",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-02-2022",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,541,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222030085": {
+    "lhm_id": 1002475,
+    "nama": "MUIS KOROMPOT",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-03-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "BIBITAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA BIBITAN",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-03-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222050004": {
+    "lhm_id": 1002338,
+    "nama": "SYARIF ISMAIL",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-05-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-05-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222050086": {
+    "lhm_id": 1002476,
+    "nama": "SINDRA HASAN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-05-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "BIBITAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA BIBITAN",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-05-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222070056": {
+    "lhm_id": 1002437,
+    "nama": "RENDI KURNIAWAN GANI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "18-07-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR SCALLER",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "18-07-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222080074": {
+    "lhm_id": 1002466,
+    "nama": "FANDIALAH MONOARFA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "21-08-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "WORKER",
+        "jabatan": "CHEKER",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "21-08-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222100005": {
+    "lhm_id": 1002336,
+    "nama": "CANDRA MANGKAU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-10-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222100075": {
+    "lhm_id": 1002468,
+    "nama": "HERDI BASATO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA INFRASRUKTUR DAN PERAWATAN JALAN",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-10-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222100078": {
+    "lhm_id": 1002467,
+    "nama": "ANDARIAS",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "WORKER",
+        "jabatan": "CHEKER",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-10-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222110006": {
+    "lhm_id": 1002364,
+    "nama": "PIRSEN Y. RAJI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-11-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-11-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222110007": {
+    "lhm_id": 1002359,
+    "nama": "HERDI NAIDI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-11-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-11-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222110008": {
+    "lhm_id": 1002362,
+    "nama": "RIVAL IBRAHIM",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "11-11-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "11-11-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1222120009": {
+    "lhm_id": 1002381,
+    "nama": "HERMAN OLII",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "17-12-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "17-12-2022",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223010010": {
+    "lhm_id": 1002343,
+    "nama": "AMIR IBRAHIM",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "09-01-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "09-01-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223010011": {
+    "lhm_id": 1002342,
+    "nama": "HASRUN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "16-01-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "16-01-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223010057": {
+    "lhm_id": 1002441,
+    "nama": "IHWAN AMASULILI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LOSS BAK BESAR",
+        "st_pajak": "M0",
+        "active": true
+      },
+      {
+        "tgl_mulai": "22-01-2023",
+        "tgl_selesai": "31-08-2026",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LBB",
+        "st_pajak": "M0",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "22-01-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223020076": {
+    "lhm_id": 1002470,
+    "nama": "ANDRIS DUNGGIO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-02-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR JALAN & JEMBATAN",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "02-02-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223030058": {
+    "lhm_id": 1002438,
+    "nama": "MARTINUS MADOA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-03-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR SCALLER",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-03-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223040012": {
+    "lhm_id": 1002379,
+    "nama": "ADRIAN TAHIR",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "06-04-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "06-04-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223050013": {
+    "lhm_id": 1002348,
+    "nama": "ROBIANSA HUSAIN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-05-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER DUMP TRUCK",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "02-05-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223050014": {
+    "lhm_id": 1002360,
+    "nama": "JAINUDIN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "04-05-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "04-05-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223050015": {
+    "lhm_id": 1002363,
+    "nama": "WANI MUSTAPA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "20-05-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "20-05-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223060059": {
+    "lhm_id": 1002442,
+    "nama": "SAHRUL",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LOSS BAK BESAR",
+        "st_pajak": "S0",
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-06-2023",
+        "tgl_selesai": "31-08-2026",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LBB",
+        "st_pajak": "S0",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-06-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223060060": {
+    "lhm_id": 1002439,
+    "nama": "ANGLI KAWANGUNG",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "14-06-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA SCALLER",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "14-06-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223070016": {
+    "lhm_id": 1002372,
+    "nama": "KRAMAT NANGILI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-07-2023",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR TANAM",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-07-2023",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,507,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223070017": {
+    "lhm_id": 1002374,
+    "nama": "DEDI SALEH",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "03-07-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "03-07-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223080018": {
+    "lhm_id": 1002382,
+    "nama": "OWAN MOYO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-08-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "02-08-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223080019": {
+    "lhm_id": 1002377,
+    "nama": "HAMID S. ABDUL",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "04-08-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "04-08-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223080077": {
+    "lhm_id": 1002469,
+    "nama": "ISMAIL ADJIE",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-08-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "WORKER",
+        "jabatan": "CHEKER",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-08-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223090020": {
+    "lhm_id": 1002356,
+    "nama": "NOLVI TOOY",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-09-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223090021": {
+    "lhm_id": 1002350,
+    "nama": "ABDUL WARID MOYO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-09-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223100022": {
+    "lhm_id": 1002375,
+    "nama": "ARIANSYAH LEMBA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-10-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "02-10-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223100023": {
+    "lhm_id": 1002385,
+    "nama": "ZAINUDIN TULIABU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "16-10-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "16-10-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223100061": {
+    "lhm_id": 1002440,
+    "nama": "MAHMUD BUMULO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-10-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA SCALLER",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "02-10-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223110024": {
+    "lhm_id": 1002347,
+    "nama": "KASIM DAUD",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-11-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-11-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223110025": {
+    "lhm_id": 1002349,
+    "nama": "DJAFAR KARIM",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "07-11-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "07-11-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223120026": {
+    "lhm_id": 1002344,
+    "nama": "ABNER MESSE",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-12-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "02-12-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223120027": {
+    "lhm_id": 1002339,
+    "nama": "PARMIN MOHA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "13-12-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "13-12-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223120028": {
+    "lhm_id": 1002341,
+    "nama": "ZIBRAN ABDUL",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "14-12-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "14-12-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1223120029": {
+    "lhm_id": 1002365,
+    "nama": "MUHAMMAD RIJAL",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "18-12-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "18-12-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224010030": {
+    "lhm_id": 1002378,
+    "nama": "HAMDIKA A. KARIM",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "09-01-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "09-01-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224010031": {
+    "lhm_id": 1002383,
+    "nama": "ADAM ASLAHA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "15-01-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "15-01-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224010032": {
+    "lhm_id": 1002380,
+    "nama": "YUSUP ISMAIL",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "15-01-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "15-01-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224020033": {
+    "lhm_id": 1002373,
+    "nama": "RIZKI DEHIMELI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "05-02-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "05-02-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224020034": {
+    "lhm_id": 1002371,
+    "nama": "ARMAN MOOBU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "15-02-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "15-02-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224020087": {
+    "lhm_id": 1002477,
+    "nama": "SAMJIN TANGAHU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-02-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "BIBITAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA BIBITAN",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-02-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224030035": {
+    "lhm_id": 1002340,
+    "nama": "RONAL MOHAMAD",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "06-03-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "06-03-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224040036": {
+    "lhm_id": 1002351,
+    "nama": "OPRIYANTO ARTAJA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "15-04-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "15-04-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224040037": {
+    "lhm_id": 1002352,
+    "nama": "HAMZAH HUNOWU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "15-04-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "15-04-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224050038": {
+    "lhm_id": 1002384,
+    "nama": "IRFANDI MOKOGINTA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "08-05-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "08-05-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224050039": {
+    "lhm_id": 1002386,
+    "nama": "ISMAIL ABUNIYO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "15-05-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA LC",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "15-05-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224060040": {
+    "lhm_id": 1002357,
+    "nama": "PANDI SAHRAIN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "03-06-2024",
+        "tgl_selesai": "30-06-2026",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "03-06-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224060041": {
+    "lhm_id": 1002361,
+    "nama": "FAISAL FRANS",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "04-06-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA LC",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "04-06-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224070079": {
+    "lhm_id": 1002461,
+    "nama": "WAWAN IBRAHIM",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-07-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER DUMP TRUCK",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-07-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224090042": {
+    "lhm_id": 1002355,
+    "nama": "DANIAL SALEH",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "03-09-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "03-09-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224090043": {
+    "lhm_id": 1002358,
+    "nama": "ABD MANAF LAENGKURU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "03-09-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "03-09-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224090044": {
+    "lhm_id": 1002353,
+    "nama": "LEONARDO LAMUSU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "11-09-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "11-09-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224090045": {
+    "lhm_id": 1002354,
+    "nama": "ROBINSON LASALUTU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "18-09-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "18-09-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224100080": {
+    "lhm_id": 1002463,
+    "nama": "GHOZALI MUKRI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "08-10-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER DUMP TRUCK",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "08-10-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1224110046": {
+    "lhm_id": 1002369,
+    "nama": "TALIB DJAMA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-11-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "02-11-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225020047": {
+    "lhm_id": 1002346,
+    "nama": "AHMAD HALA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "03-02-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER DUMP TRUCK",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "03-02-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225020081": {
+    "lhm_id": 1002464,
+    "nama": "HENDRA TOMAYAHU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "19-02-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER DUMP TRUCK",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "19-02-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225040048": {
+    "lhm_id": 1002370,
+    "nama": "ISMAIL RIVAI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "11-04-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA LC",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "11-04-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225060049": {
+    "lhm_id": 1002368,
+    "nama": "ADRIAN RAHIM",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "12-06-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA LC",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "12-06-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225070050": {
+    "lhm_id": 1002366,
+    "nama": "ROYS LASALUTU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-07-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA TANAM",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-07-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225070051": {
+    "lhm_id": 1002367,
+    "nama": "ABDUL ZABAR KALUKU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "08-07-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR TANAM",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "08-07-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225080052": {
+    "lhm_id": 1002376,
+    "nama": "NOVALDI RAMBI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "14-08-2025",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER DUMP TRUCK",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "14-08-2025",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225090062": {
+    "lhm_id": 1002443,
+    "nama": "ANDRI MALIK DAENG KUMA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LOSS BAK BESAR",
+        "st_pajak": "M1",
+        "active": true
+      },
+      {
+        "tgl_mulai": "13-09-2025",
+        "tgl_selesai": "31-08-2026",
+        "tipe": "BHL",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LBB",
+        "st_pajak": "M1",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "13-09-2025",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225120054": {
+    "lhm_id": 1002408,
+    "nama": "SAMSUL SATURA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR TANAM",
+        "st_pajak": "M2",
+        "active": true
+      },
+      {
+        "tgl_mulai": "04-12-2025",
+        "tgl_selesai": "31-08-2026",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR TANAM",
+        "st_pajak": "M2",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "04-12-2025",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1225120088": {
+    "lhm_id": 1002478,
+    "nama": "MUSRIM",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "04-12-2025",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "BIBITAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA BIBITAN",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "04-12-2025",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226010063": {
+    "lhm_id": 1002444,
+    "nama": "MUHAMMAD DASMAN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LOSS BAK BESAR",
+        "st_pajak": "M2",
+        "active": true
+      },
+      {
+        "tgl_mulai": "17-01-2026",
+        "tgl_selesai": "31-08-2026",
+        "tipe": "BHL",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LBB",
+        "st_pajak": "M2",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "17-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226010064": {
+    "lhm_id": 1002445,
+    "nama": "AYUB AL-HASNI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LOSS BAK BESAR",
+        "st_pajak": "M0",
+        "active": true
+      },
+      {
+        "tgl_mulai": "17-01-2026",
+        "tgl_selesai": "31-08-2026",
+        "tipe": "BHL",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LBB",
+        "st_pajak": "M0",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "17-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226010065": {
+    "lhm_id": 1002446,
+    "nama": "HAFID ZULKIFLI AL HASNI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LOSS BAK BESAR",
+        "st_pajak": "M2",
+        "active": true
+      },
+      {
+        "tgl_mulai": "17-01-2026",
+        "tgl_selesai": "01-08-2026",
+        "tipe": "BHL",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LBB",
+        "st_pajak": "M2",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "17-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226020053": {
+    "lhm_id": 1002345,
+    "nama": "JULKIFLI SALEH LATIF",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA RAWAT",
+        "st_pajak": "M2",
+        "active": true
+      },
+      {
+        "tgl_mulai": "02-02-2026",
+        "tgl_selesai": "31-08-2026",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA LC",
+        "st_pajak": "M2",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "02-02-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "test1",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226040082": {
+    "lhm_id": 1002465,
+    "nama": "YANTO HUSAIN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-04-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER DUMP TRUCK",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-04-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226060066": {
+    "lhm_id": 1002447,
+    "nama": "REKY PAPUTUNGAN",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LOSS BAK BESAR",
+        "st_pajak": "M2",
+        "active": true
+      },
+      {
+        "tgl_mulai": "10-06-2026",
+        "tgl_selesai": "31-08-2026",
+        "tipe": "BHL",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LBB",
+        "st_pajak": "M2",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "10-06-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226060067": {
+    "lhm_id": 1002448,
+    "nama": "DADANG ANDIKA NOER",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LOSS BAK BESAR",
+        "st_pajak": "M1",
+        "active": true
+      },
+      {
+        "tgl_mulai": "15-06-2026",
+        "tgl_selesai": "31-08-2026",
+        "tipe": "BHL",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LBB",
+        "st_pajak": "M1",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "15-06-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226080068": {
+    "lhm_id": 1002433,
+    "nama": "SURYA JAYA KUSUMA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-08-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "GUDANG SENTRAL",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "KRANI GUDANG SENTRAL",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-08-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226080069": {
+    "lhm_id": 1002459,
+    "nama": "ARDIANTO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "18-08-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "DRIVER LOSS BAK BESAR",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "18-08-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "1226090089": {
+    "lhm_id": 1002494,
+    "nama": "ROMI BALAU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TATA USAHA KAYU",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA SCALLER",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-09-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "11B0000170": {
+    "lhm_id": 1000935,
+    "nama": "MOH. AGIL PANIGORO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2021",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-10-2021",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Upload via Menu Karyawan",
+        "lock_data": true,
+        "active": true
+      }
+    ]
+  },
+  "11B0000171": {
+    "lhm_id": 1000933,
+    "nama": "ANDRIAN WULUR",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2021",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-10-2021",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Upload via Menu Karyawan",
+        "lock_data": true,
+        "active": true
+      }
+    ]
+  },
+  "12B0000001": {
+    "lhm_id": 1000543,
+    "nama": "EVEL DATUMBANUA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2023",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,800,580.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000002": {
+    "lhm_id": 1000544,
+    "nama": "FARIS RUMAMPUK",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-06-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA MOTHER PLANT",
+        "st_pajak": "M0",
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-12-2021",
+        "tgl_selesai": "31-05-2024",
+        "tipe": "PKWT",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA MOTHER PLANT",
+        "st_pajak": "M0",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2024",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2023",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "01-12-2021",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,800,580.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000003": {
+    "lhm_id": 1000545,
+    "nama": "EFRAIN HATAMA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-11-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA MOTHER PLANT",
+        "st_pajak": "M0",
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "31-10-2023",
+        "tipe": "PKWT",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M0",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2023",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,800,580.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000004": {
+    "lhm_id": 1000546,
+    "nama": "WOLTER TALUMESANG",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,800,580.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": true,
+        "active": true
+      }
+    ]
+  },
+  "12B0000005": {
+    "lhm_id": 1000547,
+    "nama": "FECKY TANIE",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2023",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,800,580.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000006": {
+    "lhm_id": 1000548,
+    "nama": "JEFRI MANTIDA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2023",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,800,580.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000007": {
+    "lhm_id": 1000549,
+    "nama": "REINAL MANDAK",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2021",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "departemen": "TANAMAN",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2023",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-09-2021",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,800,580.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "11B0000616": {
+    "lhm_id": 1000934,
+    "nama": "ZINO BOKINGS",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-09-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-09-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Upload via Menu Karyawan",
+        "lock_data": true,
+        "active": true
+      }
+    ]
+  },
+  "11B0000655": {
+    "lhm_id": 1000931,
+    "nama": "ANDARIAS",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-10-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Upload via Menu Karyawan",
+        "lock_data": true,
+        "active": true
+      }
+    ]
+  },
+  "11B0000024": {
+    "lhm_id": 1000938,
+    "nama": "SARTON PAKAYA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-11-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA MOTHER PLANT",
+        "st_pajak": "S0",
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "31-10-2023",
+        "tipe": "PKWT",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "S0",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2025",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "01-01-2024",
+        "tgl_selesai": "31-12-2024",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "Upload via Menu Karyawan",
+        "lock_data": true,
+        "active": false
+      }
+    ]
+  },
+  "12B0000009": {
+    "lhm_id": 1001032,
+    "nama": "IPEN MANJALIKU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-02-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "02-02-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": true,
+        "active": true
+      }
+    ]
+  },
+  "11B0000017": {
+    "lhm_id": 1001233,
+    "nama": "HERMAN JAINAPU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-06-2024",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA MOTHER PLANT",
+        "st_pajak": "M0",
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "31-05-2024",
+        "tipe": "PKWT",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA MOTHER PLANT",
+        "st_pajak": "M0",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2024",
+        "tgl_selesai": "",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2021",
+        "tgl_selesai": "31-12-2023",
+        "tipe": "PKWT",
+        "gapok": 0,
+        "gapok_str": "Rp. 2,989,350.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000010": {
+    "lhm_id": 1001457,
+    "nama": "REPSI TAHULENDING",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-03-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "COMMUNITY DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PENJAGA ALAT",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-03-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "12B0000011": {
+    "lhm_id": 1001458,
+    "nama": "HESKIA NATARI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "24-02-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "COMMUNITY DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PENJAGA ALAT",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2025",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "24-02-2023",
+        "tgl_selesai": "31-12-2024",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000012": {
+    "lhm_id": 1001459,
+    "nama": "REPSI TAHULENDING",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "24-02-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "COMMUNITY DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PENJAGA ALAT",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2025",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "24-02-2023",
+        "tgl_selesai": "31-12-2024",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000013": {
+    "lhm_id": 1001460,
+    "nama": "HABEL DALANTANG",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "03-06-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "COMMUNITY DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PENJAGA ALAT",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2025",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "03-06-2022",
+        "tgl_selesai": "31-12-2024",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000014": {
+    "lhm_id": 1001461,
+    "nama": "YERIKSON TATAMBIHE",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "03-06-2022",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "COMMUNITY DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PENJAGA ALAT",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2025",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "03-06-2022",
+        "tgl_selesai": "31-12-2024",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000015": {
+    "lhm_id": 1001462,
+    "nama": "STEIN EBER TAHULENDING",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2023",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "COMMUNITY DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PENJAGA ALAT",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2025",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "01-10-2023",
+        "tgl_selesai": "31-12-2024",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000016": {
+    "lhm_id": 1001541,
+    "nama": "RAMSI KANSIL",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-07-2019",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "departemen": "MOTHER PLANT",
+        "kel_jabatan": "MANDOR 1 / KERANI 1",
+        "jabatan": "MANDOR 1 MOTHER PLANT",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-07-2019",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 4,078,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "12B0000017": {
+    "lhm_id": 1001652,
+    "nama": "STEVEN KAMUDI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-10-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "COMMUNITY DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PENJAGA ALAT",
+        "st_pajak": "M2",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2025",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": false
+      },
+      {
+        "tgl_mulai": "01-10-2024",
+        "tgl_selesai": "31-12-2024",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,025,100.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000018": {
+    "lhm_id": 1001822,
+    "nama": "WISTON RAMBI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-03-2025",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "COMMUNITY DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PENJAGA ALAT",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-03-2025",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000019": {
+    "lhm_id": 1001826,
+    "nama": "MAKTISON JENAPU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "MANDOR R&D",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,553,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BULANAN",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,352,000.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000020": {
+    "lhm_id": 1001828,
+    "nama": "FANDI",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-02-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "02-02-2023",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000021": {
+    "lhm_id": 1001829,
+    "nama": "REKIANSYA PIOLA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "03-01-2024",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "S0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "03-01-2024",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000022": {
+    "lhm_id": 1001830,
+    "nama": "HUSAIN D. AGU",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "M0",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-01-2020",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000023": {
+    "lhm_id": 1001831,
+    "nama": "FIRLAN MESSE",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "01-03-2026",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "S0",
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-02-2024",
+        "tgl_selesai": "28-02-2026",
+        "tipe": "BHL",
+        "departemen": "RISET AND DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PEKERJA R&D",
+        "st_pajak": "S0",
+        "active": false
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "01-02-2024",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000024": {
+    "lhm_id": 1002091,
+    "nama": "SUKARDI PAKAYA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "02-10-2025",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "departemen": "COMMUNITY DEVELOPMENT",
+        "kel_jabatan": "WORKER",
+        "jabatan": "PENJAGA ALAT",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "01-01-2026",
+        "tgl_selesai": "",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "Otomatis DiAktivasi dari Aktivasi Standar Upah",
+        "lock_data": true,
+        "active": true
+      },
+      {
+        "tgl_mulai": "02-10-2025",
+        "tgl_selesai": "31-12-2025",
+        "tipe": "BHL",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,221,731.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": false
+      }
+    ]
+  },
+  "12B0000025": {
+    "lhm_id": 1002327,
+    "nama": "SARCO HATAMA",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "06-05-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "PRA MEKANIK",
+        "st_pajak": "M3",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "06-05-2023",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  },
+  "12B0000026": {
+    "lhm_id": 1002328,
+    "nama": "FIRMAN R. MOO",
+    "organisasi": "Inti Global Laksana Site",
+    "posisi": [
+      {
+        "tgl_mulai": "19-03-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "departemen": "TEKNIK",
+        "kel_jabatan": "MANDOR / KERANI / OPERATOR",
+        "jabatan": "PRA MEKANIK",
+        "st_pajak": "M1",
+        "active": true
+      }
+    ],
+    "gapok_history": [
+      {
+        "tgl_mulai": "19-03-2025",
+        "tgl_selesai": "",
+        "tipe": "SKU",
+        "gapok": 0,
+        "gapok_str": "Rp. 3,405,144.00",
+        "rupiah_hk": 0,
+        "keterangan": "",
+        "lock_data": false,
+        "active": true
+      }
+    ]
+  }
+}
